@@ -148,25 +148,44 @@
                 </div>
             </div>
 
-            {{-- Right Panel - Branding --}}
-            <div class="bg-brand-950 relative hidden h-full w-full items-center justify-center overflow-hidden lg:flex lg:w-1/2 dark:bg-white/5">
-                {{-- Gradient Overlay --}}
-                <div class="absolute inset-0 bg-gradient-to-br from-brand-600/20 via-transparent to-brand-800/20"></div>
-                
-                <div class="z-1 flex items-center justify-center">
-                    {{-- Grid Shape --}}
-                    @include('components.grid-shape')
+            {{-- Right Panel - Branding (6/12) --}}
+            <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gray-900 border-l border-gray-100 dark:border-gray-800">
+                {{-- Hero Image --}}
+                <div class="absolute inset-0 z-0">
+                    <img src="{{ asset('images/auth/logistics-hero.png') }}" alt="Logistics Support" class="h-full w-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-900/90 via-brand-900/40 to-transparent"></div>
+                    
+                    {{-- Decorative Mesh Gradient Blur --}}
+                    <div class="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-brand-500/20 blur-[120px] rounded-full"></div>
+                    <div class="absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-blue-500/20 blur-[100px] rounded-full"></div>
+                </div>
 
-                    <div class="flex max-w-md flex-col items-center px-8 text-center">
-                        <a href="/" class="mb-6 block">
-                            <img src="{{ asset('images/logo/auth-logo.svg') }}" alt="Logo" class="h-12" />
-                        </a>
-                        <h2 class="mb-3 text-2xl font-bold text-white">
-                            Welcome Back!
-                        </h2>
-                        <p class="text-gray-300 dark:text-white/60 leading-relaxed">
-                            Sign in to access your dashboard and manage your business with powerful tools designed for success.
-                        </p>
+                {{-- Content Overlay --}}
+                <div class="relative z-10 w-full flex flex-col justify-end p-12 xl:p-16">
+                    <div class="animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 shadow-2xl">
+                            <h2 class="text-3xl xl:text-4xl font-bold text-white mb-6 leading-tight">
+                                Access your logistics dashboard.
+                            </h2>
+                            <p class="text-white/70 text-lg leading-relaxed mb-8">
+                                Managing your shipments and carrier network has never been this seamless.
+                            </p>
+                            
+                            <div class="flex items-center gap-4 pt-6 border-t border-white/10">
+                                <div class="flex -space-x-3">
+                                    <div class="size-10 rounded-full border-2 border-brand-900 bg-gray-200">
+                                        <img src="https://ui-avatars.com/api/?name=A&background=random" class="rounded-full">
+                                    </div>
+                                    <div class="size-10 rounded-full border-2 border-brand-900 bg-gray-200">
+                                        <img src="https://ui-avatars.com/api/?name=B&background=random" class="rounded-full">
+                                    </div>
+                                    <div class="size-10 rounded-full border-2 border-brand-900 bg-gray-200">
+                                        <img src="https://ui-avatars.com/api/?name=C&background=random" class="rounded-full">
+                                    </div>
+                                </div>
+                                <span class="text-white/70 text-sm font-medium">Joined by 10k+ professionals</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

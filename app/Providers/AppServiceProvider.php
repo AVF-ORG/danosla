@@ -22,12 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $languages = Cache::remember('active_languages', 3600, function () {
-            return Language::query()
-                ->where('is_active', 1)
-                ->orderBy('name')
-                ->get(['code', 'name']);
-        });
+        try {
+            $languages = Cache::remember('active_languages', 3600, function () {
+                return Language::query()
+                    ->where('is_active', 1)
+                    ->orderBy('name')
+                    ->get(['code', 'name']);
+            });
+        } catch (\Exception $e) {
+            $languages = collect();
+        }
 
         View::share('languages', $languages);
 

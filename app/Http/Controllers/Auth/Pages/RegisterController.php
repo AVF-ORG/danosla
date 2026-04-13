@@ -11,13 +11,8 @@ class RegisterController extends Controller
 {
     public function __invoke()
     {
-        $sectors = Sector::where('is_active', true)->get();
-        $regions = Region::with('countries')->get();
-
         return view('pages.auth.register', [
             'title' => 'Register',
-            'sectors' => $sectors,
-            'regions' => $regions,
         ]);
     }
 }

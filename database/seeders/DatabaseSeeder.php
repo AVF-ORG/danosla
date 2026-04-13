@@ -16,9 +16,12 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            // TranslationSystemSeeder::class,
-            // RegionCountrySeeder::class,
+            RolesAndPermissionsSeeder::class,
+            TranslationSystemSeeder::class,
+            RegionCountrySeeder::class,
             SectorSeeder::class,
+            UserSeeder::class,
+            ShipmentSeeder::class,
         ]);
     }
 }

@@ -12,38 +12,30 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
+        // 1. Create the specific Admin user
+        $admin = \App\Models\User::firstOrCreate(
+            ['email' => 'medjadjiabdelkadir22@gmail.com'],
             [
                 'name' => 'Admin (Medjadji)',
-                'email' => 'medjadjiabdelkadir22@gmail.com',
                 'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'role' => 'Super Admin',
-            ],
-            [
-                'name' => 'Carrier Test 1',
-                'email' => 'carrier_test_1@example.com',
-                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'role' => 'carrier',
-            ],
-            [
-                'name' => 'Shipper Test 1',
-                'email' => 'shipper_test_1@example.com',
-                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'role' => 'shipper',
-            ],
-        ];
+            ]
+        );
+        
+        // Ensure roles exist before assigning
+        $superAdminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Super Admin']);
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        
+        $admin->assignRole($superAdminRole);
+        $admin->assignRole($adminRole);
 
-        foreach ($users as $userData) {
-            $roleName = $userData['role'];
-            unset($userData['role']); // Remove from array so we can pass to firstOrCreate
+        // 2. Create 10 random users
+        \App\Models\User::factory(10)->create()->each(function ($user) {
+            // Assign a random role from the available ones
+            $roles = ['carrier', 'shipper', 'User', 'Manager'];
+            $randomRoleName = $roles[array_rand($roles)];
             
-            $user = \App\Models\User::firstOrCreate(
-                ['email' => $userData['email']],
-                $userData
-            );
-
-            $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $roleName]);
+            $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $randomRoleName]);
             $user->assignRole($role);
-        }
+        });
     }
 }

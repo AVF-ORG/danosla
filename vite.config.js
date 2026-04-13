@@ -5,9 +5,13 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     server: {
         cors: true,
-        host: 'localhost',
+        host: '0.0.0.0',
+        origin: 'http://localhost:5173',
         hmr: {
             host: 'localhost',
+        },
+        watch: {
+            usePolling: true,
         },
     },
     plugins: [
