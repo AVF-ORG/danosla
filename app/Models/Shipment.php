@@ -23,7 +23,11 @@ class Shipment extends Model
         'delivery_type',
         'delivery_options',
         'latest_pickup_date',
+        'latest_pickup_time',
+        'pickup_notify_time',
         'latest_delivery_date',
+        'latest_delivery_time',
+        'delivery_notify_time',
         'requirements',
         'status',
     ];

@@ -31,10 +31,12 @@ class ShippingLotForm extends Component
             $this->totalValue = $shipmentRecord->total_value;
 
             $reqs = $shipmentRecord->requirements ?? [];
-            $this->latestPickupTime = $reqs['latestPickupTime'] ?? '';
-            $this->latestDeliveryTime = $reqs['latestDeliveryTime'] ?? '';
+            $this->latestPickupTime = $shipmentRecord->latest_pickup_time ?? ($reqs['latestPickupTime'] ?? '');
+            $this->latestDeliveryTime = $shipmentRecord->latest_delivery_time ?? ($reqs['latestDeliveryTime'] ?? '');
             $this->pickupNotify = $reqs['pickupNotify'] ?? false;
+            $this->pickupNotifyTime = $shipmentRecord->pickup_notify_time ?? ($reqs['pickupNotifyTime'] ?? '');
             $this->deliveryNotify = $reqs['deliveryNotify'] ?? false;
+            $this->deliveryNotifyTime = $shipmentRecord->delivery_notify_time ?? ($reqs['deliveryNotifyTime'] ?? '');
 
             $this->isDangerous = $reqs['isDangerous'] ?? false;
             $this->dangerousGoodsDescription = $reqs['dangerousGoodsDescription'] ?? '';
@@ -66,6 +68,7 @@ class ShippingLotForm extends Component
                     'model' => $lot->model,
                     'vehicle_weight' => $lot->vehicle_weight,
                     'is_rolling' => $lot->is_rolling,
+                    'is_stackable' => $lot->is_stackable,
                     'volume' => $lot->volume,
                 ];
             })->toArray();
@@ -138,8 +141,10 @@ class ShippingLotForm extends Component
     public $deliveryOptions = [];
 
     public $pickupNotify = false;
+    public $pickupNotifyTime = '';
 
     public $deliveryNotify = false;
+    public $deliveryNotifyTime = '';
 
     // Step 4: Schedule
     public $latestPickupDate = '';
@@ -238,7 +243,9 @@ class ShippingLotForm extends Component
             'latestDeliveryTime' => 'required',
 
             'pickupNotify' => 'boolean',
+            'pickupNotifyTime' => 'nullable',
             'deliveryNotify' => 'boolean',
+            'deliveryNotifyTime' => 'nullable',
 
             'isDangerous' => 'boolean',
             'dangerousGoodsDescription' => 'nullable|string|max:2000',
@@ -517,14 +524,16 @@ class ShippingLotForm extends Component
                 'delivery_type' => $this->deliveryType,
                 'delivery_options' => $this->deliveryOptions,
                 'latest_pickup_date' => $this->latestPickupDate,
+                'latest_pickup_time' => $this->latestPickupTime,
+                'pickup_notify_time' => $this->pickupNotifyTime,
                 'latest_delivery_date' => $this->latestDeliveryDate,
+                'latest_delivery_time' => $this->latestDeliveryTime,
+                'delivery_notify_time' => $this->deliveryNotifyTime,
                 'requirements' => [
                     'isDangerous' => $this->isDangerous,
                     'dangerousGoodsDescription' => $this->dangerousGoodsDescription,
                     'isUrgent' => $this->isUrgent,
                     'urgentDescription' => $this->urgentDescription,
-                    'latestPickupTime' => $this->latestPickupTime,
-                    'latestDeliveryTime' => $this->latestDeliveryTime,
                     'pickupNotify' => $this->pickupNotify,
                     'deliveryNotify' => $this->deliveryNotify,
                     'hasInsuranceOption' => $this->hasInsuranceOption,
@@ -602,4 +611,7 @@ class ShippingLotForm extends Component
     {
         return view('livewire.shipping-lot-form');
     }
+
+
+ 
 }

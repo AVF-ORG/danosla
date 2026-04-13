@@ -2,418 +2,367 @@
     <div class="mx-auto space-y-6">
 
         @if (!$isSubmitted)
-            <div class="space-y-4">
+            <div class="space-y-6">
 
                 <!-- MERCHANDISES -->
-                <div
-                    class="bg-white rounded-[24px] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 p-6 md:p-10 animate-fadeIn">
-
-                    <!-- SECTION HEADER -->
-                    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
+                <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] animate-fadeIn">
+                    <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h2 class="text-lg font-bold text-gray-900 tracking-tight">
-                                {{ $editingLotIndex !== null ? 'Edit lot ' . ($editingLotIndex + 1) : 'Add goods' }}
+                            <h2 class="text-base font-medium text-gray-800 dark:text-white/90">
+                                {{ $editingLotIndex !== null ? 'Modifier le lot ' . ($editingLotIndex + 1) : 'Ajouter des marchandises' }}
                             </h2>
-                            <p class="text-sm text-gray-500 mt-1">
-                                Enter the details of each shipment lot.
-                            </p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Renseignez les détails de chaque lot de votre expédition.</p>
                         </div>
 
                         @if ($editingLotIndex !== null)
                             <button wire:click="cancelEdit"
-                                class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 transition-all focus:outline-none focus:ring-2 focus:ring-gray-200">
-                                Cancel Edit
+                                class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-all focus:outline-none focus:ring-2 focus:ring-gray-200 shadow-sm">
+                                Annuler la modification
                             </button>
                         @endif
                     </div>
 
-                    <!-- LOT EDITOR -->
-                    <div class="rounded-2xl border border-gray-100 bg-gray-50/50 p-6 md:p-8 relative overflow-hidden">
-                        <!-- Decorative subtle gradient -->
-                        <div
-                            class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-gradient-to-br from-blue-50 to-transparent rounded-full opacity-50 pointer-events-none">
-                        </div>
+                    <div class="p-4 sm:p-6">
 
-                        <div
-                            class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8 relative z-10">
-                            <div class="flex items-center gap-3">
-                                <span
-                                    class="inline-flex items-center justify-center h-9 min-w-[76px] px-3 rounded-lg bg-blue-50 text-blue-700 border border-blue-100/50 text-sm font-bold tracking-wide">
-                                    LOT {{ $editingLotIndex !== null ? $editingLotIndex + 1 : count($lots) + 1 }}
-                                </span>
-                                <span class="hidden md:block text-base">
-                                    {{ $editingLotIndex !== null ? 'Update the details for this lot' : 'Configure your new shipment unit' }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- MAIN FIELDS -->
-                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                            <!-- Type -->
-                            <div>
-                                <label class="block text-sm font-bold text-gray-800 mb-2">Packaging type *</label>
-                                <select wire:model.live="type"
-                                    class="w-full h-11 bg-white border border-gray-300 rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                    <option value="colis">Parcel (custom quote)</option>
-                                    <option value="palette_standard">Standard pallet(s)</option>
-                                    <option value="palette_non_standard">Non-standard pallet(s)</option>
-                                    <option value="caisse">Wood or metal crate(s)</option>
-                                    <option value="oeuvre_art">Artwork / art object</option>
-                                    <option value="hors_gabarit">Out of gauge</option>
-                                    <option value="conteneur_groupage">Partial container (groupage)</option>
-                                    <option value="conteneur_complet">Full container(s)</option>
-                                    <option value="vehicule">Vehicle(s)</option>
-                                </select>
-                            </div>
-
-                            @if ($type === 'palette_standard')
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-bold text-gray-800 mb-2">Pallet type *</label>
-                                    <select wire:model.live="palette_type"
-                                        class="w-full h-11 bg-white border border-gray-300 rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                        @foreach (array_keys($palette_dimensions) as $p_type)
-                                            <option value="{{ $p_type }}">{{ str_replace('_', 'x', $p_type) }} cm
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @elseif($type === 'conteneur_complet')
-                                <div class="md:col-span-3">
-                                    <label class="block text-sm font-bold text-gray-800 mb-2">Type / Capacity /
-                                        Dimensions *</label>
-                                    <select wire:model.live="container_type"
-                                        class="w-full h-11 bg-white border border-gray-300 rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                        @foreach ($container_options as $c_type => $c_label)
-                                            <option value="{{ $c_type }}">{{ $c_label }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @elseif($type === 'vehicule')
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-bold text-gray-800 mb-2">Brand *</label>
-                                    <input type="text" wire:model.live="brand" placeholder="Peugeot, Honda..."
-                                        class="w-full h-11 bg-white border @error('brand') border-red-500 @else border-gray-300 @enderror rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                    @error('brand')
-                                        <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
-                                    @enderror
+                        <!-- LOT EDITOR -->
+                        <div class="space-y-6">
+                            <div class="bg-gray-50/50 dark:bg-white/[0.02] rounded-xl p-6 border border-gray-100 dark:border-gray-800 relative overflow-hidden">
+                                <div class="flex items-center gap-3 mb-6">
+                                    <span class="inline-flex items-center justify-center h-8 px-3 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-100 dark:border-blue-500/20 text-xs font-bold uppercase tracking-wider">
+                                        Lot {{ $editingLotIndex !== null ? $editingLotIndex + 1 : count($lots) + 1 }}
+                                    </span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">
+                                        {{ $editingLotIndex !== null ? 'Mise à jour des détails' : 'Configurez votre nouvelle unité' }}
+                                    </span>
                                 </div>
 
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-800 mb-2">Model *</label>
-                                    <input type="text" wire:model.live="model" placeholder="308, CBR1000RR"
-                                        class="w-full h-11 bg-white border @error('model') border-red-500 @else border-gray-300 @enderror rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                    @error('model')
-                                        <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                                <!-- MAIN FIELDS -->
+                                <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                                    <!-- Type -->
+                                    <div class="md:col-span-1">
+                                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Type de conditionnement *</label>
+                                        <div x-data="{ isOptionSelected: @entangle('type').live ? true : false }" class="relative z-20">
+                                            <select wire:model.live="type"
+                                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                                :class="isOptionSelected ? 'text-gray-800 dark:text-white/90' : 'text-gray-400'"
+                                                @change="isOptionSelected = true">
+                                                <option value="" class="text-gray-400">Choisir un type *</option>
+                                                <option value="colis">Colis (devis personnalisé)</option>
+                                                <option value="palette_standard">Palette(s) standard</option>
+                                                <option value="palette_non_standard">Palette(s) hors standard</option>
+                                                <option value="caisse">Caisse bois ou métal</option>
+                                                <option value="oeuvre_art">Oeuvre / objet d'art</option>
+                                                <option value="hors_gabarit">Hors gabarit</option>
+                                                <option value="conteneur_groupage">Conteneur partiel (groupage)</option>
+                                                <option value="conteneur_complet">Conteneur(s) complet</option>
+                                                <option value="vehicule">Véhicule(s)</option>
+                                            </select>
+                                            <span class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                                                <svg class="stroke-current" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    @if ($type === 'palette_standard')
+                                        <div class="md:col-span-2">
+                                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Type de palette *</label>
+                                            <div x-data="{ isOptionSelected: @entangle('palette_type').live ? true : false }" class="relative z-20">
+                                                <select wire:model.live="palette_type"
+                                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                                    :class="isOptionSelected ? 'text-gray-800 dark:text-white/90' : 'text-gray-400'"
+                                                    @change="isOptionSelected = true">
+                                                    @foreach (array_keys($palette_dimensions) as $p_type)
+                                                        <option value="{{ $p_type }}">{{ str_replace('_', 'x', $p_type) }} cm</option>
+                                                    @endforeach
+                                                </select>
+                                                <span class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                                                    <svg class="stroke-current" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @elseif($type === 'conteneur_complet')
+                                        <div class="md:col-span-3">
+                                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Type / Capacité / Dimensions *</label>
+                                            <div x-data="{ isOptionSelected: @entangle('container_type').live ? true : false }" class="relative z-20">
+                                                <select wire:model.live="container_type"
+                                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                                    :class="isOptionSelected ? 'text-gray-800 dark:text-white/90' : 'text-gray-400'"
+                                                    @change="isOptionSelected = true">
+                                                    @foreach ($container_options as $c_type => $c_label)
+                                                        <option value="{{ $c_type }}">{{ $c_label }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <span class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                                                    <svg class="stroke-current" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @elseif($type === 'vehicule')
+                                        <div class="md:col-span-2">
+                                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Marque *</label>
+                                            <input type="text" wire:model.live="brand" placeholder="Peugeot, Honda..."
+                                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border @error('brand') border-red-500 @else border-gray-300 @enderror bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                                            @error('brand')
+                                                <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div>
+                                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Modèle *</label>
+                                            <input type="text" wire:model.live="model" placeholder="308, CBR1000RR"
+                                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border @error('model') border-red-500 @else border-gray-300 @enderror bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                                            @error('model')
+                                                <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
+                                            @enderror
+                                        </div>
 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-800 mb-2">Weight *</label>
-                                    <select wire:model.live="vehicle_weight"
-                                        class="w-full h-11 bg-white border @error('vehicle_weight') border-red-500 @else border-gray-300 @enderror rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                        <option value="1t">1t</option>
-                                        <option value="1.5t">1.5t</option>
-                                        <option value="2t">2t</option>
-                                        <option value="3t">3t</option>
-                                    </select>
+                                    <div x-data="{ isOptionSelected: @entangle('vehicle_weight').live ? true : false }" class="relative z-20">
+                                        <select wire:model.live="vehicle_weight"
+                                            class="w-full h-11 bg-white border border-gray-300 rounded-xl px-4 appearance-none text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+                                            :class="isOptionSelected ? 'text-gray-900 font-semibold' : 'text-gray-400'"
+                                            @change="isOptionSelected = true">
+                                            <option value="1t">1t</option>
+                                            <option value="1.5t">1.5t</option>
+                                            <option value="2t">2t</option>
+                                            <option value="3t">3t</option>
+                                        </select>
+                                        <span class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500">
+                                            <svg class="stroke-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </span>
+                                    </div>
                                     @error('vehicle_weight')
                                         <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
                                     @enderror
                                 </div>
                             @else
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-800 mb-2">Length (cm) *</label>
-                                    <input type="number" wire:model.live="length" placeholder="L"
-                                        class="w-full h-11 bg-white border @error('length') border-red-500 @else border-gray-300 @enderror rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                    @error('length')
-                                        <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                                    @endif
 
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-800 mb-2">Width (cm) *</label>
-                                    <input type="number" wire:model.live="width" placeholder="W"
-                                        class="w-full h-11 bg-white border @error('width') border-red-500 @else border-gray-300 @enderror rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                    @error('width')
-                                        <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            @endif
+                                    @if ($type !== 'vehicule')
+                                        <div>
+                                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Longueur (cm) *</label>
+                                            <input type="number" wire:model.live="length" placeholder="L"
+                                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border @error('length') border-red-500 @else border-gray-300 @enderror bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                                            @error('length')
+                                                <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
+                                            @enderror
+                                        </div>
 
-                            @if ($type !== 'vehicule')
-                                @if ($type !== 'conteneur_complet')
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-800 mb-2">Height (cm)
-                                            *</label>
-                                        <input type="number" wire:model.live="height" placeholder="H"
-                                            class="w-full h-11 bg-white border @error('height') border-red-500 @else border-gray-300 @enderror rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                        @error('height')
-                                            <span
-                                                class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                @endif
+                                        <div>
+                                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Largeur (cm) *</label>
+                                            <input type="number" wire:model.live="width" placeholder="W"
+                                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border @error('width') border-red-500 @else border-gray-300 @enderror bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                                            @error('width')
+                                                <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    @endif
 
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-800 mb-2">Quantity *</label>
-                                    <input type="number" wire:model.live="quantity" min="1"
-                                        class="w-full h-11 bg-white border @error('quantity') border-red-500 @else border-gray-300 @enderror rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                    @error('quantity')
-                                        <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            @endif
-                        </div>
-
-                        <!-- SECONDARY FIELDS -->
-                        <div class="mt-6">
-                            @if ($type !== 'vehicule')
-                                <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
-                                    <div class="xl:col-span-4">
-                                        <label class="block text-sm font-bold text-gray-800 mb-2">
-                                            Unit weight (kg) *
-                                        </label>
-                                        <div class="relative">
-                                            <input type="number" wire:model.live="weight" step="0.01"
-                                                class="w-full h-12 bg-white border @error('weight') border-red-500 @else border-gray-300 @enderror rounded-xl pl-4 pr-12 text-sm text-gray-800 font-semibold outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                            <div
-                                                class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                                                <span class="text-gray-400 font-bold text-sm">kg</span>
+                                    @if ($type !== 'vehicule')
+                                        @if ($type !== 'conteneur_complet')
+                                            <div>
+                                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Hauteur (cm) *</label>
+                                                <input type="number" wire:model.live="height" placeholder="H"
+                                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border @error('height') border-red-500 @else border-gray-300 @enderror bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                                                @error('height')
+                                                    <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                        </div>
-                                        @error('weight')
-                                            <span
-                                                class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
-                                        @enderror
+                                        @endif
 
-                                        <div class="mt-4">
-                                            <label
-                                                class="h-11 bg-white border border-gray-300 rounded-xl px-4 flex items-center gap-3 cursor-pointer shadow-[0_1px_2px_0_rgba(0,0,0,0.02)] hover:border-gray-400 transition-colors">
-                                                <input type="checkbox" wire:model.live="is_stackable"
-                                                    class="h-4.5 w-4.5 rounded border-gray-300 text-blue-500 focus:ring-blue-500 transition-colors">
-                                                <span class="text-sm font-semibold text-gray-800">Stackable (superposable)</span>
-                                            </label>
-                                            <p class="text-[10px] text-gray-400 mt-1 leading-tight">
-                                                Check this if other pallets can be placed on top to reduce costs.
-                                            </p>
+                                        <div>
+                                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Quantité *</label>
+                                            <input type="number" wire:model.live="quantity" min="1"
+                                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border @error('quantity') border-red-500 @else border-gray-300 @enderror bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                                            @error('quantity')
+                                                <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
+                                            @enderror
                                         </div>
-                                    </div>
+                                    @endif
+                                </div>
 
-                                    <div class="xl:col-span-8">
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                            <!-- Summary Cards -->
-                                            <div
-                                                class="rounded-xl border border-gray-100 bg-white p-4 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)] flex flex-col justify-center relative overflow-hidden group">
-                                                <div
-                                                    class="absolute top-0 right-0 w-12 h-12 bg-gray-50 rounded-bl-full -z-10 transition-transform group-hover:scale-110">
-                                                </div>
-                                                <div
-                                                    class="text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">
-                                                    Total weight
-                                                </div>
-                                                <div class="flex items-baseline gap-1">
-                                                    <div class="text-base font-bold text-gray-900">
-                                                        {{ number_format((float) ($weight ?: 0) * (int) ($quantity ?: 1), 2, '.', '') }}
+                                <!-- SECONDARY FIELDS -->
+                                <div class="mt-8">
+                                    @if ($type !== 'vehicule')
+                                        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                                            <div class="xl:col-span-4 space-y-6">
+                                                <div>
+                                                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Poids unitaire (kg) *</label>
+                                                    <div class="relative">
+                                                        <input type="number" wire:model.live="weight" step="0.01"
+                                                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border @error('weight') border-red-500 @else border-gray-300 @enderror bg-transparent pl-4 pr-12 text-sm text-gray-800 font-medium placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                                                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                                                            <span class="text-gray-400 text-xs font-bold uppercase">kg</span>
+                                                        </div>
                                                     </div>
-                                                    <div class="text-xs font-bold text-gray-400">kg</div>
+                                                    @error('weight')
+                                                        <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="flex items-center gap-3">
+                                                    <label class="relative inline-flex items-center cursor-pointer">
+                                                        <input type="checkbox" wire:model.live="is_stackable" class="sr-only peer">
+                                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-500/10 dark:peer-focus:ring-brand-500/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-500"></div>
+                                                        <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Superposable</span>
+                                                    </label>
                                                 </div>
                                             </div>
 
-                                            <div
-                                                class="rounded-xl border border-gray-100 bg-white p-4 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)] flex flex-col justify-center relative overflow-hidden group">
-                                                <div
-                                                    class="absolute top-0 right-0 w-12 h-12 bg-gray-50 rounded-bl-full -z-10 transition-transform group-hover:scale-110">
-                                                </div>
-                                                <div
-                                                    class="text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">
-                                                    Unit volume
-                                                </div>
-                                                <div class="flex items-baseline gap-1">
-                                                    <div class="text-base font-bold text-gray-900">
-                                                        {{ number_format($this->unit_volume, 4, '.', '') }}
+                                            <div class="xl:col-span-8">
+                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                    <!-- Summary Cards -->
+                                                    <div class="p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-white/[0.02] shadow-sm">
+                                                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Poids total</div>
+                                                        <div class="flex items-baseline gap-1">
+                                                            <div class="text-lg font-bold text-gray-900 dark:text-white">
+                                                                {{ number_format((float) ($weight ?: 0) * (int) ($quantity ?: 1), 2, '.', '') }}
+                                                            </div>
+                                                            <div class="text-xs font-bold text-gray-400 uppercase">kg</div>
+                                                        </div>
                                                     </div>
-                                                    <div class="text-xs font-bold text-gray-400">m³</div>
-                                                </div>
-                                            </div>
 
-                                            <div
-                                                class="rounded-xl border border-indigo-100 bg-indigo-50/30 p-4 shadow-[0_1px_3px_0_rgba(79,70,229,0.05)] flex flex-col justify-center relative overflow-hidden group">
-                                                <div
-                                                    class="absolute -right-4 -top-4 w-16 h-16 bg-indigo-500/5 rounded-full blur-xl">
-                                                </div>
-                                                <div
-                                                    class="text-xs uppercase tracking-wider text-indigo-600 font-bold mb-1">
-                                                    Total volume
-                                                </div>
-                                                <div class="flex items-baseline gap-1 relative z-10">
-                                                    <div class="text-base font-bold text-indigo-900">
-                                                        {{ number_format($this->current_lot_volume, 4, '.', '') }}
+                                                    <div class="p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-white/[0.02] shadow-sm">
+                                                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Volume unitaire</div>
+                                                        <div class="flex items-baseline gap-1">
+                                                            <div class="text-lg font-bold text-gray-900 dark:text-white">
+                                                                {{ number_format($this->unit_volume, 4, '.', '') }}
+                                                            </div>
+                                                            <div class="text-xs font-bold text-gray-400">m³</div>
+                                                        </div>
                                                     </div>
-                                                    <div class="text-xs font-bold text-indigo-500">m³</div>
+
+                                                    <div class="p-4 rounded-xl border border-brand-100 dark:border-brand-500/20 bg-brand-50/50 dark:bg-brand-500/5 shadow-sm">
+                                                        <div class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-1">Volume total</div>
+                                                        <div class="flex items-baseline gap-1">
+                                                            <div class="text-lg font-bold text-brand-900 dark:text-brand-200">
+                                                                {{ number_format($this->current_lot_volume, 4, '.', '') }}
+                                                            </div>
+                                                            <div class="text-xs font-bold text-brand-600/60">m³</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            @else
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-800 mb-2">Quantity
-                                            *</label>
-                                        <input type="number" wire:model.live="quantity" min="1"
-                                            class="w-full h-11 bg-white border @error('quantity') border-red-500 @else border-gray-300 @enderror rounded-xl px-3 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
-                                        @error('quantity')
-                                            <span
-                                                class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                    @else
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Quantité *</label>
+                                                <input type="number" wire:model.live="quantity" min="1"
+                                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border @error('quantity') border-red-500 @else border-gray-300 @enderror bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                                                @error('quantity')
+                                                    <span class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
+                                                @enderror
+                                            </div>
 
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-800 mb-2">Vehicle
-                                            condition</label>
-                                        <div class="flex flex-col gap-2">
-                                            <label
-                                                class="h-11 bg-white border border-gray-300 rounded-xl px-4 flex items-center gap-3 cursor-pointer shadow-[0_1px_2px_0_rgba(0,0,0,0.02)] hover:border-gray-400 transition-colors">
-                                                <input type="checkbox" wire:model.live="is_rolling"
-                                                    class="h-4.5 w-4.5 rounded border-gray-300 text-green-500 focus:ring-green-500 transition-colors">
-                                                <span class="text-sm font-semibold text-gray-700">Rolling vehicle</span>
-                                            </label>
-                                            <label
-                                                class="h-11 bg-white border border-gray-300 rounded-xl px-4 flex items-center gap-3 cursor-pointer shadow-[0_1px_2px_0_rgba(0,0,0,0.02)] hover:border-gray-400 transition-colors">
-                                                <input type="checkbox" wire:model.live="is_stackable"
-                                                    class="h-4.5 w-4.5 rounded border-gray-300 text-blue-500 focus:ring-blue-500 transition-colors">
-                                                <span class="text-sm font-semibold text-gray-700">Stackable (superposable)</span>
-                                            </label>
+                                            <div class="space-y-4">
+                                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">État du véhicule</label>
+                                                <div class="flex flex-col gap-3">
+                                                    <label class="relative inline-flex items-center cursor-pointer">
+                                                        <input type="checkbox" wire:model.live="is_rolling" class="sr-only peer">
+                                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-500/10 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-500"></div>
+                                                        <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Véhicule roulant</span>
+                                                    </label>
+                                                    <label class="relative inline-flex items-center cursor-pointer">
+                                                        <input type="checkbox" wire:model.live="is_stackable" class="sr-only peer">
+                                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-500/10 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-500"></div>
+                                                        <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Superposable</span>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
-                                        @error('is_rolling')
-                                            <span
-                                                class="text-xs text-red-500 mt-1 block font-bold">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                    @endif
                                 </div>
-                            @endif
-                        </div>
 
-                        <div class="mt-8 pt-6 border-t border-gray-200/60 flex justify-end">
-                            <button wire:click="addLot"
-                                class="inline-flex items-center justify-center px-6 py-2.5 bg-gray-900 hover:bg-gray-800 text-white font-bold text-sm rounded-xl transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_14px_rgba(0,0,0,0.15)] focus:outline-none focus:ring-2 focus:ring-gray-900/50 active:scale-[0.98]">
-                                {{ $editingLotIndex !== null ? 'Save lot modifications' : 'Add this lot' }}
-                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                        d="M12 4v16m8-8H4" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- LOTS -->
-                    @if (count($lots) > 0)
-                        <div class="mt-8 pt-8 border-t border-gray-100">
-                            <div class="mb-5">
-                                <h3 class="text-lg font-bold text-gray-900">My goods</h3>
-                                <p class="text-sm text-gray-500 mt-1">Review the lots already added.</p>
-                            </div>
-
-                            @error('lots')
-                                <div
-                                    class="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold">
-                                    You must add at least one lot.
-                                </div>
-                            @enderror
-
-                            <div
-                                class="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]">
-                                <div class="overflow-x-auto">
-                                    <table class="w-full text-left text-sm text-gray-700">
-                                        <thead
-                                            class="bg-gray-50/50 border-b border-gray-100 text-sm uppercase tracking-wider text-gray-500 font-bold">
-                                            <tr>
-                                                <th class="px-4 py-3 font-semibold">Lot</th>
-                                                <th class="px-4 py-3 font-semibold">Packaging</th>
-                                                <th class="px-4 py-3 font-semibold">Qty</th>
-                                                <th class="px-4 py-3 font-semibold">Unit Wt</th>
-                                                <th class="px-4 py-3 font-semibold">Total Wt</th>
-                                                <th class="px-4 py-3 font-semibold text-center">Stackable</th>
-                                                <th class="px-4 py-3 font-semibold">Total Vol</th>
-                                                <th class="px-4 py-3"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-gray-100">
-                                            @foreach ($lots as $index => $lot)
-                                                <tr class="hover:bg-gray-50 transition-colors">
-                                                    <td class="px-4 py-3 font-bold text-gray-900">{{ $index + 1 }}
-                                                    </td>
-                                                    <td class="px-4 py-3">
-                                                        {{ $lot['type'] === 'colis' ? 'Parcel (custom quote)' : str_replace('_', ' ', $lot['type']) }}
-                                                    </td>
-                                                    <td class="px-4 py-3 font-bold text-gray-900">
-                                                        {{ $lot['quantity'] }}</td>
-                                                    <td class="px-4 py-3 font-bold text-gray-900">
-                                                        {{ number_format($lot['weight'], 2, ',', ' ') }} kg
-                                                    </td>
-                                                    <td class="px-4 py-3 font-bold text-gray-900">
-                                                        {{ number_format($lot['weight'] * $lot['quantity'], 2, ',', ' ') }}
-                                                        kg
-                                                    </td>
-                                                    <td class="px-4 py-3 text-center">
-                                                        @if ($lot['is_stackable'] ?? true)
-                                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100">YES</span>
-                                                        @else
-                                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-gray-50 text-gray-400 border border-gray-100">NO</span>
-                                                        @endif
-                                                    </td>
-                                                    <td class="px-4 py-3 font-bold text-gray-900">
-                                                        {{ number_format($lot['volume'] ?? 0, 4, ',', ' ') }} m³
-                                                    </td>
-                                                    <td class="px-4 py-3 text-right whitespace-nowrap">
-                                                        <button wire:click="editLot({{ $index }})"
-                                                            class="text-blue-600 hover:underline text-sm font-semibold mr-3">
-                                                            Edit
-                                                        </button>
-                                                        <button wire:click="removeLot({{ $index }})"
-                                                            class="text-red-600 hover:underline text-sm font-semibold">
-                                                            Delete
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                <div class="mt-8 flex justify-end">
+                                    <button wire:click="addLot"
+                                        class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 dark:bg-brand-500 hover:bg-gray-800 dark:hover:bg-brand-600 text-white font-bold text-sm rounded-lg transition-all shadow-sm active:scale-[0.98]">
+                                        {{ $editingLotIndex !== null ? 'Sauvegarder les modifications' : 'Ajouter ce lot' }}
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-                                <div
-                                    class="rounded-xl border border-gray-100 bg-gray-50/50 p-4 shadow-[0_1px_2px_0_rgba(0,0,0,0.01)]">
-                                    <div class="text-sm uppercase tracking-wider text-gray-400 font-bold">Lots
+                            <!-- LOTS TABLE -->
+                            @if (count($lots) > 0)
+                                <div class="mt-8">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Mes marchandises</h3>
+                                        @error('lots')
+                                            <span class="text-xs text-red-500 font-bold">Veuillez ajouter au moins un lot.</span>
+                                        @enderror
                                     </div>
-                                    <div class="text-lg font-bold text-gray-900 mt-1">{{ count($lots) }}</div>
-                                </div>
 
-                                <div
-                                    class="rounded-xl border border-gray-100 bg-gray-50/50 p-4 shadow-[0_1px_2px_0_rgba(0,0,0,0.01)]">
-                                    <div class="text-sm uppercase tracking-wider text-gray-400 font-bold">Total
-                                        weight
+                                    <div class="overflow-hidden rounded-xl border border-gray-100 dark:border-gray-800">
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full text-left text-sm text-gray-700 dark:text-gray-300">
+                                                <thead class="bg-gray-50 dark:bg-white/[0.02] border-b border-gray-100 dark:border-gray-800 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                    <tr>
+                                                        <th class="px-4 py-3">Lot</th>
+                                                        <th class="px-4 py-3">Type</th>
+                                                        <th class="px-4 py-3">Qté</th>
+                                                        <th class="px-4 py-3">Poids Unitaire</th>
+                                                        <th class="px-4 py-3">Poids Total</th>
+                                                        <th class="px-4 py-3 text-center">Superpo.</th>
+                                                        <th class="px-4 py-3">Volume</th>
+                                                        <th class="px-4 py-3 text-right">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                                                    @foreach ($lots as $index => $lot)
+                                                        <tr class="hover:bg-gray-50 dark:hover:bg-white/[0.01] transition-colors">
+                                                            <td class="px-4 py-3 font-bold text-gray-900 dark:text-white">{{ $index + 1 }}</td>
+                                                            <td class="px-4 py-3">{{ $lot['type'] === 'colis' ? 'Colis' : str_replace('_', ' ', $lot['type']) }}</td>
+                                                            <td class="px-4 py-3 font-bold">{{ $lot['quantity'] }}</td>
+                                                            <td class="px-4 py-3">{{ number_format($lot['weight'], 2, ',', ' ') }} kg</td>
+                                                            <td class="px-4 py-3 font-bold">{{ number_format($lot['weight'] * $lot['quantity'], 2, ',', ' ') }} kg</td>
+                                                            <td class="px-4 py-3 text-center">
+                                                                @if ($lot['is_stackable'] ?? true)
+                                                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-500/20">OUI</span>
+                                                                @else
+                                                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-gray-50 dark:bg-white/5 text-gray-400 border border-gray-100 dark:border-white/10">NON</span>
+                                                                @endif
+                                                            </td>
+                                                            <td class="px-4 py-3 font-bold">{{ number_format($lot['volume'] ?? 0, 4, ',', ' ') }} m³</td>
+                                                            <td class="px-4 py-3 text-right whitespace-nowrap">
+                                                                <button wire:click="editLot({{ $index }})" class="text-brand-500 hover:text-brand-600 font-bold mr-3">Modifier</button>
+                                                                <button wire:click="removeLot({{ $index }})" class="text-red-500 hover:text-red-600 font-bold">Supprimer</button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                    <div class="text-lg font-bold text-gray-900 mt-1">
-                                        {{ number_format($total_weight, 0, ',', ' ') }}
-                                        <span class="text-sm font-bold text-gray-400">kg</span>
-                                    </div>
-                                </div>
 
-                                <div
-                                    class="rounded-xl border border-gray-100 bg-gray-50/50 p-4 shadow-[0_1px_2px_0_rgba(0,0,0,0.01)]">
-                                    <div class="text-sm uppercase tracking-wider text-gray-400 font-bold">Total
-                                        volume
-                                    </div>
-                                    <div class="text-lg font-bold text-gray-900 mt-1">
-                                        {{ number_format($total_volume, 4, '.', '') }}
-                                        <span class="text-sm font-bold text-gray-400">m³</span>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-white/[0.02] border border-gray-100 dark:border-gray-800">
+                                            <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Nombre de lots</div>
+                                            <div class="text-xl font-bold text-gray-900 dark:text-white">{{ count($lots) }}</div>
+                                        </div>
+                                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-white/[0.02] border border-gray-100 dark:border-gray-800">
+                                            <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Poids total cumulé</div>
+                                            <div class="text-xl font-bold text-gray-900 dark:text-white">{{ number_format($total_weight, 0, ',', ' ') }} <span class="text-sm font-bold opacity-50">kg</span></div>
+                                        </div>
+                                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-white/[0.02] border border-gray-100 dark:border-gray-800">
+                                            <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Volume total cumulé</div>
+                                            <div class="text-xl font-bold text-gray-900 dark:text-white">{{ number_format($total_volume, 4, '.', '') }} <span class="text-sm font-bold opacity-50">m³</span></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
-                    @endif
 
                     <!-- DETAILS -->
                     <div class="mt-8 pt-8 border-t border-gray-100 space-y-5">
@@ -883,16 +832,33 @@
                                             Date et Heure d'enlèvement *
                                         </div>
                                         <div class="grid grid-cols-2 gap-3">
-                                            <div>
-                                                <input type="date" wire:model.live="latestPickupDate"
-                                                    class="block w-full h-11 bg-white border @error('latestPickupDate') border-red-500 @else border-gray-300 @enderror rounded-lg px-4 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                            <div x-data="{ value: @entangle('latestPickupDate').live }" 
+                                                 x-init="flatpickr($refs.datepicker, { dateFormat: 'Y-m-d', defaultDate: value, onChange: function(selectedDates, dateStr, instance) { value = dateStr; } })">
+                                                <div class="relative">
+                                                    <input type="text" x-ref="datepicker" x-model="value"
+                                                        placeholder="AAAA-MM-JJ"
+                                                        class="h-11 w-full appearance-none rounded-xl border @error('latestPickupDate') border-red-500 @else border-gray-300 @enderror bg-white px-4 pr-11 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm">
+                                                    <span class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                                        <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
                                                 @error('latestPickupDate')
                                                     <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                             <div>
-                                                <input type="time" wire:model.live="latestPickupTime"
-                                                    class="block w-full h-11 bg-white border @error('latestPickupTime') border-red-500 @else border-gray-300 @enderror rounded-lg px-4 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                                <div class="relative">
+                                                    <input type="time" wire:model.live="latestPickupTime"
+                                                        onclick="this.showPicker()"
+                                                        class="h-11 w-full appearance-none rounded-xl border @error('latestPickupTime') border-red-500 @else border-gray-300 @enderror bg-white px-4 pr-11 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm">
+                                                    <span class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                                        <svg class="fill-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.04175 9.99984C3.04175 6.15686 6.1571 3.0415 10.0001 3.0415C13.8431 3.0415 16.9584 6.15686 16.9584 9.99984C16.9584 13.8428 13.8431 16.9582 10.0001 16.9582C6.1571 16.9582 3.04175 13.8428 3.04175 9.99984ZM10.0001 1.5415C5.32867 1.5415 1.54175 5.32843 1.54175 9.99984C1.54175 14.6712 5.32867 18.4582 10.0001 18.4582C14.6715 18.4582 18.4584 14.6712 18.4584 9.99984C18.4584 5.32843 14.6715 1.5415 10.0001 1.5415ZM9.99998 10.7498C9.58577 10.7498 9.24998 10.4141 9.24998 9.99984V5.4165C9.24998 5.00229 9.58577 4.6665 9.99998 4.6665C10.4142 4.6665 10.75 5.00229 10.75 5.4165V9.24984H13.3334C13.7476 9.24984 14.0834 9.58562 14.0834 9.99984C14.0834 10.4141 13.7476 10.7498 13.3334 10.7498H10.0001H9.99998Z" fill="currentColor" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
                                                 @error('latestPickupTime')
                                                     <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                                                 @enderror
@@ -925,6 +891,20 @@
                                                             class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500">
                                                         <span class="text-sm font-bold text-brand-600 uppercase tracking-tight">Appeler avant passage</span>
                                                     </label>
+
+                                                    @if($pickupNotify)
+                                                        <div class="mt-2 animate-fadeIn relative">
+                                                            <input type="time" wire:model.live="pickupNotifyTime"
+                                                                onclick="this.showPicker()"
+                                                                class="h-11 w-full appearance-none rounded-xl border @error('pickupNotifyTime') border-red-500 @else border-gray-200 @enderror bg-white px-4 pr-11 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm">
+                                                            <span class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                                                <svg class="fill-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.04175 9.99984C3.04175 6.15686 6.1571 3.0415 10.0001 3.0415C13.8431 3.0415 16.9584 6.15686 16.9584 9.99984C16.9584 13.8428 13.8431 16.9582 10.0001 16.9582C6.1571 16.9582 3.04175 13.8428 3.04175 9.99984ZM10.0001 1.5415C5.32867 1.5415 1.54175 5.32843 1.54175 9.99984C1.54175 14.6712 5.32867 18.4582 10.0001 18.4582C14.6715 18.4582 18.4584 14.6712 18.4584 9.99984C18.4584 5.32843 14.6715 1.5415 10.0001 1.5415ZM9.99998 10.7498C9.58577 10.7498 9.24998 10.4141 9.24998 9.99984V5.4165C9.24998 5.00229 9.58577 4.6665 9.99998 4.6665C10.4142 4.6665 10.75 5.00229 10.75 5.4165V9.24984H13.3334C13.7476 9.24984 14.0834 9.58562 14.0834 9.99984C14.0834 10.4141 13.7476 10.7498 13.3334 10.7498H10.0001H9.99998Z" fill="currentColor" />
+                                                                </svg>
+                                                            </span>
+                                                            @error('pickupNotifyTime') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -933,16 +913,26 @@
                                             <div class="text-xs uppercase tracking-wider text-gray-400 font-bold mb-3">
                                                 Type d’adresse
                                             </div>
-                                            <select wire:model.live="pickupType"
-                                                class="block w-full h-11 bg-white border border-gray-300 rounded-xl px-3 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                                                <option value="domicile">Domicile privé</option>
-                                                <option value="pro_quai">Pro avec quai de chargement</option>
-                                                <option value="pro_sans_quai">Pro sans quai de chargement</option>
-                                                <option value="pro_difficile">Pro accès camion difficile</option>
-                                                <option value="salon">Salon / exposition</option>
-                                                <option value="port">Zone portuaire</option>
-                                                <option value="aeroport">Zone aéroportuaire</option>
-                                            </select>
+                                            <div x-data="{ isOptionSelected: @entangle('pickupType').live ? true : false }" class="relative z-20">
+                                                <select wire:model.live="pickupType"
+                                                    class="block w-full h-11 bg-white border border-gray-300 rounded-xl px-4 appearance-none text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                                                    :class="isOptionSelected ? 'text-gray-900 font-semibold' : 'text-gray-400'"
+                                                    @change="isOptionSelected = true">
+                                                    <option value="" class="text-gray-400">Choisir le type d'adresse</option>
+                                                    <option value="domicile">Domicile privé</option>
+                                                    <option value="pro_quai">Pro avec quai de chargement</option>
+                                                    <option value="pro_sans_quai">Pro sans quai de chargement</option>
+                                                    <option value="pro_difficile">Pro accès camion difficile</option>
+                                                    <option value="salon">Salon / exposition</option>
+                                                    <option value="port">Zone portuaire</option>
+                                                    <option value="aeroport">Zone aéroportuaire</option>
+                                                </select>
+                                                <span class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500">
+                                                    <svg class="stroke-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -975,16 +965,33 @@
                                             Date et Heure de livraison *
                                         </div>
                                         <div class="grid grid-cols-2 gap-3">
-                                            <div>
-                                                <input type="date" wire:model.live="latestDeliveryDate"
-                                                    class="block w-full h-11 bg-white border @error('latestDeliveryDate') border-red-500 @else border-gray-300 @enderror rounded-lg px-4 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                            <div x-data="{ value: @entangle('latestDeliveryDate').live }" 
+                                                 x-init="flatpickr($refs.datepicker, { dateFormat: 'Y-m-d', defaultDate: value, onChange: function(selectedDates, dateStr, instance) { value = dateStr; } })">
+                                                <div class="relative">
+                                                    <input type="text" x-ref="datepicker" x-model="value"
+                                                        placeholder="AAAA-MM-JJ"
+                                                        class="h-11 w-full appearance-none rounded-xl border @error('latestDeliveryDate') border-red-500 @else border-gray-300 @enderror bg-white px-4 pr-11 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm">
+                                                    <span class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                                        <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
                                                 @error('latestDeliveryDate')
                                                     <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                             <div>
-                                                <input type="time" wire:model.live="latestDeliveryTime"
-                                                    class="block w-full h-11 bg-white border @error('latestDeliveryTime') border-red-500 @else border-gray-300 @enderror rounded-lg px-4 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                                <div class="relative">
+                                                    <input type="time" wire:model.live="latestDeliveryTime"
+                                                        onclick="this.showPicker()"
+                                                        class="h-11 w-full appearance-none rounded-xl border @error('latestDeliveryTime') border-red-500 @else border-gray-300 @enderror bg-white px-4 pr-11 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm">
+                                                    <span class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                                        <svg class="fill-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.04175 9.99984C3.04175 6.15686 6.1571 3.0415 10.0001 3.0415C13.8431 3.0415 16.9584 6.15686 16.9584 9.99984C16.9584 13.8428 13.8431 16.9582 10.0001 16.9582C6.1571 16.9582 3.04175 13.8428 3.04175 9.99984ZM10.0001 1.5415C5.32867 1.5415 1.54175 5.32843 1.54175 9.99984C1.54175 14.6712 5.32867 18.4582 10.0001 18.4582C14.6715 18.4582 18.4584 14.6712 18.4584 9.99984C18.4584 5.32843 14.6715 1.5415 10.0001 1.5415ZM9.99998 10.7498C9.58577 10.7498 9.24998 10.4141 9.24998 9.99984V5.4165C9.24998 5.00229 9.58577 4.6665 9.99998 4.6665C10.4142 4.6665 10.75 5.00229 10.75 5.4165V9.24984H13.3334C13.7476 9.24984 14.0834 9.58562 14.0834 9.99984C14.0834 10.4141 13.7476 10.7498 13.3334 10.7498H10.0001H9.99998Z" fill="currentColor" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
                                                 @error('latestDeliveryTime')
                                                     <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                                                 @enderror
@@ -1017,6 +1024,20 @@
                                                             class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                                                         <span class="text-sm font-bold text-blue-600 uppercase tracking-tight">Appeler avant passage</span>
                                                     </label>
+
+                                                    @if($deliveryNotify)
+                                                        <div class="mt-2 animate-fadeIn relative">
+                                                            <input type="time" wire:model.live="deliveryNotifyTime"
+                                                                onclick="this.showPicker()"
+                                                                class="h-11 w-full appearance-none rounded-xl border @error('deliveryNotifyTime') border-red-500 @else border-gray-200 @enderror bg-white px-4 pr-11 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm">
+                                                            <span class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                                                <svg class="fill-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.04175 9.99984C3.04175 6.15686 6.1571 3.0415 10.0001 3.0415C13.8431 3.0415 16.9584 6.15686 16.9584 9.99984C16.9584 13.8428 13.8431 16.9582 10.0001 16.9582C6.1571 16.9582 3.04175 13.8428 3.04175 9.99984ZM10.0001 1.5415C5.32867 1.5415 1.54175 5.32843 1.54175 9.99984C1.54175 14.6712 5.32867 18.4582 10.0001 18.4582C14.6715 18.4582 18.4584 14.6712 18.4584 9.99984C18.4584 5.32843 14.6715 1.5415 10.0001 1.5415ZM9.99998 10.7498C9.58577 10.7498 9.24998 10.4141 9.24998 9.99984V5.4165C9.24998 5.00229 9.58577 4.6665 9.99998 4.6665C10.4142 4.6665 10.75 5.00229 10.75 5.4165V9.24984H13.3334C13.7476 9.24984 14.0834 9.58562 14.0834 9.99984C14.0834 10.4141 13.7476 10.7498 13.3334 10.7498H10.0001H9.99998Z" fill="currentColor" />
+                                                                </svg>
+                                                            </span>
+                                                            @error('deliveryNotifyTime') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -1025,16 +1046,26 @@
                                             <div class="text-xs uppercase tracking-wider text-gray-400 font-bold mb-3">
                                                 Type d’adresse
                                             </div>
-                                            <select wire:model.live="deliveryType"
-                                                class="block w-full h-11 bg-white border border-gray-300 rounded-xl px-3 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                                                <option value="domicile">Domicile privé</option>
-                                                <option value="pro_quai">Pro avec quai de chargement</option>
-                                                <option value="pro_sans_quai">Pro sans quai de chargement</option>
-                                                <option value="pro_difficile">Pro accès camion difficile</option>
-                                                <option value="salon">Salon / exposition</option>
-                                                <option value="port">Zone portuaire</option>
-                                                <option value="aeroport">Zone aéroportuaire</option>
-                                            </select>
+                                            <div x-data="{ isOptionSelected: @entangle('deliveryType').live ? true : false }" class="relative z-20">
+                                                <select wire:model.live="deliveryType"
+                                                    class="block w-full h-11 bg-white border border-gray-300 rounded-xl px-4 appearance-none text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                                                    :class="isOptionSelected ? 'text-gray-900 font-semibold' : 'text-gray-400'"
+                                                    @change="isOptionSelected = true">
+                                                    <option value="" class="text-gray-400">Choisir le type d'adresse</option>
+                                                    <option value="domicile">Domicile privé</option>
+                                                    <option value="pro_quai">Pro avec quai de chargement</option>
+                                                    <option value="pro_sans_quai">Pro sans quai de chargement</option>
+                                                    <option value="pro_difficile">Pro accès camion difficile</option>
+                                                    <option value="salon">Salon / exposition</option>
+                                                    <option value="port">Zone portuaire</option>
+                                                    <option value="aeroport">Zone aéroportuaire</option>
+                                                </select>
+                                                <span class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500">
+                                                    <svg class="stroke-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
