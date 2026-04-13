@@ -305,16 +305,22 @@
             @php
                 $defaultCountries = [
                     [
-                        'name' => 'USA',
+                        'name' => 'Algeria',
                         'flag' => './images/country/country-01.svg',
-                        'customers' => '2,379',
-                        'percentage' => 79,
+                        'customers' => '4,120',
+                        'percentage' => 85,
                     ],
                     [
                         'name' => 'France',
                         'flag' => './images/country/country-02.svg',
-                        'customers' => '589',
-                        'percentage' => 23,
+                        'customers' => '1,240',
+                        'percentage' => 35,
+                    ],
+                    [
+                        'name' => 'UAE',
+                        'flag' => './images/country/country-03.svg',
+                        'customers' => '890',
+                        'percentage' => 22,
                     ],
                 ];
 
@@ -408,43 +414,43 @@
             @php
                 $defaultProducts = [
                     [
-                        'name' => 'Macbook pro 13"',
-                        'variants' => 2,
+                        'name' => 'Full Container Load (40ft)',
+                        'variants' => 'CNTR-9921',
                         'image' => '/images/product/product-01.jpg',
-                        'category' => 'Laptop',
-                        'price' => '$2399.00',
+                        'category' => 'Sea Freight',
+                        'price' => '$4,350.00',
                         'status' => 'Delivered',
                     ],
                     [
-                        'name' => 'Apple Watch Ultra',
-                        'variants' => 1,
+                        'name' => 'Heavy Machinery Parts',
+                        'variants' => 'PLT-4432',
                         'image' => '/images/product/product-02.jpg',
-                        'category' => 'Watch',
-                        'price' => '$879.00',
+                        'category' => 'Air Freight',
+                        'price' => '$1,270.00',
                         'status' => 'Pending',
                     ],
                     [
-                        'name' => 'iPhone 15 Pro Max',
-                        'variants' => 2,
+                        'name' => 'Automotive Parts (Express)',
+                        'variants' => 'EXP-1029',
                         'image' => '/images/product/product-03.jpg',
-                        'category' => 'SmartPhone',
-                        'price' => '$1869.00',
+                        'category' => 'Land Transport',
+                        'price' => '$850.00',
                         'status' => 'Delivered',
                     ],
                     [
-                        'name' => 'iPad Pro 3rd Gen',
-                        'variants' => 2,
+                        'name' => 'Perishable Goods',
+                        'variants' => 'REF-5521',
                         'image' => '/images/product/product-04.jpg',
-                        'category' => 'Electronics',
-                        'price' => '$1699.00',
+                        'category' => 'Cold Chain',
+                        'price' => '$2,100.00',
                         'status' => 'Canceled',
                     ],
                     [
-                        'name' => 'Airpods Pro 2nd Gen',
-                        'variants' => 1,
+                        'name' => 'Industrial Chemicals',
+                        'variants' => 'HAZ-3329',
                         'image' => '/images/product/product-05.jpg',
-                        'category' => 'Accessories',
-                        'price' => '$240.00',
+                        'category' => 'Specialized',
+                        'price' => '$3,400.00',
                         'status' => 'Delivered',
                     ],
                 ];
@@ -505,13 +511,13 @@
                         <thead>
                             <tr class="border-t border-gray-100 dark:border-gray-800">
                                 <th class="py-3 text-left">
-                                    <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Products</p>
+                                    <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Shipment Type</p>
                                 </th>
                                 <th class="py-3 text-left">
                                     <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Category</p>
                                 </th>
                                 <th class="py-3 text-left">
-                                    <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Price</p>
+                                    <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Shipping Cost</p>
                                 </th>
                                 <th class="py-3 text-left">
                                     <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Status</p>
@@ -531,7 +537,7 @@
                                                     {{ $product['name'] }}
                                                 </p>
                                                 <span class="text-gray-500 text-theme-xs dark:text-gray-400">
-                                                    {{ $product['variants'] }} Variants
+                                                    Ref: {{ $product['variants'] }}
                                                 </span>
                                             </div>
                                         </div>

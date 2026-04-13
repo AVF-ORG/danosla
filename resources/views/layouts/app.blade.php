@@ -14,6 +14,7 @@
     <title>{{ $title ?? 'Dashboard' }} | TailAdmin - Laravel Tailwind CSS Admin Dashboard Template</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 
     <!-- Theme Store -->
     <script>
@@ -179,6 +180,7 @@ window.addEventListener('resize', checkMobile);">
         });
     </script>
 
+    @livewireScripts
     @stack('scripts')
 </body>
 

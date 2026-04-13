@@ -1,5 +1,5 @@
 import './bootstrap';
-import Alpine from 'alpinejs';
+// import Alpine from 'alpinejs';
 import ApexCharts from 'apexcharts';
 import Swal from 'sweetalert2';
 
@@ -11,13 +11,13 @@ import { Calendar } from '@fullcalendar/core';
 
 
 
-window.Alpine = Alpine;
+// window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
 window.flatpickr = flatpickr;
 window.FullCalendar = Calendar;
 window.Swal = Swal;
 
-Alpine.start();
+// Alpine.start();
 
 // Initialize components on DOM ready
 document.addEventListener('DOMContentLoaded', () => {

@@ -29,9 +29,10 @@
         x-transition:leave-end="transform opacity-0 scale-95"
         class="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark z-50"
         style="display: none;">
-        <!-- User Info -->
+    <!-- User Info -->
         <div>
-            <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">{{ auth()->user()->name }}</span>
+            <span
+                class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">{{ auth()->user()->name }}</span>
             <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</span>
         </div>
 
@@ -49,7 +50,7 @@
                                 fill="currentColor"
                             />
                         </svg>',
-                        'path' => 'profile',
+                        'route' => route('profile.index'),
                     ],
                     [
                         'text' => 'Account settings',
@@ -61,7 +62,7 @@
                             fill="currentColor"
                         />
                         </svg>',
-                        'path' => 'chat',
+                        'route' => route('profile.index', ['tab' => 'settings']),
                     ],
                     [
                         'text' => 'Support',
@@ -73,14 +74,14 @@
                             fill="currentColor"
                           />
                         </svg>',
-                        'path' => 'profile',
+                        'route' => route('profile.index', ['tab' => 'support']),
                     ],
                 ];
             @endphp
 
             @foreach ($menuItems as $item)
                 <li>
-                    <a href="{{ $item['path'] }}"
+                    <a href="{{ $item['route'] }}"
                         class="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
                         <span class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
                             {!! $item['icon'] !!}

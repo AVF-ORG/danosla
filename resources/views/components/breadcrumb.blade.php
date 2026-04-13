@@ -31,7 +31,7 @@
                 </a>
             </li>
             <li class="text-sm text-gray-800 dark:text-white/90">
-                User Profile
+                {{ $pageTitle ?? 'Dashboard' }}
             </li>
         </ol>
     </nav>

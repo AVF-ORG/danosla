@@ -12,7 +12,10 @@ class RegisterAction extends Controller
 {
     public function __invoke(Request $request)
     {
+        $role = $request->input('role', 'transporter');
+
         $data = $request->validate([
+            'role' => ['required', 'in:transporter,customer-transporter'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => [
@@ -29,7 +32,11 @@ class RegisterAction extends Controller
             'country_id' => ['required', 'exists:countries,id'],
             'phone' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
-            'sector_id' => ['required', 'exists:sectors,id'],
+            'sector_id' => [
+                'required_if:role,customer-transporter',
+                'nullable',
+                'exists:sectors,id'
+            ],
             'website' => ['nullable', 'url', 'max:255'],
             'company_name' => ['required', 'string', 'max:255'],
             'company_number' => ['required', 'string', 'max:255'],
@@ -42,11 +49,14 @@ class RegisterAction extends Controller
             'country_id' => $data['country_id'],
             'phone' => $data['phone'],
             'address' => $data['address'],
-            'sector_id' => $data['sector_id'],
+            'sector_id' => ($data['role'] === 'customer-transporter') ? $data['sector_id'] : null,
             'website' => $data['website'] ?? null,
             'company_name' => $data['company_name'],
             'company_number' => $data['company_number'],
+            'status' => User::STATUS_PENDING,
         ]);
+
+        $user->assignRole($data['role']);
 
         Auth::login($user);
 

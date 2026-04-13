@@ -12,7 +12,7 @@ class UserController extends Controller
     /**
      * Display a listing of users.
      */
-    public function index(Request $request)
+    public function index(Request $request, $role = null)
     {
         $query = User::query();
 
@@ -24,6 +24,7 @@ class UserController extends Controller
             'inactive' => User::where('status', User::STATUS_INACTIVE)->count(),
         ];
 
+        // Search
         if ($search = $request->get('search')) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -31,8 +32,15 @@ class UserController extends Controller
             });
         }
 
+        // Status filter
         if ($status = $request->get('status')) {
             $query->where('status', $status);
+        }
+
+        // Role filter (prefer route parameter, then query string)
+        $roleToFilter = $role ?: $request->get('role');
+        if ($roleToFilter) {
+            $query->role($roleToFilter);
         }
 
         $users = $query->latest()->paginate(15);

@@ -1,18 +1,24 @@
 <?php
 
-use App\Http\Controllers\Dashboard\Region\RegionController;
+use App\Http\Controllers\Auth\Actions\LogoutAction;
 use App\Http\Controllers\Dashboard\Country\CountryController;
+use App\Http\Controllers\Dashboard\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\Permission\PermissionController;
+use App\Http\Controllers\Dashboard\Region\RegionController;
 use App\Http\Controllers\Dashboard\RegionCountry\RegionCountryController;
 use App\Http\Controllers\Dashboard\Role\RoleController;
-use App\Http\Controllers\Dashboard\Permission\PermissionController;
-use App\Http\Controllers\Dashboard\User\UserController;
-use App\Http\Controllers\Auth\Actions\LogoutAction;
-use App\Http\Controllers\Dashboard\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\Sector\SectorController;
+use App\Http\Controllers\Dashboard\ContactSubject\ContactSubjectController;
+use App\Http\Controllers\Dashboard\Contact\ContactController;
+use App\Http\Controllers\Dashboard\User\UserController;
+use App\Http\Controllers\TransportFirmBidController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+Route::get('/empty2', function () {
+    return view('pages.empty2', ['title' => 'Empty page']);
+})->name('empty2');
 
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
@@ -36,13 +42,14 @@ Route::group([
         Route::prefix('profile')
             ->name('profile.')
             ->group(function () {
-                Route::get('/', [ProfileController::class, 'index'])->name('index');
+                Route::get('/{tab?}', [ProfileController::class, 'index'])->name('index');
                 Route::put('/{user}', [ProfileController::class, 'update'])->name('update');
             });
 
-        Route::get('/empty', function () {
-            return view('pages.empty', ['title' => 'Empty page']);
-        })->name('empty');
+        // Route::get('/empty', function () {
+        //     return view('pages.empty', ['title' => 'Empty page']);
+        // })->name('empty');
+
 
         Route::prefix('dashboard')->name('dashboard.')->group(function () {
             // Sectors
@@ -58,6 +65,24 @@ Route::group([
 
             Route::get('sectors/{sector}/json', [SectorController::class, 'json'])
                 ->name('sectors.json');
+
+            // Contact Subjects
+            Route::resource('contact-subjects', ContactSubjectController::class);
+
+            Route::get('contact-subjects/{id}/restore',
+                [ContactSubjectController::class, 'restore']
+            )->name('contact-subjects.restore');
+
+            Route::delete('contact-subjects/{id}/force-delete',
+                [ContactSubjectController::class, 'forceDelete']
+            )->name('contact-subjects.forceDelete');
+
+            Route::get('contact-subjects/{contactSubject}/json', [ContactSubjectController::class, 'json'])
+                ->name('contact-subjects.json');
+
+            // Contacts
+            Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
+            Route::post('contacts/{contact}/reply', [ContactController::class, 'updateReply'])->name('contacts.reply');
 
             // Regions
             Route::resource('regions', RegionController::class);
@@ -88,6 +113,12 @@ Route::group([
             // User Assignment & Management
             Route::get('users/pending', [UserController::class, 'pending'])->name('users.pending');
             Route::patch('users/{user}/status', [UserController::class, 'updateStatus'])->name('users.update-status');
+            
+            // Clean Role Routes
+            Route::get('users/admins', [UserController::class, 'index'])->defaults('role', 'admin')->name('users.admins');
+            Route::get('users/transporters', [UserController::class, 'index'])->defaults('role', 'transporter')->name('users.transporters');
+            Route::get('users/customer-transporters', [UserController::class, 'index'])->defaults('role', 'customer-transporter')->name('users.customers');
+
             Route::resource('users', UserController::class);
         });
 
@@ -108,6 +139,15 @@ Route::group([
     Route::get('/', function () {
         return view('pages.front.landing', ['title' => 'Home Page']);
     })->name('landing');
+
+    // transport firm bid page
+    Route::prefix('transport-firm-bid')->name('transport-firm-bid.')->group(function () {
+        Route::get('/', [TransportFirmBidController::class, 'index'])->name('index');
+        Route::get('/create', [TransportFirmBidController::class, 'create'])->name('create');
+        Route::get('/{shipment}', [TransportFirmBidController::class, 'show'])->name('show');
+        Route::get('/{shipment}/edit', [TransportFirmBidController::class, 'edit'])->name('edit');
+        Route::delete('/{shipment}', [TransportFirmBidController::class, 'destroy'])->name('destroy');
+    });
 
     // calender pages
     Route::get('/calendar', function () {

@@ -5,7 +5,7 @@ export const initChartThree = () => {
     if (chartElement) {
         const chartThreeOptions = {
             series: [{
-                name: "Sales",
+                name: "Shipments",
                 data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
             },
             {

@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function index($tab = 'profile')
     {
-        return view('pages.user.profile.index');
+        return view('pages.user.profile.index', compact('tab'));
     }
 
 
@@ -26,7 +26,7 @@ class ProfileController extends Controller
         $user->update($data);
 
         return redirect()
-            ->route('pages.user.profile.index')
+            ->route('profile.index')
             ->with('success', 'Profile updated.');
     }
 

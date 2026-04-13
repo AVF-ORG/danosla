@@ -32,7 +32,8 @@
         isSubmenuOpen(key) { return this.openSubmenus[key] || false; },
         {{-- isActive(path) { return window.location.pathname === path || '{{ $currentPath }}' === path.replace(/^\//, ''); } --}}
         isActive(path) {
-            return window.location.pathname.endsWith(path)
+            const baseTarget = path.split('?')[0];
+            return window.location.pathname.endsWith(baseTarget);
         }
     }"
     :class="{
@@ -120,14 +121,14 @@
 
                         <!-- Products Firm Bids -->
                         <li>
-                            <a href="{{ route('dashboard.index') }}" class="menu-item group"
+                            <a href="{{ route('transport-firm-bid.index') }}" class="menu-item group"
                                 :class="[
-                                    isActive('/firmbidts') ? 'menu-item-active' : 'menu-item-inactive',
+                                    isActive('/transport-firm-bid') ? 'menu-item-active' : 'menu-item-inactive',
                                     (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar
                                         .isMobileOpen) ? 'xl:justify-center' : 'justify-start'
                                 ]">
                                 <span
-                                    :class="isActive('/firmbidts') ? 'menu-item-icon-active' : 'menu-item-icon-inactive'">
+                                    :class="isActive('/transport-firm-bid') ? 'menu-item-icon-active' : 'menu-item-icon-inactive'">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -142,7 +143,7 @@
                                 <span
                                     x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                                     class="menu-item-text flex items-center gap-2 text-start">
-                                    Products Firm Bids
+                                    Transport Firm Bids
                                 </span>
                             </a>
                         </li>
@@ -176,14 +177,14 @@
 
                     <ul class="flex flex-col gap-1">
                         <li>
-                            <a href="/calendar" class="menu-item group"
+                            <a href="{{ route('dashboard.contacts.index') }}" class="menu-item group"
                                 :class="[
-                                    isActive('/calendar') ? 'menu-item-active' : 'menu-item-inactive',
+                                    isActive('/dashboard/contacts') ? 'menu-item-active' : 'menu-item-inactive',
                                     (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar
                                         .isMobileOpen) ? 'xl:justify-center' : 'justify-start'
                                 ]">
                                 <span
-                                    :class="isActive('/calendar') ? 'menu-item-icon-active' : 'menu-item-icon-inactive'">
+                                    :class="isActive('/dashboard/contacts') ? 'menu-item-icon-active' : 'menu-item-icon-inactive'">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -197,7 +198,7 @@
                                 <span
                                     x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                                     class="menu-item-text flex items-center gap-2 text-start">
-                                    Contact Message
+                                    Contact Messages
                                 </span>
                             </a>
                         </li>
@@ -267,9 +268,9 @@
 
                         <!-- Transporters -->
                         <li>
-                            <a href="/calendar" class="menu-item group"
+                            <a href="{{ route('dashboard.users.transporters') }}" class="menu-item group"
                                 :class="[
-                                    isActive('/calendar') ? 'menu-item-active' : 'menu-item-inactive',
+                                    isActive('{{ route('dashboard.users.transporters', [], false) }}') ? 'menu-item-active' : 'menu-item-inactive',
                                     (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar
                                         .isMobileOpen) ? 'xl:justify-center' : 'justify-start'
                                 ]">
@@ -291,11 +292,11 @@
                             </a>
                         </li>
 
-                        <!-- Customers / Transports -->
+                        <!-- Customers / Transporters -->
                         <li>
-                            <a href="/calendar" class="menu-item group"
+                            <a href="{{ route('dashboard.users.customers') }}" class="menu-item group"
                                 :class="[
-                                    isActive('/calendar') ? 'menu-item-active' : 'menu-item-inactive',
+                                    isActive('{{ route('dashboard.users.customers', [], false) }}') ? 'menu-item-active' : 'menu-item-inactive',
                                     (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar
                                         .isMobileOpen) ? 'xl:justify-center' : 'justify-start'
                                 ]">
@@ -321,16 +322,16 @@
                                 <span
                                     x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                                     class="menu-item-text flex items-center gap-2 text-start">
-                                    Customers / Transports
+                                    Customers / Transporters
                                 </span>
                             </a>
                         </li>
 
                         <!-- Admins -->
                         <li>
-                            <a href="/calendar" class="menu-item group"
+                            <a href="{{ route('dashboard.users.admins') }}" class="menu-item group"
                                 :class="[
-                                    isActive('/calendar') ? 'menu-item-active' : 'menu-item-inactive',
+                                    isActive('{{ route('dashboard.users.admins', [], false) }}') ? 'menu-item-active' : 'menu-item-inactive',
                                     (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar
                                         .isMobileOpen) ? 'xl:justify-center' : 'justify-start'
                                 ]">
@@ -598,12 +599,6 @@
                                 ]">
                                 <span
                                     :class="isActive('/dashboard/sectors') ? 'menu-item-icon-active' : 'menu-item-icon-inactive'">
-                                    {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M9 6a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v1h4a2 2 0 0 1 2 2v3.5a2 2 0 0 1-1.2 1.84l-6.3 2.7a2 2 0 0 1-1.6 0l-6.3-2.7A2 2 0 0 1 3 12.5V9a2 2 0 0 1 2-2h4V6Zm2 1h2V6a1 1 0 0 0-1-1h0a1 1 0 0 0-1 1v1Z"
-                                            fill="currentColor" />
-                                    </svg> --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none">
                                         <path
@@ -620,6 +615,35 @@
                                 </span>
                             </a>
                         </li>
+
+                        <!-- Contact Subjects -->
+                        <li>
+                            <a href="{{ route('dashboard.contact-subjects.index') }}" class="menu-item group"
+                                :class="[
+                                    isActive('/dashboard/contact-subjects') ? 'menu-item-active' : 'menu-item-inactive',
+                                    (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar
+                                        .isMobileOpen) ?
+                                    'xl:justify-center' :
+                                    'justify-start'
+                                ]">
+                                <span
+                                    :class="isActive('/dashboard/contact-subjects') ? 'menu-item-icon-active' : 'menu-item-icon-inactive'">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </span>
+
+                                <span
+                                    x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                                    class="menu-item-text flex items-center gap-2 text-start">
+                                    Contact Subject
+                                </span>
+                            </a>
+                        </li>
+
 
                         {{-- <!-- Regions -->
                         <li>

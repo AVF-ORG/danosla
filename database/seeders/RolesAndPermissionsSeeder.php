@@ -34,8 +34,11 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         // Create roles and assign created permissions
-        $adminRole = Role::firstOrCreate(['name' => 'Super Admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $adminRole->syncPermissions(Permission::all());
+
+        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin']);
+        $superAdminRole->syncPermissions(Permission::all());
 
         $managerRole = Role::firstOrCreate(['name' => 'Manager']);
         $managerRole->syncPermissions([
@@ -45,12 +48,19 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage-countries',
         ]);
 
+        $transporterRole = Role::firstOrCreate(['name' => 'transporter']);
+        $transporterRole->syncPermissions(['view-dashboard']);
+
+        $customerRole = Role::firstOrCreate(['name' => 'customer-transporter']);
+        $customerRole->syncPermissions(['view-dashboard']);
+
         $userRole = Role::firstOrCreate(['name' => 'User']);
         $userRole->syncPermissions(['view-dashboard']);
 
-        // Assign Super Admin role to the first user if exists
-        $user = User::first();
+        // Assign Super Admin and admin role to the first user if exists
+        $user = User::where('email', 'medjadjiabdelkadir22@gmail.com')->first() ?: User::first();
         if ($user) {
+            $user->assignRole($superAdminRole);
             $user->assignRole($adminRole);
         }
     }

@@ -33,18 +33,27 @@ class AppServiceProvider extends ServiceProvider
 
         $allLocales = config('laravellocalization.supportedLocales', []);
 
-        config()->set('laravellocalization.supportedLocales',
-            $languages->mapWithKeys(fn ($l) => [
-                $l->code => array_merge(
-                    $allLocales[$l->code] ?? [
-                        'script' => str_starts_with($l->code, 'ar') ? 'Arab' : 'Latn',
-                        'native' => $l->name,
-                        'regional' => $l->code,
-                    ],
-                    ['name' => $l->name]
-                ),
-            ])->toArray()
-        );
+        if ($languages->isNotEmpty()) {
+            config()->set('laravellocalization.supportedLocales',
+                $languages->mapWithKeys(fn ($l) => [
+                    $l->code => array_merge(
+                        $allLocales[$l->code] ?? [
+                            'script' => str_starts_with($l->code, 'ar') ? 'Arab' : 'Latn',
+                            'native' => $l->name,
+                            'regional' => $l->code,
+                        ],
+                        ['name' => $l->name]
+                    ),
+                ])->toArray()
+            );
+        } else {
+            // Provide a bare minimum config if DB is empty during migrations
+            config()->set('laravellocalization.supportedLocales', [
+                'en' => ['name' => 'English', 'script' => 'Latn', 'native' => 'English', 'regional' => 'en_GB'],
+                'fr' => ['name' => 'French', 'script' => 'Latn', 'native' => 'français', 'regional' => 'fr_FR'],
+                'ar' => ['name' => 'Arabic', 'script' => 'Arab', 'native' => 'العربية', 'regional' => 'ar_AE'],
+            ]);
+        }
     
     }
 }

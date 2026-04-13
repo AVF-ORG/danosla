@@ -37,6 +37,7 @@
                                 password: '',
                                 showPassword: false,
                                 acceptedTerms: false,
+                                role: '{{ old('role', 'transporter') }}',
                         
                                 {{-- Country Codes for Phone --}}
                             countryCodes: {
@@ -85,6 +86,31 @@
                                 @csrf
 
                                 <div class="space-y-6">
+                                    {{-- Role Selection --}}
+                                    <div class="space-y-1.5">
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Register as <span class="text-red-500">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            <select name="role" x-model="role"
+                                                class="h-12 w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                                <option value="transporter">Transporter</option>
+                                                <option value="customer-transporter">Customer-Transporter</option>
+                                            </select>
+                                            <span
+                                                class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-400">
+                                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        @error('role')
+                                            <p class="text-xs text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
                                     {{-- 1. Identity Group --}}
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                                         {{-- Full Name --}}
@@ -207,7 +233,7 @@
                                     {{-- 4. Professional Group --}}
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                                         {{-- Sector --}}
-                                        <div class="space-y-1.5">
+                                        <div class="space-y-1.5" x-show="role === 'customer-transporter'" x-cloak>
                                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                 Industry Sector <span class="text-red-500">*</span>
                                             </label>
