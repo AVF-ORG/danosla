@@ -1,6 +1,6 @@
 # DANOSLA
 
-**DANOSLA** is a transport management platform for **customers**, **transporters**, **firm bids**, and **operations analytics**.
+**DANOSLA** is a transport management platform for **shippers**, **carriers**, **firm bids**, and **operations analytics**.
 
 Built with **Laravel 12**, **Tailwind CSS v4**, **Alpine.js**, and a clean, modular architecture. It is designed for building fast, scalable transport management solutions.
 

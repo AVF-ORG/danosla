@@ -48,11 +48,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage-countries',
         ]);
 
-        $transporterRole = Role::firstOrCreate(['name' => 'transporter']);
-        $transporterRole->syncPermissions(['view-dashboard']);
+        $carrierRole = Role::firstOrCreate(['name' => 'carrier']);
+        $carrierRole->syncPermissions(['view-dashboard']);
 
-        $customerRole = Role::firstOrCreate(['name' => 'customer-transporter']);
-        $customerRole->syncPermissions(['view-dashboard']);
+        $shipperRole = Role::firstOrCreate(['name' => 'shipper']);
+        $shipperRole->syncPermissions(['view-dashboard']);
 
         $userRole = Role::firstOrCreate(['name' => 'User']);
         $userRole->syncPermissions(['view-dashboard']);

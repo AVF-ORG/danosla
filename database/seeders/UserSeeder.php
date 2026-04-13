@@ -20,16 +20,16 @@ class UserSeeder extends Seeder
                 'role' => 'Super Admin',
             ],
             [
-                'name' => 'Transporter Test 1',
-                'email' => 'transporter_test_1@example.com',
+                'name' => 'Carrier Test 1',
+                'email' => 'carrier_test_1@example.com',
                 'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'role' => 'transporter',
+                'role' => 'carrier',
             ],
             [
-                'name' => 'Customer Transporter Test 1',
-                'email' => 'customer_transporter_test_1@example.com',
+                'name' => 'Shipper Test 1',
+                'email' => 'shipper_test_1@example.com',
                 'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'role' => 'customer-transporter',
+                'role' => 'shipper',
             ],
         ];
 

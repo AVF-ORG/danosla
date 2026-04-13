@@ -37,7 +37,7 @@
                                 password: '',
                                 showPassword: false,
                                 acceptedTerms: false,
-                                role: '{{ old('role', 'transporter') }}',
+                                role: '{{ old('role', 'carrier') }}',
                         
                                 {{-- Country Codes for Phone --}}
                             countryCodes: {
@@ -94,8 +94,8 @@
                                         <div class="relative">
                                             <select name="role" x-model="role"
                                                 class="h-12 w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
-                                                <option value="transporter">Transporter</option>
-                                                <option value="customer-transporter">Customer-Transporter</option>
+                                                <option value="carrier">Carrier</option>
+                                                <option value="shipper">Shipper</option>
                                             </select>
                                             <span
                                                 class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-400">
@@ -233,7 +233,7 @@
                                     {{-- 4. Professional Group --}}
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                                         {{-- Sector --}}
-                                        <div class="space-y-1.5" x-show="role === 'customer-transporter'" x-cloak>
+                                        <div class="space-y-1.5" x-show="role === 'shipper'" x-cloak>
                                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                 Industry Sector <span class="text-red-500">*</span>
                                             </label>

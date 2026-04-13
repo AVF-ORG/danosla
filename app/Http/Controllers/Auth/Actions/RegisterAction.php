@@ -12,10 +12,10 @@ class RegisterAction extends Controller
 {
     public function __invoke(Request $request)
     {
-        $role = $request->input('role', 'transporter');
+        $role = $request->input('role', 'carrier');
 
         $data = $request->validate([
-            'role' => ['required', 'in:transporter,customer-transporter'],
+            'role' => ['required', 'in:carrier,shipper'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => [
@@ -33,7 +33,7 @@ class RegisterAction extends Controller
             'phone' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
             'sector_id' => [
-                'required_if:role,customer-transporter',
+                'required_if:role,shipper',
                 'nullable',
                 'exists:sectors,id'
             ],
@@ -49,7 +49,7 @@ class RegisterAction extends Controller
             'country_id' => $data['country_id'],
             'phone' => $data['phone'],
             'address' => $data['address'],
-            'sector_id' => ($data['role'] === 'customer-transporter') ? $data['sector_id'] : null,
+            'sector_id' => ($data['role'] === 'shipper') ? $data['sector_id'] : null,
             'website' => $data['website'] ?? null,
             'company_name' => $data['company_name'],
             'company_number' => $data['company_number'],

@@ -1,7 +1,7 @@
 {
     "name": "danosla/danosla",
     "type": "project",
-    "description": "DANOSLA is a transport management platform for customers, transporters, firm bids, and operations analytics.",
+    "description": "DANOSLA is a transport management platform for shippers, carriers, firm bids, and operations analytics.",
     "keywords": [
         "laravel",
         "transport",
@@ -9,7 +9,8 @@
         "fleet",
         "shipping",
         "bidding",
-        "customers",
+        "shippers",
+        "carriers",
         "dashboard",
         "admin"
     ],

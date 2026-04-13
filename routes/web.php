@@ -116,8 +116,8 @@ Route::group([
             
             // Clean Role Routes
             Route::get('users/admins', [UserController::class, 'index'])->defaults('role', 'admin')->name('users.admins');
-            Route::get('users/transporters', [UserController::class, 'index'])->defaults('role', 'transporter')->name('users.transporters');
-            Route::get('users/customer-transporters', [UserController::class, 'index'])->defaults('role', 'customer-transporter')->name('users.customers');
+            Route::get('users/carriers', [UserController::class, 'index'])->defaults('role', 'carrier')->name('users.carriers');
+            Route::get('users/shippers', [UserController::class, 'index'])->defaults('role', 'shipper')->name('users.shippers');
 
             Route::resource('users', UserController::class);
         });

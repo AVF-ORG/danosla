@@ -266,11 +266,11 @@
                             </a>
                         </li>
 
-                        <!-- Transporters -->
+                        <!-- Carriers -->
                         <li>
-                            <a href="{{ route('dashboard.users.transporters') }}" class="menu-item group"
+                            <a href="{{ route('dashboard.users.carriers') }}" class="menu-item group"
                                 :class="[
-                                    isActive('{{ route('dashboard.users.transporters', [], false) }}') ? 'menu-item-active' : 'menu-item-inactive',
+                                    isActive('{{ route('dashboard.users.carriers', [], false) }}') ? 'menu-item-active' : 'menu-item-inactive',
                                     (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar
                                         .isMobileOpen) ? 'xl:justify-center' : 'justify-start'
                                 ]">
@@ -287,16 +287,16 @@
                                 <span
                                     x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                                     class="menu-item-text flex items-center gap-2 text-start">
-                                    Transporters
+                                    Carriers
                                 </span>
                             </a>
                         </li>
 
-                        <!-- Customers / Transporters -->
+                        <!-- Shippers -->
                         <li>
-                            <a href="{{ route('dashboard.users.customers') }}" class="menu-item group"
+                            <a href="{{ route('dashboard.users.shippers') }}" class="menu-item group"
                                 :class="[
-                                    isActive('{{ route('dashboard.users.customers', [], false) }}') ? 'menu-item-active' : 'menu-item-inactive',
+                                    isActive('{{ route('dashboard.users.shippers', [], false) }}') ? 'menu-item-active' : 'menu-item-inactive',
                                     (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar
                                         .isMobileOpen) ? 'xl:justify-center' : 'justify-start'
                                 ]">
@@ -322,7 +322,7 @@
                                 <span
                                     x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                                     class="menu-item-text flex items-center gap-2 text-start">
-                                    Customers / Transporters
+                                    Shippers
                                 </span>
                             </a>
                         </li>
