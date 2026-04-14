@@ -2,6 +2,12 @@
 
 @section('content')
     @include('components.breadcrumb', ['pageTitle' => 'User Profile'])
+    
+    @if(session('success'))
+        <div class="mb-6 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-700 dark:border-green-800/30 dark:bg-green-500/10 dark:text-green-400">
+            {{ session('success') }}
+        </div>
+    @endif
 
     <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div class="flex items-center justify-between">
@@ -29,14 +35,14 @@
 
                         <div class="text-center sm:text-left">
                             <h4 class="text-xl font-semibold text-gray-900 dark:text-white/90">
-                                Musharof Chowdhury
+                                {{ $user->name }}
                             </h4>
                             <div
                                 class="mt-1 flex flex-col items-center gap-1 text-sm text-gray-500 dark:text-gray-400 sm:flex-row sm:gap-2">
-                                <span>Team Manager</span>
+                                <span>{{ $user->getRoleNames()->first() ?? 'User' }}</span>
                                 <span
                                     class="hidden h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-700 sm:inline-block"></span>
-                                <span>Arizona, United States</span>
+                                <span>{{ $user->country->name ?? 'Update your location' }}</span>
                             </div>
                         </div>
                     </div>
@@ -124,25 +130,21 @@
                 </div>
 
                 <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-7 2xl:gap-x-24">
-                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03]">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">First Name</p>
-                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">Musharof</p>
+                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03] sm:col-span-2">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Full Name</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">{{ $user->name }}</p>
                     </div>
                     <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03]">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Last Name</p>
-                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">Chowdhury</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Email Address</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">{{ $user->email }}</p>
                     </div>
                     <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03]">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Email</p>
-                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">randomuser@pimjo.com</p>
-                    </div>
-                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03]">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Phone</p>
-                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">+09 363 398 46</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Phone Number</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">{{ $user->phone ?? 'Not provided' }}</p>
                     </div>
                     <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03] sm:col-span-2">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Bio</p>
-                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">Team Manager</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Website</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">{{ $user->website ?? 'Not provided' }}</p>
                     </div>
                 </div>
             </div>
@@ -171,19 +173,19 @@
                 <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-7 2xl:gap-x-24">
                     <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03]">
                         <p class="text-xs text-gray-500 dark:text-gray-400">Country</p>
-                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">United States</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">{{ $user->country->name ?? 'Not selected' }}</p>
                     </div>
                     <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03]">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">City/State</p>
-                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">Phoenix, United States</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Address / City</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">{{ $user->address ?? 'Not provided' }}</p>
                     </div>
                     <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03]">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Postal Code</p>
-                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">ERT 2489</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Company Name</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">{{ $user->company_name ?? 'Not provided' }}</p>
                     </div>
                     <div class="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.03]">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">TAX ID</p>
-                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">AS4568384</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Company ID / Tax ID</p>
+                        <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white/90">{{ $user->company_number ?? 'Not provided' }}</p>
                     </div>
                 </div>
             </div>
@@ -209,91 +211,50 @@
                     </button>
                 </div>
 
-                <form class="flex flex-col">
+                <form action="{{ route('profile.update', $user) }}" method="POST" class="flex flex-col">
+                    @csrf
+                    @method('PUT')
+                    
                     <div class="max-h-[60vh] overflow-y-auto p-5 custom-scrollbar lg:p-6">
-                        <h5 class="mb-4 text-base font-semibold text-gray-900 dark:text-white/90">Social Links</h5>
+                        <h5 class="mb-4 text-base font-semibold text-gray-900 dark:text-white/90">Personal Information</h5>
 
                         <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                            {{-- inputs unchanged, keep your classes --}}
-                            <div>
-                                <label
-                                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Facebook</label>
-                                <input type="text" value="https://www.facebook.com/PimjoHQ"
+                            <div class="lg:col-span-2">
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Full Name</label>
+                                <input type="text" name="name" value="{{ old('name', $user->name) }}"
                                     class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                @error('name') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
-                                <label
-                                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">X.com</label>
-                                <input type="text" value="https://x.com/PimjoHQ"
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Email Address</label>
+                                <input type="email" name="email" value="{{ old('email', $user->email) }}"
                                     class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                @error('email') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
-                                <label
-                                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Linkedin</label>
-                                <input type="text" value="https://www.linkedin.com/company/pimjo/posts/?feedView=all"
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Phone</label>
+                                <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
                                     class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                @error('phone') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                             </div>
 
-                            <div>
-                                <label
-                                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Instagram</label>
-                                <input type="text" value="https://instagram.com/emirhan55"
+                            <div class="lg:col-span-2">
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Website</label>
+                                <input type="url" name="website" value="{{ old('website', $user->website) }}"
                                     class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-                            </div>
-                        </div>
-
-                        <div class="mt-7">
-                            <h5 class="mb-4 text-base font-semibold text-gray-900 dark:text-white/90">Personal Information
-                            </h5>
-
-                            <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                                <div>
-                                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">First
-                                        Name</label>
-                                    <input type="text" value="Musharof"
-                                        class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-                                </div>
-
-                                <div>
-                                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Last
-                                        Name</label>
-                                    <input type="text" value="Chowdhury"
-                                        class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-                                </div>
-
-                                <div>
-                                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Email
-                                        Address</label>
-                                    <input type="text" value="randomuser@pimjo.com"
-                                        class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-                                </div>
-
-                                <div>
-                                    <label
-                                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Phone</label>
-                                    <input type="text" value="+09 363 398 46"
-                                        class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-                                </div>
-
-                                <div class="lg:col-span-2">
-                                    <label
-                                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Bio</label>
-                                    <input type="text" value="Team Manager"
-                                        class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-                                </div>
+                                @error('website') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>
 
-                    <div
-                        class="flex items-center justify-end gap-3 border-t border-gray-200 p-5 dark:border-gray-800 lg:p-6">
+                    <div class="flex items-center justify-end gap-3 border-t border-gray-200 p-5 dark:border-gray-800 lg:p-6">
                         <button @click="open = false" type="button"
                             class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]">
                             Cancel
                         </button>
-                        <button @click="saveProfile" type="button"
+                        <button type="submit"
                             class="rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600">
                             Save Changes
                         </button>
@@ -320,46 +281,55 @@
                     </button>
                 </div>
 
-                <form class="flex flex-col">
+                <form action="{{ route('profile.update', $user) }}" method="POST" class="flex flex-col">
+                    @csrf
+                    @method('PUT')
+                    
                     <div class="max-h-[60vh] overflow-y-auto p-5 custom-scrollbar lg:p-6">
                         <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                             <div>
-                                <label
-                                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Country</label>
-                                <input type="text" value="United States"
-                                    class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Country</label>
+                                <select name="country_id"
+                                    class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:focus:border-brand-800">
+                                    <option value="">Select Country</option>
+                                    @foreach($countries as $country)
+                                        <option value="{{ $country->id }}" {{ old('country_id', $user->country_id) == $country->id ? 'selected' : '' }}>
+                                            {{ $country->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('country_id') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
-                                <label
-                                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">City/State</label>
-                                <input type="text" value="Phoenix, Arizona, United States"
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Address / City</label>
+                                <input type="text" name="address" value="{{ old('address', $user->address) }}"
                                     class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                @error('address') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Postal
-                                    Code</label>
-                                <input type="text" value="ERT 2489"
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Company Name</label>
+                                <input type="text" name="company_name" value="{{ old('company_name', $user->company_name) }}"
                                     class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                @error('company_name') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">TAX
-                                    ID</label>
-                                <input type="text" value="AS4568384"
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">TAX ID / Company ID</label>
+                                <input type="text" name="company_number" value="{{ old('company_number', $user->company_number) }}"
                                     class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                @error('company_number') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>
 
-                    <div
-                        class="flex items-center justify-end gap-3 border-t border-gray-200 p-5 dark:border-gray-800 lg:p-6">
+                    <div class="flex items-center justify-end gap-3 border-t border-gray-200 p-5 dark:border-gray-800 lg:p-6">
                         <button @click="open = false" type="button"
                             class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]">
                             Cancel
                         </button>
-                        <button @click="saveProfile" type="button"
+                        <button type="submit"
                             class="rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600">
                             Save Changes
                         </button>

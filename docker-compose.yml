@@ -28,7 +28,9 @@ services:
       - danosla_network
 
   node:
-    image: node:20-alpine
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
     container_name: laravel_node
     working_dir: /var/www
     env_file:
@@ -36,9 +38,8 @@ services:
     volumes:
       - ./:/var/www
       - node_modules:/var/www/node_modules
-    ports:
-      - "5173:5173"
-    command: npm run dev
+    ports:      - "5173:5173"
+
     networks:
       - danosla_network
 
