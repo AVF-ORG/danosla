@@ -297,6 +297,7 @@
                                         </div>
                                     @endif
                                     
+                                    @if($lot->volume)
                                         <div class="text-xs mt-1 bg-gray-100 dark:bg-gray-700 inline-block px-2 py-0.5 rounded text-gray-600 dark:text-gray-300">
                                             Vol: {{ number_format($lot->volume, 3) }} m³
                                         </div>
