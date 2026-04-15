@@ -13,11 +13,11 @@
             <table class="w-full min-w-[900px] text-left text-sm">
                 <thead class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     <tr class="border-b border-gray-100 dark:border-gray-800">
-                        <th class="px-4 py-3 text-center">Group</th>
-                        <th class="px-4 py-3 text-center">Key</th>
-                        <th class="px-4 py-3 text-center">Language</th>
-                        <th class="px-4 py-3 text-center">Translation</th>
-                        <th class="px-4 py-3 text-center">Action</th>
+                        <th class="px-4 py-3">Group</th>
+                        <th class="px-4 py-3">Key</th>
+                        <th class="px-4 py-3">Language</th>
+                        <th class="px-4 py-3">Translation</th>
+                        <th class="px-4 py-3 text-right">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
