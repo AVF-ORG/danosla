@@ -27,11 +27,11 @@
             <table class="w-full min-w-[720px] text-left text-sm">
                 <thead class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     <tr class="border-b border-gray-100 dark:border-gray-800">
-                        <th class="px-4 py-3 text-center">Code</th>
-                        <th class="px-4 py-3 text-center">Name</th>
-                        <th class="px-4 py-3 text-center">Native Name</th>
+                        <th class="px-4 py-3">Code</th>
+                        <th class="px-4 py-3">Name</th>
+                        <th class="px-4 py-3">Native Name</th>
                         <th class="px-4 py-3 text-center">Active</th>
-                        <th class="px-4 py-3 text-center">Actions</th>
+                        <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
 

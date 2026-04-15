@@ -24,9 +24,9 @@
             <table class="w-full min-w-[900px] text-left text-sm">
                 <thead class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     <tr class="border-b border-gray-100 dark:border-gray-800">
-                        <th class="px-4 py-3 text-center">Group</th>
-                        <th class="px-4 py-3 text-center">Key</th>
-                        <th class="px-4 py-3 text-center">Actions</th>
+                        <th class="px-4 py-3">Group</th>
+                        <th class="px-4 py-3">Key</th>
+                        <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
 

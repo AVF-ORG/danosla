@@ -50,22 +50,22 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead>
                             <tr class="bg-gray-50/50 dark:bg-gray-800/50">
-                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Récapitulatif
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Trajet
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Volume / Poids
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Date limite
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Statut
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-right text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Action
                                 </th>
                             </tr>

@@ -8,10 +8,10 @@
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                        User Management
+                        {{ $roleToFilter ? ucfirst(Str::plural($roleToFilter)) . ' Management' : 'User Management' }}
                     </h1>
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        Manage system users, their roles, and account statuses.
+                        {{ $roleToFilter ? "View and manage all registered " . Str::plural($roleToFilter) . "." : "Manage system users, their roles, and account statuses." }}
                     </p>
                 </div>
 
@@ -67,12 +67,24 @@
                 <table class="w-full">
                     <thead class="border-b border-gray-200 bg-gray-50/50 dark:border-gray-800 dark:bg-white/[0.02]">
                         <tr>
-                            <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                User Details
-                            </th>
-                            <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                Roles
-                            </th>
+                            @if($roleToFilter)
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                    Name
+                                </th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                    Email
+                                </th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                    Phone
+                                </th>
+                            @else
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                    User Details
+                                </th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                    Roles
+                                </th>
+                            @endif
                             <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                 Status
                             </th>
@@ -84,32 +96,51 @@
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
                         @forelse ($users as $user)
                             <tr class="group hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 font-bold text-sm">
-                                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                @if($roleToFilter)
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="flex items-center justify-center gap-3">
+                                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 font-bold text-xs uppercase">
+                                                {{ collect(explode(' ', $user->name))->map(fn($w) => substr($w, 0, 1))->take(2)->implode('') }}
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-900 dark:text-white">
                                                 {{ $user->name }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-400">
+                                        {{ $user->email }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-400">
+                                        {{ $user->phone ?? '---' }}
+                                    </td>
+                                @else
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="flex items-center justify-center gap-3">
+                                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 font-bold text-xs uppercase">
+                                                {{ collect(explode(' ', $user->name))->map(fn($w) => substr($w, 0, 1))->take(2)->implode('') }}
                                             </div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $user->email }}
+                                            <div class="text-left">
+                                                <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                                    {{ $user->name }}
+                                                </div>
+                                                <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                    {{ $user->email }}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex flex-wrap gap-1.5">
-                                        @forelse ($user->roles as $role)
-                                            <span class="inline-flex items-center rounded-md bg-brand-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:bg-brand-500/10 dark:text-brand-400">
-                                                {{ $role->name }}
-                                            </span>
-                                        @empty
-                                            <span class="text-[10px] font-medium text-gray-400 italic">No roles</span>
-                                        @endforelse
-                                    </div>
-                                </td>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <div class="flex flex-wrap justify-center gap-1.5">
+                                            @forelse ($user->roles as $role)
+                                                <span class="inline-flex items-center rounded-md bg-brand-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:bg-brand-500/10 dark:text-brand-400">
+                                                    {{ $role->name }}
+                                                </span>
+                                            @empty
+                                                <span class="text-[10px] font-medium text-gray-400 italic">No roles</span>
+                                            @endforelse
+                                        </div>
+                                    </td>
+                                @endif
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @php
                                         $statusConfig = [
@@ -123,7 +154,7 @@
                                         {{ $user->status }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
                                     <div x-data="{ dropdownOpen: false, openDeleteModal: false }" class="relative inline-block text-left" @click.away="dropdownOpen = false">
                                         <!-- Dropdown Trigger -->
                                         <button @click.stop.prevent="dropdownOpen = !dropdownOpen" type="button" class="inline-flex p-2 items-center justify-center text-gray-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-gray-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500" title="Actions">
@@ -197,7 +228,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-12 text-center border-none">
+                                <td colspan="{{ $roleToFilter ? 5 : 4 }}" class="px-6 py-12 text-center border-none">
                                     <div class="flex flex-col items-center justify-center">
                                         <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No users found</h3>
                                         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Try adjusting your filters.</p>

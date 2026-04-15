@@ -45,7 +45,7 @@ class UserController extends Controller
 
         $users = $query->latest()->paginate(15);
 
-        return view('pages.dashboard.users.index', compact('users', 'stats'));
+        return view('pages.dashboard.users.index', compact('users', 'stats', 'roleToFilter'));
     }
 
     /**
@@ -68,7 +68,7 @@ class UserController extends Controller
             });
         }
 
-        $users = $query->latest()->paginate(15);
+        $users = $query->with('roles')->latest()->paginate(15);
 
         return view('pages.dashboard.users.pending', compact('users', 'stats'));
     }

@@ -70,6 +70,7 @@ services:
 
 networks:
   danosla_network:
+    name: danosla_network
 
 volumes:
   data_base_danosla:

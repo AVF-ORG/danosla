@@ -111,12 +111,12 @@
                     <table class="min-w-full">
                         <thead>
                             <tr class="border-y border-gray-100 dark:border-white/[0.05]">
-                                <th class="px-6 py-4 text-center text-theme-xs font-semibold uppercase tracking-wider text-gray-500">ID</th>
-                                <th class="px-6 py-4 text-center text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Subject Name</th>
+                                <th class="px-6 py-4 text-left text-theme-xs font-semibold uppercase tracking-wider text-gray-500">ID</th>
+                                <th class="px-6 py-4 text-left text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Subject Name</th>
                                 <th class="px-6 py-4 text-center text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Status</th>
-                                <th class="px-6 py-4 text-center text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Translations</th>
-                                <th class="px-6 py-4 text-center text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Created</th>
-                                <th class="px-6 py-4 text-center text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Actions</th>
+                                <th class="px-6 py-4 text-left text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Translations</th>
+                                <th class="px-6 py-4 text-left text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Created</th>
+                                <th class="px-6 py-4 text-right text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Actions</th>
                             </tr>
                         </thead>
 
