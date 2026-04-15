@@ -1,21 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div x-data="{
-        openDelete: false,
-        actionUrl: '',
-        deleteName: '',
-        confirmDelete(url, regionName, countryName) {
-            this.actionUrl = url
-            this.deleteName = `${countryName} from ${regionName}`
-            this.openDelete = true
-        },
-        closeDelete() {
-            this.openDelete = false
-            this.actionUrl = ''
-            this.deleteName = ''
-        }
-    }">
+    <div>
 
 
         {{-- Header --}}
@@ -132,16 +118,16 @@
                             <table class="w-full">
                                 <thead class="border-b border-gray-200 bg-gray-50/30 dark:border-gray-800 dark:bg-white/[0.01]">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                        <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                             Country
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                        <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                             ISO2
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                        <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                             Int. Code
                                         </th>
-                                        <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                        <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                             Actions
                                         </th>
                                     </tr>
@@ -159,12 +145,65 @@
                                                 {{ $country->international_code }}
                                             </td>
                                             <td class="px-6 py-3 text-right">
-                                                <button @click="confirmDelete('{{ route('dashboard.region-countries.destroy', [$region->id, $country->id]) }}', '{{ $region->getTranslation('name', app()->getLocale()) }}', '{{ $country->getTranslation('name', app()->getLocale()) }}')"
-                                                    class="p-2 text-gray-400 hover:text-red-500 transition-colors" title="Remove">
-                                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                </button>
+                                                <div x-data="{ dropdownOpen: false, openDeleteModal: false }" class="relative inline-block text-left" @click.away="dropdownOpen = false">
+                                                    <!-- Dropdown Trigger -->
+                                                    <button @click.stop.prevent="dropdownOpen = !dropdownOpen" type="button" class="inline-flex p-1.5 items-center justify-center text-gray-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-gray-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500" title="Actions">
+                                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                                        </svg>
+                                                    </button>
+
+                                                    <!-- Dropdown Menu -->
+                                                    <div x-show="dropdownOpen" 
+                                                         x-transition:enter="transition ease-out duration-100"
+                                                         x-transition:enter-start="transform opacity-0 scale-95"
+                                                         x-transition:enter-end="transform opacity-100 scale-100"
+                                                         x-transition:leave="transition ease-in duration-75"
+                                                         x-transition:leave-start="transform opacity-100 scale-100"
+                                                         x-transition:leave-end="transform opacity-0 scale-95"
+                                                         class="absolute right-0 z-50 mt-1 w-40 rounded-xl bg-white dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700 focus:outline-none"
+                                                         style="display: none;">
+                                                        <div class="py-1">
+                                                            <button @click.stop.prevent="dropdownOpen = false; openDeleteModal = true" type="button" class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                                                <svg class="w-4 h-4 mr-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                                Retirer
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Delete Modal for List Item -->
+                                                    <template x-teleport="body">
+                                                        <div @click.stop>
+                                                            <x-ui.modal model="openDeleteModal" title="Retirer l'affectation" maxWidth="max-w-md">
+                                                                <div class="sm:flex sm:items-start whitespace-normal">
+                                                                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
+                                                                        <svg class="h-6 w-6 text-red-600 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                                        </svg>
+                                                                    </div>
+                                                                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                                        <p class="text-sm text-gray-500 dark:text-gray-400 break-words">
+                                                                            Êtes-vous sûr de vouloir retirer le pays <strong>{{ $country->getTranslation('name', app()->getLocale()) }}</strong> de la région <strong>{{ $region->getTranslation('name', app()->getLocale()) }}</strong> ?
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <x-slot:footer>
+                                                                    <button @click.stop.prevent="openDeleteModal = false" type="button" class="w-full inline-flex justify-center rounded-xl border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:w-auto sm:text-sm transition-colors">
+                                                                        Annuler
+                                                                    </button>
+                                                                    <form action="{{ route('dashboard.region-countries.destroy', [$region->id, $country->id]) }}" method="POST" class="inline">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm transition-colors" @click.stop>
+                                                                            Retirer définitivement
+                                                                        </button>
+                                                                    </form>
+                                                                </x-slot:footer>
+                                                            </x-ui.modal>
+                                                        </div>
+                                                    </template>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -195,30 +234,7 @@
             </div>
         @endif
 
-        {{-- Delete Modal --}}
-        <x-ui.modal model="openDelete" title="Remove Assignment" maxWidth="max-w-2xl">
-            <div class="py-2">
-                <p class="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Are you sure you want to remove <span class="font-bold text-gray-800 dark:text-white">"<span x-text="deleteName"></span>"</span>?
-                    This action is permanent and cannot be undone.
-                </p>
-            </div>
 
-            <x-slot:footer>
-                <button type="button" @click="closeDelete()"
-                    class="rounded-lg border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-50 transition-all focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700">
-                    Close
-                </button>
-                <form :action="actionUrl" method="POST" class="inline-block">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        class="rounded-lg bg-red-600 px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-red-700 transition-all active:scale-95 focus:outline-none">
-                        Remove
-                    </button>
-                </form>
-            </x-slot:footer>
-        </x-ui.modal>
 
     </div>
 @endsection

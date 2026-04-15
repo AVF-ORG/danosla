@@ -80,8 +80,8 @@
                     <table class="min-w-full divide-y divide-gray-100 dark:divide-white/[0.05]">
                         <thead class="bg-gray-50 dark:bg-gray-900/50">
                             <tr>
-                                <th class="px-6 py-4 text-left text-theme-xs font-bold text-gray-500 uppercase tracking-wider">Language</th>
-                                <th class="px-6 py-4 text-left text-theme-xs font-bold text-gray-500 uppercase tracking-wider">Value</th>
+                                <th class="px-6 py-4 text-center text-theme-xs font-bold text-gray-500 uppercase tracking-wider">Language</th>
+                                <th class="px-6 py-4 text-center text-theme-xs font-bold text-gray-500 uppercase tracking-wider">Value</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-white/[0.05]">
