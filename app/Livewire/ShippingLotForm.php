@@ -28,6 +28,7 @@ class ShippingLotForm extends Component
             $this->latestDeliveryDate = $shipmentRecord->latest_delivery_date ? \Carbon\Carbon::parse($shipmentRecord->latest_delivery_date)->format('Y-m-d') : null;
             $this->validityDate = $shipmentRecord->validity_date ? \Carbon\Carbon::parse($shipmentRecord->validity_date)->format('Y-m-d') : null;
             $this->validityTime = $shipmentRecord->validity_date ? \Carbon\Carbon::parse($shipmentRecord->validity_date)->format('H:i') : null;
+            $this->deliveryPrice = $shipmentRecord->delivery_price;
             $this->totalValue = $shipmentRecord->total_value;
 
             $reqs = $shipmentRecord->requirements ?? [];
@@ -153,6 +154,7 @@ class ShippingLotForm extends Component
 
     public $validityDate = '';
     public $validityTime = '';
+    public $deliveryPrice = '';
 
     // Step: Terms and Conditions / Special requirements
 
@@ -241,6 +243,7 @@ class ShippingLotForm extends Component
 
             'validityDate' => 'required|date',
             'validityTime' => 'required',
+            'deliveryPrice' => 'nullable|numeric|min:0',
 
             'pickupNotify' => 'boolean',
             'pickupNotifyTime' => 'nullable',
@@ -528,6 +531,7 @@ class ShippingLotForm extends Component
                 'latest_delivery_time' => $this->latestDeliveryTime,
                 'delivery_notify_time' => $this->deliveryNotifyTime,
                 'validity_date' => ($this->validityDate && $this->validityTime) ? \Carbon\Carbon::parse($this->validityDate . ' ' . $this->validityTime) : null,
+                'delivery_price' => $this->deliveryPrice ?: null,
                 'requirements' => [
                     'isDangerous' => $this->isDangerous,
                     'dangerousGoodsDescription' => $this->dangerousGoodsDescription,

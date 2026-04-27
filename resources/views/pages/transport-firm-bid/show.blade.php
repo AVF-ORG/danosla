@@ -180,6 +180,12 @@
                     <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Volume Total</span>
                     <span class="block text-lg font-bold text-gray-900 dark:text-white">{{ number_format($shipment->total_volume, 3) }} m³</span>
                 </div>
+                @if($shipment->delivery_price)
+                <div class="p-4 text-center">
+                    <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Prix Livraison</span>
+                    <span class="block text-lg font-bold text-brand-600">{{ number_format($shipment->delivery_price, 2) }} €</span>
+                </div>
+                @endif
             </div>
         </div>
 

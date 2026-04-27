@@ -688,8 +688,8 @@
                         <p class="text-sm text-gray-500 mt-1">Renseignez les deux adresses dans la même section.</p>
                     </div>
 
-                    <!-- Validity Date & Time -->
-                    <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-indigo-50/30 rounded-xl border border-indigo-100/50">
+                    <!-- Validity Date & Time and Delivery Price -->
+                    <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-indigo-50/30 rounded-xl border border-indigo-100/50">
                         <div>
                             <label class="block text-sm font-bold text-gray-800 mb-2">Validité de la demande (Date) *</label>
                             <div x-data="{ value: @entangle('validityDate').live }" 
@@ -722,6 +722,18 @@
                                 </span>
                             </div>
                             @error('validityTime')
+                                <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Prix de livraison (€)</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500 font-bold">€</div>
+                                <input type="number" step="0.01" wire:model.live="deliveryPrice"
+                                    placeholder="0.00"
+                                    class="h-11 w-full pl-8 rounded-xl border @error('deliveryPrice') border-red-500 @else border-gray-300 @enderror bg-white px-4 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm">
+                            </div>
+                            @error('deliveryPrice')
                                 <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                             @enderror
                         </div>

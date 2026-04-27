@@ -29,6 +29,7 @@ class Shipment extends Model
         'latest_delivery_time',
         'delivery_notify_time',
         'validity_date',
+        'delivery_price',
         'requirements',
         'status',
     ];
@@ -40,6 +41,7 @@ class Shipment extends Model
         'latest_pickup_date' => 'date',
         'latest_delivery_date' => 'date',
         'validity_date' => 'datetime',
+        'delivery_price' => 'decimal:2',
     ];
 
     public function lots(): HasMany
