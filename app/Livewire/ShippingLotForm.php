@@ -137,12 +137,6 @@ class ShippingLotForm extends Component
 
     public $deliveryOptions = [];
 
-    public $pickupNotify = false;
-    public $pickupNotifyTime = '';
-
-    public $deliveryNotify = false;
-    public $deliveryNotifyTime = '';
-
     // Step 4: Schedule
     public $latestPickupDate = '';
 
@@ -244,11 +238,6 @@ class ShippingLotForm extends Component
             'validityDate' => 'required|date',
             'validityTime' => 'required',
             'deliveryPrice' => 'nullable|numeric|min:0',
-
-            'pickupNotify' => 'boolean',
-            'pickupNotifyTime' => 'nullable',
-            'deliveryNotify' => 'boolean',
-            'deliveryNotifyTime' => 'nullable',
 
             'isDangerous' => 'boolean',
             'dangerousGoodsDescription' => 'nullable|string|max:2000',
@@ -526,10 +515,8 @@ class ShippingLotForm extends Component
                 'delivery_options' => $this->deliveryOptions,
                 'latest_pickup_date' => $this->latestPickupDate,
                 'latest_pickup_time' => $this->latestPickupTime,
-                'pickup_notify_time' => $this->pickupNotifyTime,
                 'latest_delivery_date' => $this->latestDeliveryDate,
                 'latest_delivery_time' => $this->latestDeliveryTime,
-                'delivery_notify_time' => $this->deliveryNotifyTime,
                 'validity_date' => ($this->validityDate && $this->validityTime) ? \Carbon\Carbon::parse($this->validityDate . ' ' . $this->validityTime) : null,
                 'delivery_price' => $this->deliveryPrice ?: null,
                 'requirements' => [
