@@ -398,6 +398,7 @@
                             <textarea wire:model.live="comment" rows="3"
                                 class="block w-full border border-gray-300 rounded-2xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-4 text-sm resize-y outline-none transition-colors shadow-sm"></textarea>
                         </div>
+                        </div>
                     </div>
 
                 </div>
@@ -687,6 +688,45 @@
                         <p class="text-sm text-gray-500 mt-1">Renseignez les deux adresses dans la même section.</p>
                     </div>
 
+                    <!-- Validity Date & Time -->
+                    <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-indigo-50/30 rounded-xl border border-indigo-100/50">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Validité de la demande (Date) *</label>
+                            <div x-data="{ value: @entangle('validityDate').live }" 
+                                 x-init="flatpickr($refs.datepicker, { dateFormat: 'Y-m-d', defaultDate: value, onChange: function(selectedDates, dateStr, instance) { value = dateStr; } })">
+                                <div class="relative">
+                                    <input type="text" x-ref="datepicker" x-model="value"
+                                        placeholder="AAAA-MM-JJ"
+                                        class="h-11 w-full appearance-none rounded-xl border @error('validityDate') border-red-500 @else border-gray-300 @enderror bg-white px-4 pr-11 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm">
+                                    <span class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                        <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                @error('validityDate')
+                                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-800 mb-2">Heure de validité *</label>
+                            <div class="relative">
+                                <input type="time" wire:model.live="validityTime"
+                                    onclick="this.showPicker()"
+                                    class="h-11 w-full appearance-none rounded-xl border @error('validityTime') border-red-500 @else border-gray-300 @enderror bg-white px-4 pr-11 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm">
+                                <span class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                    <svg class="fill-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.04175 9.99984C3.04175 6.15686 6.1571 3.0415 10.0001 3.0415C13.8431 3.0415 16.9584 6.15686 16.9584 9.99984C16.9584 13.8428 13.8431 16.9582 10.0001 16.9582C6.1571 16.9582 3.04175 13.8428 3.04175 9.99984ZM10.0001 1.5415C5.32867 1.5415 1.54175 5.32843 1.54175 9.99984C1.54175 14.6712 5.32867 18.4582 10.0001 18.4582C14.6715 18.4582 18.4584 14.6712 18.4584 9.99984C18.4584 5.32843 14.6715 1.5415 10.0001 1.5415ZM9.99998 10.7498C9.58577 10.7498 9.24998 10.4141 9.24998 9.99984V5.4165C9.24998 5.00229 9.58577 4.6665 9.99998 4.6665C10.4142 4.6665 10.75 5.00229 10.75 5.4165V9.24984H13.3334C13.7476 9.24984 14.0834 9.58562 14.0834 9.99984C14.0834 10.4141 13.7476 10.7498 13.3334 10.7498H10.0001H9.99998Z" fill="currentColor" />
+                                    </svg>
+                                </span>
+                            </div>
+                            @error('validityTime')
+                                <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <!-- DESKTOP / TABLET TIMELINE -->
                     <div class="hidden md:block mb-8">
                         <div class="flex items-center w-full gap-4 md:gap-6">
@@ -909,31 +949,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="border border-gray-200 rounded-xl p-4">
-                                            <div class="text-xs uppercase tracking-wider text-gray-400 font-bold mb-3">
-                                                Type d’adresse
-                                            </div>
-                                            <div x-data="{ isOptionSelected: @entangle('pickupType').live ? true : false }" class="relative z-20">
-                                                <select wire:model.live="pickupType"
-                                                    class="block w-full h-11 bg-white border border-gray-300 rounded-xl px-4 appearance-none text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
-                                                    :class="isOptionSelected ? 'text-gray-900 font-semibold' : 'text-gray-400'"
-                                                    @change="isOptionSelected = true">
-                                                    <option value="" class="text-gray-400">Choisir le type d'adresse</option>
-                                                    <option value="domicile">Domicile privé</option>
-                                                    <option value="pro_quai">Pro avec quai de chargement</option>
-                                                    <option value="pro_sans_quai">Pro sans quai de chargement</option>
-                                                    <option value="pro_difficile">Pro accès camion difficile</option>
-                                                    <option value="salon">Salon / exposition</option>
-                                                    <option value="port">Zone portuaire</option>
-                                                    <option value="aeroport">Zone aéroportuaire</option>
-                                                </select>
-                                                <span class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500">
-                                                    <svg class="stroke-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </div>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -1042,31 +1058,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="border border-gray-200 rounded-xl p-4">
-                                            <div class="text-xs uppercase tracking-wider text-gray-400 font-bold mb-3">
-                                                Type d’adresse
-                                            </div>
-                                            <div x-data="{ isOptionSelected: @entangle('deliveryType').live ? true : false }" class="relative z-20">
-                                                <select wire:model.live="deliveryType"
-                                                    class="block w-full h-11 bg-white border border-gray-300 rounded-xl px-4 appearance-none text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
-                                                    :class="isOptionSelected ? 'text-gray-900 font-semibold' : 'text-gray-400'"
-                                                    @change="isOptionSelected = true">
-                                                    <option value="" class="text-gray-400">Choisir le type d'adresse</option>
-                                                    <option value="domicile">Domicile privé</option>
-                                                    <option value="pro_quai">Pro avec quai de chargement</option>
-                                                    <option value="pro_sans_quai">Pro sans quai de chargement</option>
-                                                    <option value="pro_difficile">Pro accès camion difficile</option>
-                                                    <option value="salon">Salon / exposition</option>
-                                                    <option value="port">Zone portuaire</option>
-                                                    <option value="aeroport">Zone aéroportuaire</option>
-                                                </select>
-                                                <span class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500">
-                                                    <svg class="stroke-current" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </div>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

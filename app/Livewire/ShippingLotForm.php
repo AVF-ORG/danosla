@@ -21,13 +21,13 @@ class ShippingLotForm extends Component
             $this->description = $shipmentRecord->description;
             $this->comment = $shipmentRecord->comment;
             $this->pickupAddress = $shipmentRecord->pickup_address;
-            $this->pickupType = $shipmentRecord->pickup_type;
             $this->pickupOptions = $shipmentRecord->pickup_options ?? [];
             $this->deliveryAddress = $shipmentRecord->delivery_address;
-            $this->deliveryType = $shipmentRecord->delivery_type;
             $this->deliveryOptions = $shipmentRecord->delivery_options ?? [];
             $this->latestPickupDate = $shipmentRecord->latest_pickup_date ? \Carbon\Carbon::parse($shipmentRecord->latest_pickup_date)->format('Y-m-d') : null;
             $this->latestDeliveryDate = $shipmentRecord->latest_delivery_date ? \Carbon\Carbon::parse($shipmentRecord->latest_delivery_date)->format('Y-m-d') : null;
+            $this->validityDate = $shipmentRecord->validity_date ? \Carbon\Carbon::parse($shipmentRecord->validity_date)->format('Y-m-d') : null;
+            $this->validityTime = $shipmentRecord->validity_date ? \Carbon\Carbon::parse($shipmentRecord->validity_date)->format('H:i') : null;
             $this->totalValue = $shipmentRecord->total_value;
 
             $reqs = $shipmentRecord->requirements ?? [];
@@ -130,13 +130,9 @@ class ShippingLotForm extends Component
     // Step 3: Itinerary
     public $pickupAddress = '';
 
-    public $pickupType = 'domicile';
-
     public $pickupOptions = [];
 
     public $deliveryAddress = '';
-
-    public $deliveryType = 'pro_quai';
 
     public $deliveryOptions = [];
 
@@ -154,6 +150,9 @@ class ShippingLotForm extends Component
     public $latestDeliveryDate = '';
 
     public $latestDeliveryTime = '';
+
+    public $validityDate = '';
+    public $validityTime = '';
 
     // Step: Terms and Conditions / Special requirements
 
@@ -233,14 +232,15 @@ class ShippingLotForm extends Component
             'comment' => 'nullable|string|max:2000',
 
             'pickupAddress' => 'required|string|min:3',
-            'pickupType' => 'required|string',
             'deliveryAddress' => 'required|string|min:3',
-            'deliveryType' => 'required|string',
 
             'latestPickupDate' => 'required|date',
             'latestPickupTime' => 'required',
             'latestDeliveryDate' => 'required|date|after_or_equal:latestPickupDate',
             'latestDeliveryTime' => 'required',
+
+            'validityDate' => 'required|date',
+            'validityTime' => 'required',
 
             'pickupNotify' => 'boolean',
             'pickupNotifyTime' => 'nullable',
@@ -518,10 +518,8 @@ class ShippingLotForm extends Component
                 'total_volume' => (float) $this->total_volume,
                 'total_weight' => (float) $this->total_weight,
                 'pickup_address' => $this->pickupAddress,
-                'pickup_type' => $this->pickupType,
                 'pickup_options' => $this->pickupOptions,
                 'delivery_address' => $this->deliveryAddress,
-                'delivery_type' => $this->deliveryType,
                 'delivery_options' => $this->deliveryOptions,
                 'latest_pickup_date' => $this->latestPickupDate,
                 'latest_pickup_time' => $this->latestPickupTime,
@@ -529,6 +527,7 @@ class ShippingLotForm extends Component
                 'latest_delivery_date' => $this->latestDeliveryDate,
                 'latest_delivery_time' => $this->latestDeliveryTime,
                 'delivery_notify_time' => $this->deliveryNotifyTime,
+                'validity_date' => ($this->validityDate && $this->validityTime) ? \Carbon\Carbon::parse($this->validityDate . ' ' . $this->validityTime) : null,
                 'requirements' => [
                     'isDangerous' => $this->isDangerous,
                     'dangerousGoodsDescription' => $this->dangerousGoodsDescription,

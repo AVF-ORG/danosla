@@ -19,10 +19,8 @@ class Shipment extends Model
         'total_volume',
         'total_weight',
         'pickup_address',
-        'pickup_type',
         'pickup_options',
         'delivery_address',
-        'delivery_type',
         'delivery_options',
         'latest_pickup_date',
         'latest_pickup_time',
@@ -30,6 +28,7 @@ class Shipment extends Model
         'latest_delivery_date',
         'latest_delivery_time',
         'delivery_notify_time',
+        'validity_date',
         'requirements',
         'status',
     ];
@@ -40,6 +39,7 @@ class Shipment extends Model
         'requirements' => 'array',
         'latest_pickup_date' => 'date',
         'latest_delivery_date' => 'date',
+        'validity_date' => 'datetime',
     ];
 
     public function lots(): HasMany

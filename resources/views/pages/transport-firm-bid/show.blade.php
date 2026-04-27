@@ -20,6 +20,13 @@
                         {{ ucfirst($shipment->status) }}
                     </span>
                 @endif
+
+                @if($shipment->validity_date)
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800/50">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Valide jusqu'au : {{ $shipment->validity_date->format('d/m/Y H:i') }}
+                    </span>
+                @endif
             </div>
             
             <nav class="mt-2">
@@ -121,7 +128,6 @@
                             <p class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Enlèvement</p>
                             <h3 class="text-base font-bold text-gray-900 dark:text-white">{{ $shipment->pickup_address }}</h3>
                             <div class="flex items-center mt-2 text-base text-gray-600 dark:text-gray-400">
-                                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-sm font-medium mr-3">Type: {{ ucfirst($shipment->pickup_type ?? 'Non spécifié') }}</span>
                                 <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                 Avant le {{ $shipment->latest_pickup_date ? \Carbon\Carbon::parse($shipment->latest_pickup_date)->format('d/m/Y') : 'Non spécifié' }}
                                 @if(isset($shipment->requirements['latestPickupTime']))
@@ -147,7 +153,6 @@
                             <p class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Livraison</p>
                             <h3 class="text-base font-bold text-gray-900 dark:text-white">{{ $shipment->delivery_address }}</h3>
                             <div class="flex items-center mt-2 text-base text-gray-600 dark:text-gray-400">
-                                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-sm font-medium mr-3">Type: {{ ucfirst($shipment->delivery_type ?? 'Non spécifié') }}</span>
                                 <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                 Avant le {{ $shipment->latest_delivery_date ? \Carbon\Carbon::parse($shipment->latest_delivery_date)->format('d/m/Y') : 'Non spécifié' }}
                                 @if(isset($shipment->requirements['latestDeliveryTime']))
