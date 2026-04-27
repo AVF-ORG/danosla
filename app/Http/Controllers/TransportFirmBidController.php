@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Shipment;
 use App\Models\ShipmentBid;
 use App\Models\BidMessage;
+use App\Models\Review;
 
 class TransportFirmBidController extends Controller
 {
@@ -173,6 +174,61 @@ class TransportFirmBidController extends Controller
         $shipment->update(['status' => 'active']);
 
         return back()->with('success', 'Offre acceptée avec succès. L\'expédition est maintenant active.');
+    }
+
+    public function completeShipment(Shipment $shipment)
+    {
+        // Ensure only the shipment owner can complete it
+        if ($shipment->user_id !== auth()->id() && !auth()->user()->hasRole('admin')) {
+            return back()->with('error', 'Unauthorized action.');
+        }
+
+        if ($shipment->status !== 'active') {
+            return back()->with('error', 'Seules les expéditions actives peuvent être marquées comme terminées.');
+        }
+
+        $shipment->update(['status' => 'completed']);
+
+        return back()->with('success', 'Expédition terminée ! Vous pouvez maintenant laisser un avis au transporteur.');
+    }
+
+    public function storeReview(Request $request, Shipment $shipment)
+    {
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        // Ensure only the shipment owner can rate
+        if ($shipment->user_id !== auth()->id()) {
+            return back()->with('error', 'Seul le client peut laisser un avis.');
+        }
+
+        // Ensure shipment is completed
+        if ($shipment->status !== 'completed') {
+            return back()->with('error', 'L\'expédition doit être terminée avant de laisser un avis.');
+        }
+
+        // Check if review already exists
+        if ($shipment->review()->exists()) {
+            return back()->with('error', 'Vous avez déjà laissé un avis pour cette expédition.');
+        }
+
+        // Find the accepted carrier
+        $acceptedBid = $shipment->bids()->where('status', 'accepted')->first();
+        if (!$acceptedBid) {
+            return back()->with('error', 'Aucun transporteur accepté trouvé.');
+        }
+
+        Review::create([
+            'shipment_id' => $shipment->id,
+            'reviewer_id' => auth()->id(),
+            'reviewee_id' => $acceptedBid->user_id,
+            'rating' => $validated['rating'],
+            'comment' => $validated['comment'],
+        ]);
+
+        return back()->with('success', 'Merci pour votre avis !');
     }
 
     /**

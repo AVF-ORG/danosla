@@ -491,8 +491,70 @@
                                 </button>
                             </form>
                             @endif
+
+                            @if((auth()->user()->hasRole('shipper') || auth()->user()->hasRole('admin')) && $shipment->status === 'active')
+                            <form action="{{ route('transport-firm-bid.complete-shipment', $shipment->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-6 py-2.5 bg-brand-500 text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-brand-500/30 hover:bg-brand-600 transition-all">
+                                    Marquer comme terminé
+                                </button>
+                            </form>
+                            @endif
                         </div>
                     </div>
+
+                    <!-- Rating/Review Section -->
+                    @if($shipment->status === 'completed')
+                        @if(!$shipment->review)
+                            @if(auth()->id() === $shipment->user_id)
+                                <!-- Rating Form -->
+                                <div class="m-6 p-6 bg-brand-50/50 dark:bg-brand-900/10 border border-brand-100 dark:border-brand-800 rounded-3xl shadow-sm" x-data="{ rating: 5 }">
+                                    <div class="flex items-center gap-4 mb-6">
+                                        <div class="w-12 h-12 rounded-2xl bg-brand-500 text-white flex items-center justify-center shadow-lg shadow-brand-500/20">
+                                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">Laissez un avis</h3>
+                                            <p class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Comment s'est déroulée la livraison ?</p>
+                                        </div>
+                                    </div>
+
+                                    <form action="{{ route('transport-firm-bid.store-review', $shipment->id) }}" method="POST" class="space-y-6">
+                                        @csrf
+                                        <input type="hidden" name="rating" :value="rating">
+                                        
+                                        <div class="flex items-center gap-2">
+                                            <template x-for="i in 5">
+                                                <button type="button" @click="rating = i" class="transition-all duration-200" :class="rating >= i ? 'text-amber-400 scale-110' : 'text-gray-200 dark:text-gray-700'">
+                                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                                </button>
+                                            </template>
+                                            <span class="ml-4 text-xs font-black text-brand-600 dark:text-brand-400 uppercase tracking-widest" x-text="rating + '/5'"></span>
+                                        </div>
+
+                                        <textarea name="comment" rows="3" class="w-full bg-white dark:bg-gray-800 border-brand-100 dark:border-brand-800 rounded-2xl px-4 py-3 text-sm font-medium focus:ring-brand-500 focus:border-brand-500 placeholder-gray-400 shadow-inner" placeholder="Partagez votre expérience avec ce transporteur..."></textarea>
+
+                                        <button type="submit" class="w-full py-4 bg-brand-500 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-brand-500/20 hover:bg-brand-600 transform hover:-translate-y-0.5 transition-all">
+                                            Publier l'avis
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
+                        @else
+                            <!-- Display Existing Review -->
+                            <div class="m-6 p-6 bg-green-50/50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-3xl shadow-sm">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-1.5">
+                                        @for($i=1; $i<=5; $i++)
+                                            <svg class="w-4 h-4 {{ $shipment->review->rating >= $i ? 'text-amber-400' : 'text-gray-200 dark:text-gray-700' }}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                        @endfor
+                                    </div>
+                                    <span class="text-[9px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full">Avis publié</span>
+                                </div>
+                                <p class="text-sm font-medium text-gray-700 dark:text-gray-300 italic">"{{ $shipment->review->comment }}"</p>
+                            </div>
+                        @endif
+                    @endif
 
                 <!-- Messages area -->
                 <div class="flex-1 p-8 space-y-8 overflow-y-auto max-h-[500px]">

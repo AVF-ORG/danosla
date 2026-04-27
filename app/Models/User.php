@@ -78,4 +78,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(BidMessage::class);
     }
+
+    public function reviewsGiven()
+    {
+        return $this->hasMany(Review::class, 'reviewer_id');
+    }
+
+    public function reviewsReceived()
+    {
+        return $this->hasMany(Review::class, 'reviewee_id');
+    }
 }

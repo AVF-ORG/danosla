@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Shipment;
 use App\Models\ShipmentBid;
 use App\Models\BidMessage;
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -68,7 +69,21 @@ class ShipmentBidSeeder extends Seeder
                 $winningBid = $shipment->bids->random();
                 $winningBid->update(['status' => 'accepted']);
                 $shipment->bids()->where('id', '!=', $winningBid->id)->update(['status' => 'rejected']);
-                $shipment->update(['status' => 'active']);
+                
+                // Randomly decide if the shipment is still active or already completed with a review
+                if (rand(1, 2) === 1) {
+                    $shipment->update(['status' => 'completed']);
+                    
+                    Review::create([
+                        'shipment_id' => $shipment->id,
+                        'reviewer_id' => $shipment->user_id,
+                        'reviewee_id' => $winningBid->user_id,
+                        'rating' => rand(4, 5),
+                        'comment' => "Transporteur exceptionnel ! Livraison rapide et communication parfaite tout au long du trajet.",
+                    ]);
+                } else {
+                    $shipment->update(['status' => 'active']);
+                }
             }
         }
     }

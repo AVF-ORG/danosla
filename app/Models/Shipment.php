@@ -58,4 +58,9 @@ class Shipment extends Model
     {
         return $this->hasMany(ShipmentBid::class);
     }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
 }
