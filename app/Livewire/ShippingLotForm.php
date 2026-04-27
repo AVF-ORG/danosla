@@ -12,6 +12,7 @@ class ShippingLotForm extends Component
 
     // Submission State
     public $isSubmitted = false;
+    public $termsAccepted = false;
 
     public function mount(Shipment $shipmentRecord = null)
     {
@@ -34,10 +35,6 @@ class ShippingLotForm extends Component
             $reqs = $shipmentRecord->requirements ?? [];
             $this->latestPickupTime = $shipmentRecord->latest_pickup_time ?? ($reqs['latestPickupTime'] ?? '');
             $this->latestDeliveryTime = $shipmentRecord->latest_delivery_time ?? ($reqs['latestDeliveryTime'] ?? '');
-            $this->pickupNotify = $reqs['pickupNotify'] ?? false;
-            $this->pickupNotifyTime = $shipmentRecord->pickup_notify_time ?? ($reqs['pickupNotifyTime'] ?? '');
-            $this->deliveryNotify = $reqs['deliveryNotify'] ?? false;
-            $this->deliveryNotifyTime = $shipmentRecord->delivery_notify_time ?? ($reqs['deliveryNotifyTime'] ?? '');
 
             $this->isDangerous = $reqs['isDangerous'] ?? false;
             $this->dangerousGoodsDescription = $reqs['dangerousGoodsDescription'] ?? '';
@@ -237,7 +234,7 @@ class ShippingLotForm extends Component
 
             'validityDate' => 'required|date',
             'validityTime' => 'required',
-            'deliveryPrice' => 'nullable|numeric|min:0',
+            'deliveryPrice' => 'required|numeric|min:0',
 
             'isDangerous' => 'boolean',
             'dangerousGoodsDescription' => 'nullable|string|max:2000',
@@ -524,8 +521,6 @@ class ShippingLotForm extends Component
                     'dangerousGoodsDescription' => $this->dangerousGoodsDescription,
                     'isUrgent' => $this->isUrgent,
                     'urgentDescription' => $this->urgentDescription,
-                    'pickupNotify' => $this->pickupNotify,
-                    'deliveryNotify' => $this->deliveryNotify,
                     'hasInsuranceOption' => $this->hasInsuranceOption,
                     'insuranceDescription' => $this->insuranceDescription,
                     'hasSpecialHandlingInstructions' => $this->hasSpecialHandlingInstructions,
@@ -597,11 +592,33 @@ class ShippingLotForm extends Component
         }
     }
 
+    public function getIsMarchandisesCompleteProperty()
+    {
+        return count($this->lots) > 0;
+    }
+
+    public function getIsTermsCompleteProperty()
+    {
+        return $this->termsAccepted 
+            && $this->isMarchandisesComplete 
+            && $this->isItineraryComplete;
+    }
+
+    public function getIsItineraryCompleteProperty()
+    {
+        return !empty(trim($this->pickupAddress))
+            && !empty(trim($this->deliveryAddress))
+            && !empty(trim($this->latestPickupDate))
+            && !empty(trim($this->latestPickupTime))
+            && !empty(trim($this->latestDeliveryDate))
+            && !empty($this->latestDeliveryTime)
+            && !empty(trim($this->validityDate))
+            && !empty(trim($this->validityTime))
+            && !empty($this->deliveryPrice);
+    }
+
     public function render()
     {
         return view('livewire.shipping-lot-form');
     }
-
-
- 
 }
