@@ -1,331 +1,300 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-6">
-    <!-- Header & Breadcrumbs -->
-    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <div class="flex items-center gap-3">
-                <h1 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
-                    Expédition #{{ str_pad($shipment->id, 5, '0', STR_PAD_LEFT) }}
-                </h1>
-                
-                @if($shipment->status === 'pending')
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50">
-                        <span class="w-2 h-2 mr-2 bg-amber-500 rounded-full animate-pulse"></span>
-                        En attente
-                    </span>
-                @else
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
-                        {{ ucfirst($shipment->status) }}
-                    </span>
-                @endif
-
-                @if($shipment->validity_date)
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800/50">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        Valide jusqu'au : {{ $shipment->validity_date->format('d/m/Y H:i') }}
-                    </span>
-                @endif
-            </div>
-            
-            <nav class="mt-2">
-                <ol class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                    <li><a class="font-medium hover:text-brand-500 transition-colors" href="{{ route('dashboard.index') }}">Dashboard /</a></li>
-                    <li><a class="font-medium hover:text-brand-500 transition-colors" href="{{ route('transport-firm-bid.index') }}">Mes Expéditions /</a></li>
-                    <li class="font-medium text-brand-500">Détails</li>
-                </ol>
-            </nav>
-        </div>
-        
-        <!-- Action Buttons -->
-        <div class="flex items-center space-x-3">
-            <div x-data="{ openDeleteModal: false }" class="inline">
-                <!-- Trigger Button -->
-                <button @click="openDeleteModal = true" type="button" class="inline-flex items-center justify-center px-4 py-2 bg-red-50 hover:bg-red-100 border border-transparent rounded-xl text-sm font-semibold text-red-600 dark:bg-red-900/20 dark:text-red-400 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-                    <svg class="mr-2 -ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+<div class="px-4 py-4 md:px-4 md:py-4">
+    @php
+        $statusConfig = match($shipment->status) {
+            'pending' => ['label' => 'En Attente', 'color' => 'bg-amber-50 text-amber-700 border-amber-100', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+            'active' => ['label' => 'En Cours', 'color' => 'bg-blue-50 text-blue-700 border-blue-100', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
+            'completed' => ['label' => 'Livré', 'color' => 'bg-green-50 text-green-700 border-green-100', 'icon' => 'M5 13l4 4L19 7'],
+            'cancelled', 'canceled' => ['label' => 'Annulé', 'color' => 'bg-red-50 text-red-700 border-red-100', 'icon' => 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'],
+            default => ['label' => ucfirst($shipment->status), 'color' => 'bg-gray-50 text-gray-700 border-gray-100', 'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+        };
+    @endphp
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="{{ route('transport-firm-bid.index') }}" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
-                    Supprimer
-                </button>
-
-                <!-- Delete Modal -->
-                <x-ui.modal model="openDeleteModal" title="Supprimer la demande" maxWidth="max-w-md">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-red-600 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                            <p class="text-sm text-gray-500 dark:text-gray-400 break-words">
-                                Êtes-vous sûr de vouloir supprimer cette demande d'expédition ? Toutes les données associées (marchandises) seront définitivement effacées. Cette action est irréversible.
-                            </p>
-                        </div>
-                    </div>
-
-                    <x-slot:footer>
-                        <button @click="openDeleteModal = false" type="button" class="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm transition-colors">
-                            Annuler
-                        </button>
-                        <form action="{{ route('transport-firm-bid.destroy', $shipment) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm transition-colors">
-                                Supprimer définitivement
-                            </button>
-                        </form>
-                    </x-slot:footer>
-                </x-ui.modal>
+                </a>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-medium text-gray-400">{{ $shipment->created_at->format('M d, Y') }}</span>
+                    <span class="text-xs text-gray-300">•</span>
+                    <span class="text-xs font-medium text-gray-400">EXP-{{ str_pad($shipment->id, 6, '0', STR_PAD_LEFT) }}</span>
+                </div>
             </div>
 
-            <a href="{{ route('transport-firm-bid.edit', $shipment) }}" 
-                class="inline-flex items-center justify-center px-4 py-2 bg-brand-50 hover:bg-brand-100 border border-transparent rounded-xl text-sm font-semibold text-brand-600 dark:bg-brand-900/20 dark:text-brand-400 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
-                <svg class="mr-2 -ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Éditer
-            </a>
-            
-            <a href="{{ route('transport-firm-bid.index') }}" 
-                class="inline-flex items-center justify-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm transition-all">
-                <svg class="mr-2 -ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Retour
-            </a>
+            <!-- Management Toolbar (Actions, Status, Price) -->
+            <div class="flex items-center gap-6">
+                <!-- Actions -->
+                <div class="flex items-center gap-2 border-r border-gray-100 dark:border-gray-800 pr-6 mr-3" x-data="{ openDeleteModal: false }">
+                    <a href="{{ route('transport-firm-bid.edit', $shipment) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-brand-600 hover:text-white transition-all shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                        Edit
+                    </a>
+                    <button @click="openDeleteModal = true" class="inline-flex items-center gap-2 px-4 py-2 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-50 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        Delete
+                    </button>
+
+                    <!-- Delete Modal -->
+                    <x-ui.modal model="openDeleteModal" title="Delete Shipment" maxWidth="max-w-md">
+                        <div class="p-8 text-center">
+                            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                            </div>
+                            <h3 class="text-lg font-black text-gray-900 dark:text-white mb-2 uppercase">Permanently Delete?</h3>
+                            <p class="text-sm text-gray-500 mb-6">This action cannot be undone. All lots associated with this shipment will be removed.</p>
+                            <div class="flex gap-3">
+                                <button @click="openDeleteModal = false" class="flex-1 py-3 bg-gray-100 text-gray-700 rounded-xl font-black uppercase text-[10px] tracking-widest">Cancel</button>
+                                <form action="{{ route('transport-firm-bid.destroy', $shipment) }}" method="POST" class="flex-1">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="w-full py-3 bg-red-600 text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-red-500/30">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </x-ui.modal>
+                </div>
+
+                <!-- Status & Price Badges -->
+                <div class="flex items-center gap-3">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border {{ $statusConfig['color'] }} shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $statusConfig['icon'] }}" /></svg>
+                        <span class="text-[10px] font-black uppercase tracking-widest">{{ $statusConfig['label'] }}</span>
+                    </div>
+                    
+                    @if($shipment->delivery_price)
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 shadow-sm">
+                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400">
+                            {{ number_format($shipment->delivery_price, 2, ',', ' ') }} €
+                        </span>
+                    </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Description Block -->
-    @if($shipment->description)
-    <div class="mb-8 p-4 bg-gray-50 dark:bg-gray-800/40 rounded-xl border border-gray-200/60 dark:border-gray-700/60">
-        <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100 mb-1">Description</h3>
-        <p class="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap">{{ $shipment->description }}</p>
-    </div>
-    @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <!-- Main Shipment Card (Merged Recap & Details) -->
+    <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl shadow-gray-200/40 dark:shadow-none overflow-hidden mb-8">
         
-        <!-- Logistics Card (Spans 2 columns) -->
-        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/60 dark:border-gray-700 shadow-sm overflow-hidden flex flex-col">
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center bg-gray-50/50 dark:bg-gray-800/50">
-                <svg class="w-5 h-5 text-brand-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
-                <h2 class="text-lg font-bold text-gray-900 dark:text-white">Logistique du Trajet</h2>
-            </div>
-            
-            <div class="p-6 flex-1">
-                <div class="relative">
-                    <!-- Vertical Line Connecter -->
-                    <div class="absolute left-6 top-8 bottom-8 w-0.5 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                    
-                    <!-- Pickup -->
-                    <div class="flex relative mb-8">
-                        <div class="w-12 h-12 flex-shrink-0 bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400 rounded-xl flex items-center justify-center ring-4 ring-white dark:ring-gray-800 z-10">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Enlèvement</p>
-                            <h3 class="text-base font-bold text-gray-900 dark:text-white">{{ $shipment->pickup_address }}</h3>
-                            <div class="flex items-center mt-2 text-base text-gray-600 dark:text-gray-400">
-                                <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                Avant le {{ $shipment->latest_pickup_date ? \Carbon\Carbon::parse($shipment->latest_pickup_date)->format('d/m/Y') : 'Non spécifié' }}
-                                @if(isset($shipment->requirements['latestPickupTime']))
-                                    à {{ $shipment->requirements['latestPickupTime'] }}
-                                @endif
+        <!-- Route Overview Section -->
+        <div class="px-8 py-10">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 relative">
+                <!-- Departure -->
+                <div class="flex-1">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Pickup</p>
+                    <h2 class="text-4xl font-black text-gray-900 dark:text-white leading-none mb-1">
+                        {{ $shipment->latest_pickup_time ? \Carbon\Carbon::parse($shipment->latest_pickup_time)->format('H:i') : '00:00' }}
+                        <span class="text-xl font-bold text-gray-300 ml-1">am</span>
+                    </h2>
+                    <p class="text-xs font-bold text-gray-600 dark:text-gray-400">{{ $shipment->latest_pickup_date ? $shipment->latest_pickup_date->translatedFormat('M d, Y') : '-' }}</p>
+                </div>
 
-                                @if($shipment->requirements['pickupNotify'] ?? false)
-                                    <span class="ml-3 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-100 uppercase tracking-tight">
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                                        Appeler avant pass.
-                                    </span>
-                                @endif
+                <!-- Path Visual -->
+                <div class="flex flex-col items-center gap-2 px-4 flex-none group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full border-2 border-brand-500 shadow-[0_0_8px_rgba(var(--brand-600-rgb),0.3)]"></div>
+                        <div class="flex gap-1 items-center">
+                            @for($i=0; $i<6; $i++) <div class="w-1 h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div> @endfor
+                            <div class="px-2 py-1 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 group-hover:scale-110 transition-transform cursor-help">
+                                <svg class="w-4 h-4 text-brand-500 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                             </div>
+                            @for($i=0; $i<6; $i++) <div class="w-1 h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div> @endfor
                         </div>
+                        <div class="w-2.5 h-2.5 rounded-full border-2 border-gray-300 dark:border-gray-600"></div>
                     </div>
-                    
-                    <!-- Delivery -->
-                    <div class="flex relative">
-                        <div class="w-12 h-12 flex-shrink-0 bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-xl flex items-center justify-center ring-4 ring-white dark:ring-gray-800 z-10">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Livraison</p>
-                            <h3 class="text-base font-bold text-gray-900 dark:text-white">{{ $shipment->delivery_address }}</h3>
-                            <div class="flex items-center mt-2 text-base text-gray-600 dark:text-gray-400">
-                                <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                Avant le {{ $shipment->latest_delivery_date ? \Carbon\Carbon::parse($shipment->latest_delivery_date)->format('d/m/Y') : 'Non spécifié' }}
-                                @if(isset($shipment->requirements['latestDeliveryTime']))
-                                    à {{ $shipment->requirements['latestDeliveryTime'] }}
-                                @endif
+                    <span class="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em]">Est. distance</span>
+                </div>
 
-                                @if($shipment->requirements['deliveryNotify'] ?? false)
-                                    <span class="ml-3 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100 uppercase tracking-tight">
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                                        Appeler avant pass.
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
+                <!-- Arrival -->
+                <div class="flex-1 text-right">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Delivery</p>
+                    <h2 class="text-4xl font-black text-gray-900 dark:text-white leading-none mb-1">
+                        {{ $shipment->latest_delivery_time ? \Carbon\Carbon::parse($shipment->latest_delivery_time)->format('H:i') : '00:00' }}
+                        <span class="text-xl font-bold text-gray-300 ml-1">pm</span>
+                    </h2>
+                    <p class="text-xs font-bold text-gray-600 dark:text-gray-400">{{ $shipment->latest_delivery_date ? $shipment->latest_delivery_date->translatedFormat('M d, Y') : '-' }}</p>
                 </div>
             </div>
-            <!-- Totals Footer -->
-            <div class="grid grid-cols-2 divide-x divide-gray-200 dark:divide-gray-700 bg-gray-50 dark:bg-gray-800/80 border-t border-gray-200 dark:border-gray-700">
-                <div class="p-4 text-center">
-                    <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Poids Total</span>
-                    <span class="block text-lg font-bold text-gray-900 dark:text-white">{{ number_format($shipment->total_weight, 2) }} kg</span>
+        </div>
+
+        <!-- Horizontal Separator -->
+        <div class="h-px bg-gradient-to-r from-transparent via-gray-100 to-transparent dark:via-gray-800"></div>
+
+        <!-- Detailed Locations Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100 dark:divide-gray-800">
+            <div class="p-8 group hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
+                    </div>
+                    <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">Pickup Location</h3>
                 </div>
-                <div class="p-4 text-center">
-                    <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Volume Total</span>
-                    <span class="block text-lg font-bold text-gray-900 dark:text-white">{{ number_format($shipment->total_volume, 3) }} m³</span>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium mb-2">{{ $shipment->pickup_address }}</p>
+            </div>
+
+            <div class="p-8 group hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 flex items-center justify-center shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
+                    </div>
+                    <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">Delivery Location</h3>
                 </div>
-                @if($shipment->delivery_price)
-                <div class="p-4 text-center">
-                    <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Prix Livraison</span>
-                    <span class="block text-lg font-bold text-brand-600">{{ number_format($shipment->delivery_price, 2) }} €</span>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium mb-2">{{ $shipment->delivery_address }}</p>
+            </div>
+        </div>
+
+        <!-- Notes & Information Section -->
+        @if($shipment->description || $shipment->comment)
+        <div class="bg-gray-50/50 dark:bg-gray-800/20 border-t border-gray-100 dark:border-gray-800 p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                @if($shipment->description)
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Description des Marchandises</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed bg-white dark:bg-gray-900/50 p-4 rounded-xl border border-gray-100 dark:border-gray-800/50 italic">
+                        "{{ $shipment->description }}"
+                    </p>
+                </div>
+                @endif
+
+                @if($shipment->comment)
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                        <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Commentaires Additionnels</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed bg-white dark:bg-gray-900/50 p-4 rounded-xl border border-gray-100 dark:border-gray-800/50 italic">
+                        "{{ $shipment->comment }}"
+                    </p>
                 </div>
                 @endif
             </div>
         </div>
+        @endif
 
-        <!-- Requirements Card -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/60 dark:border-gray-700 shadow-sm overflow-hidden flex flex-col">
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center bg-gray-50/50 dark:bg-gray-800/50">
-                <svg class="w-5 h-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                <h2 class="text-lg font-bold text-gray-900 dark:text-white">Exigences Spéciales</h2>
-            </div>
-            
-            <div class="p-6 flex-1 overflow-y-auto">
-                @php
-                    $reqs = $shipment->requirements ?? [];
-                    
-                    // Simple helper to map key to visual styling
-                    $specialFlags = [
-                        ['key' => 'isUrgent', 'label' => 'Urgent', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'red', 'descKey' => 'urgentDescription'],
-                        ['key' => 'isDangerous', 'label' => 'Marchandise Dangereuse', 'icon' => 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z', 'color' => 'orange', 'descKey' => 'dangerousGoodsDescription'],
-                        ['key' => 'hasFragileGoods', 'label' => 'Fragile', 'icon' => 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z', 'color' => 'blue', 'descKey' => 'fragileGoodsDescription'],
-                        ['key' => 'needsTemperatureControlledTransport', 'label' => 'Température Contrôlée', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'color' => 'cyan', 'descKey' => 'temperatureControlledDescription'],
-                        ['key' => 'hasInsuranceOption', 'label' => 'Assurance', 'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'color' => 'green', 'descKey' => 'insuranceDescription'],
-                        ['key' => 'hasSpecialHandlingInstructions', 'label' => 'Manutention Spéciale', 'icon' => 'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11', 'color' => 'purple', 'descKey' => 'specialHandlingDescription'],
-                        ['key' => 'hasAdditionalRequirements', 'label' => 'Exigences Complémentaires', 'icon' => 'M4 6h16M4 10h16M4 14h16M4 18h16', 'color' => 'gray', 'descKey' => 'additionalRequirementsDescription'],
-                    ];
-                    
-                    $hasAnyRequirements = false;
-                @endphp
+        <!-- Special Conditions Section -->
+        @php
+            $requirementsMap = [
+                'isDangerous' => ['label' => 'Matières Dangereuses', 'descKey' => 'dangerousGoodsDescription', 'icon' => 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z', 'color' => 'red'],
+                'isUrgent' => ['label' => 'Transport Urgent', 'descKey' => 'urgentDescription', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'orange'],
+                'hasInsuranceOption' => ['label' => 'Assurance Requise', 'descKey' => 'insuranceDescription', 'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'color' => 'blue'],
+                'hasSpecialHandlingInstructions' => ['label' => 'Manipulation Spéciale', 'descKey' => 'specialHandlingDescription', 'icon' => 'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0V12m-3-0.5a3 3 0 00-6 0v2.5m6-2.5c.348 0 .678.046 1 .132V3.5a1.5 1.5 0 013 0V12m-3-0.5a3 3 0 00-6 0v2.5m6-2.5c.348 0 .678.046 1 .132V1.5a1.5 1.5 0 013 0V12', 'color' => 'purple'],
+                'needsTemperatureControlledTransport' => ['label' => 'Température Contrôlée', 'descKey' => 'temperatureControlledDescription', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'color' => 'cyan'],
+                'hasFragileGoods' => ['label' => 'Marchandises Fragiles', 'descKey' => 'fragileGoodsDescription', 'icon' => 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z', 'color' => 'rose'],
+                'hasAdditionalRequirements' => ['label' => 'Exigences Additionnelles', 'descKey' => 'additionalRequirementsDescription', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4', 'color' => 'slate'],
+            ];
 
-                <ul class="space-y-4">
-                    @foreach($specialFlags as $flag)
-                        @if(isset($reqs[$flag['key']]) && $reqs[$flag['key']])
-                            @php $hasAnyRequirements = true; @endphp
-                            <li class="flex items-start">
-                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-{{ $flag['color'] }}-100 text-{{ $flag['color'] }}-600 dark:bg-{{ $flag['color'] }}-900/30 dark:text-{{ $flag['color'] }}-400 flex items-center justify-center mt-0.5">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $flag['icon'] }}" /></svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm font-bold text-gray-900 dark:text-white">{{ $flag['label'] }}</p>
-                                    @if(isset($reqs[$flag['descKey']]) && $reqs[$flag['descKey']])
-                                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $reqs[$flag['descKey']] }}</p>
-                                    @endif
-                                </div>
-                            </li>
-                        @endif
-                    @endforeach
-                </ul>
+            $activeRequirements = [];
+            if(!empty($shipment->requirements)) {
+                foreach($requirementsMap as $key => $config) {
+                    if(!empty($shipment->requirements[$key])) {
+                        $activeRequirements[] = [
+                            'label' => $config['label'],
+                            'description' => $shipment->requirements[$config['descKey']] ?? null,
+                            'icon' => $config['icon'],
+                            'color' => $config['color']
+                        ];
+                    }
+                }
+            }
+        @endphp
 
-                @if(!$hasAnyRequirements)
-                    <div class="h-full flex flex-col items-center justify-center text-center py-6 text-gray-400 dark:text-gray-500">
-                        <svg class="w-12 h-12 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <p class="text-sm">Aucune exigence ou restriction particulière pour cette expédition.</p>
+        @if(count($activeRequirements) > 0)
+        <div class="border-t border-gray-100 dark:border-gray-800 p-8">
+            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6">Conditions & Exigences Spéciales</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach($activeRequirements as $req)
+                <div class="flex items-start gap-4 p-4 rounded-2xl bg-{{ $req['color'] }}-50/50 dark:bg-{{ $req['color'] }}-900/10 border border-{{ $req['color'] }}-100/50 dark:border-{{ $req['color'] }}-800/30">
+                    <div class="w-8 h-8 rounded-lg bg-{{ $req['color'] }}-100 dark:bg-{{ $req['color'] }}-900/30 text-{{ $req['color'] }}-600 dark:text-{{ $req['color'] }}-400 flex items-center justify-center flex-none">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $req['icon'] }}" /></svg>
                     </div>
-                @endif
+                    <div>
+                        <p class="text-[11px] font-black text-{{ $req['color'] }}-700 dark:text-{{ $req['color'] }}-300 uppercase tracking-tight mb-1">{{ $req['label'] }}</p>
+                        <p class="text-xs text-{{ $req['color'] }}-600/80 dark:text-{{ $req['color'] }}-400/80 leading-relaxed font-medium">
+                            {{ $req['description'] ?: 'Aucune instruction spécifique fournie.' }}
+                        </p>
+                    </div>
+                </div>
+                @endforeach
             </div>
         </div>
+        @endif
     </div>
 
 
-    <!-- Merchandise (Lots) Section -->
-    <div class="mb-6">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Marchandises ({{ $shipment->lots->count() }} lots)</h2>
-        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/60 dark:border-gray-700 shadow-sm overflow-hidden">
+
+    <!-- Merchandise Section -->
+    <div class="mb-12">
+        <div class="flex items-center justify-between mb-6 px-1">
+            <h2 class="text-sm font-black uppercase tracking-[0.2em] text-gray-400">Merchandise Details</h2>
+            <div class="flex items-center gap-4">
+                <span class="text-[10px] font-black bg-gray-100 dark:bg-gray-800 text-gray-500 px-3 py-1 rounded-full uppercase tracking-widest">{{ $shipment->lots->count() }} Lot(s)</span>
+                <span class="text-[10px] font-black bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 px-3 py-1 rounded-full uppercase tracking-widest">{{ number_format($shipment->total_weight, 2) }} kg total</span>
+            </div>
+        </div>
+        
+        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-50/50 dark:bg-gray-800/50">
-                            <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Type
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Quantité
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Poids Unitaire
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Dimensions / Détails
-                            </th>
+                        <tr class="bg-gray-50/50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest w-16">#</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Type & Description</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Qty</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Dimensions</th>
+                            <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Total Weight</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
-                        @foreach($shipment->lots as $lot)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="h-8 w-8 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 mr-3">
-                                            <!-- Simple icon based on type -->
-                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-                                        </div>
-                                        <div class="text-sm font-semibold text-gray-900 dark:text-white uppercase">{{ $lot->type }}</div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300 font-medium">
-                                    {{ $lot->quantity }} x
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                                    @if($lot->weight)
-                                        {{ number_format($lot->weight, 2) }} kg
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                                    @if($lot->type === 'palette' && $lot->palette_type)
-                                        <div class="mb-1"><span class="font-medium text-gray-700 dark:text-gray-300">Type de palette:</span> {{ $lot->palette_type }}</div>
-                                    @endif
-                                    
-                                    @if($lot->type === 'conteneur' && $lot->container_type)
-                                        <div class="mb-1"><span class="font-medium text-gray-700 dark:text-gray-300">Type de conteneur:</span> {{ $lot->container_type }}</div>
-                                    @endif
-
-                                    @if($lot->type === 'vehicule')
-                                        <div class="mb-1"><span class="font-medium text-gray-700 dark:text-gray-300">Véhicule:</span> {{ $lot->brand }} {{ $lot->model }}</div>
-                                        <div class="mb-1"><span class="font-medium text-gray-700 dark:text-gray-300">Roulant:</span> {{ $lot->is_rolling ? 'Oui' : 'Non' }}</div>
-                                    @endif
-
-                                    @if($lot->length || $lot->width || $lot->height)
-                                        <div>
-                                            L: {{ $lot->length ?? 0 }}m × l: {{ $lot->width ?? 0 }}m × H: {{ $lot->height ?? 0 }}m
-                                        </div>
-                                    @endif
-                                    
-                                    @if($lot->volume)
-                                        <div class="text-xs mt-1 bg-gray-100 dark:bg-gray-700 inline-block px-2 py-0.5 rounded text-gray-600 dark:text-gray-300">
-                                            Vol: {{ number_format($lot->volume, 3) }} m³
-                                        </div>
-                                    @endif
-
+                    <tbody class="divide-y divide-gray-50 dark:divide-gray-800">
+                        @foreach($shipment->lots as $index => $lot)
+                        <tr class="group hover:bg-gray-50/30 dark:hover:bg-gray-800/30 transition-colors">
+                            <td class="px-6 py-5">
+                                <span class="w-8 h-8 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-[10px] font-black text-gray-400 group-hover:bg-brand-50 group-hover:text-brand-600 transition-colors">
+                                    {{ $index + 1 }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-5">
+                                <p class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">{{ str_replace('_', ' ', $lot->type) }}</p>
+                                <div class="flex gap-2">
                                     @if($lot->is_stackable)
-                                        <div class="text-[10px] mt-1 bg-blue-50 dark:bg-blue-900/20 inline-block px-2 py-0.5 rounded text-blue-600 dark:text-blue-400 font-bold border border-blue-100 dark:border-blue-800/50 uppercase">
-                                            Gérable / Superposable
-                                        </div>
+                                        <span class="px-1.5 py-0.5 rounded bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-[9px] font-black uppercase">Stackable</span>
                                     @endif
-                                </td>
-                            </tr>
+                                    @if($lot->is_rolling)
+                                        <span class="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[9px] font-black uppercase">Rolling</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-5 text-center">
+                                <span class="text-sm font-black text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-md">x{{ $lot->quantity }}</span>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-600 dark:text-gray-400">
+                                    <span>{{ $lot->length }}m</span>
+                                    <span class="text-gray-300">×</span>
+                                    <span>{{ $lot->width }}m</span>
+                                    <span class="text-gray-300">×</span>
+                                    <span>{{ $lot->height }}m</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-5 text-right">
+                                <p class="text-sm font-black text-gray-900 dark:text-white">{{ number_format($lot->weight * $lot->quantity, 2) }} <span class="text-[10px] text-gray-400 ml-0.5">kg</span></p>
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
 </div>
 @endsection

@@ -33,11 +33,10 @@ class ShipmentFactory extends Factory
             'delivery_options' => ['hayon'],
             'latest_pickup_date' => $this->faker->dateTimeBetween('now', '+1 week'),
             'latest_pickup_time' => '09:00',
-            'pickup_notify_time' => '08:00',
             'latest_delivery_date' => $this->faker->dateTimeBetween('+1 week', '+2 weeks'),
             'latest_delivery_time' => '17:00',
-            'delivery_notify_time' => '16:00',
             'validity_date' => $this->faker->dateTimeBetween('now', '+3 days'),
+            'delivery_price' => $this->faker->randomFloat(2, 50, 2000),
             'requirements' => [],
             'status' => $this->faker->randomElement(['pending', 'active', 'completed', 'cancelled']),
         ];

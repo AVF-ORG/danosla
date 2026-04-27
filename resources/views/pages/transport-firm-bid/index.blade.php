@@ -51,16 +51,19 @@
                         <thead>
                             <tr class="bg-gray-50/50 dark:bg-gray-800/50">
                                 <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Récapitulatif
-                                </th>
-                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Trajet
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Volume / Poids
+                                    Date Départ
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Date limite
+                                    Date Arrivée
+                                </th>
+                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Validité
+                                </th>
+                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Prix de livraison
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Statut
@@ -73,26 +76,7 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
                             @foreach ($shipments as $shipment)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group cursor-pointer" onclick="window.location='{{ route('transport-firm-bid.show', $shipment) }}'">
-                                    <!-- Recap -->
-                                    <td class="px-6 py-5 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 group-hover:bg-brand-50 group-hover:text-brand-500 transition-colors">
-                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                                </svg>
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
-                                                    Demande #{{ str_pad($shipment->id, 5, '0', STR_PAD_LEFT) }}
-                                                </div>
-                                                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate max-w-[200px]" title="{{ $shipment->description }}">
-                                                    {{ Str::limit($shipment->description, 30) }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <!-- Route -->
+                                    <!-- Trajet -->
                                     <td class="px-6 py-5">
                                         <div class="flex flex-col text-sm">
                                             <div class="flex items-center text-gray-900 dark:text-white font-medium">
@@ -107,25 +91,51 @@
                                         </div>
                                     </td>
 
-                                    <!-- Volume / Weight -->
+                                    <!-- Date Départ -->
                                     <td class="px-6 py-5 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900 dark:text-white font-semibold flex items-center">
-                                            <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>
-                                            {{ number_format($shipment->total_weight, 2) }} kg
-                                        </div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400 mt-1 pl-5">
-                                            {{ number_format($shipment->total_volume, 3) }} m³
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-brand-500 dark:text-brand-400">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-bold text-gray-900 dark:text-white">
+                                                    {{ $shipment->latest_pickup_date ? \Carbon\Carbon::parse($shipment->latest_pickup_date)->format('d M Y') : '-' }}
+                                                </div>
+                                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                                    {{ $shipment->latest_pickup_time ? \Carbon\Carbon::parse($shipment->latest_pickup_time)->format('H:i') : '' }}
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
 
-                                    <!-- Dates -->
+                                    <!-- Date Arrivée -->
                                     <td class="px-6 py-5 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900 dark:text-white">
-                                            {{ $shipment->latest_pickup_date ? \Carbon\Carbon::parse($shipment->latest_pickup_date)->format('d M Y') : '-' }}
+                                        <div class="text-sm font-bold text-gray-900 dark:text-white">
+                                            {{ $shipment->latest_delivery_date ? \Carbon\Carbon::parse($shipment->latest_delivery_date)->format('d M Y') : '-' }}
                                         </div>
-                                        <div class="text-sm text-brand-600 dark:text-brand-400 font-medium mt-1 flex items-center">
-                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                            Livraison: {{ $shipment->latest_delivery_date ? \Carbon\Carbon::parse($shipment->latest_delivery_date)->format('d M') : '-' }}
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                            {{ $shipment->latest_delivery_time ? \Carbon\Carbon::parse($shipment->latest_delivery_time)->format('H:i') : '' }}
+                                        </div>
+                                    </td>
+
+                                    <!-- Validity -->
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        @if($shipment->validity_date)
+                                            <div class="text-sm font-bold text-brand-600 dark:text-brand-400">
+                                                {{ $shipment->validity_date->format('d M Y') }}
+                                            </div>
+                                            <div class="text-xs text-brand-500/70 dark:text-brand-400/70 mt-0.5 font-medium">
+                                                {{ $shipment->validity_date->format('H:i') }}
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400 text-sm">-</span>
+                                        @endif
+                                    </td>
+
+                                    <!-- Price -->
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <div class="text-sm font-black text-gray-900 dark:text-white">
+                                            {{ $shipment->delivery_price ? number_format($shipment->delivery_price, 2, ',', ' ') . ' €' : '-' }}
                                         </div>
                                     </td>
 
@@ -141,7 +151,7 @@
                                             ][$shipment->status] ?? 'bg-gray-500';
                                         @endphp
                                         <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {{ $shipmentStatusConfig }} text-white shadow-sm">
-                                            {{ $shipment->status === 'pending' ? 'En attente' : ucfirst($shipment->status) }}
+                                            {{ $shipment->status === 'pending' ? 'En attente' : ($shipment->status === 'completed' ? 'Terminé' : ($shipment->status === 'active' ? 'Actif' : ($shipment->status === 'cancelled' || $shipment->status === 'canceled' ? 'Annulé' : ucfirst($shipment->status)))) }}
                                         </span>
                                     </td>
 
