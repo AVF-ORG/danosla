@@ -14,8 +14,23 @@ class TransportFirmBidController extends Controller
      */
     public function index()
     {
-        // Fetch shipments (for now, simply all shipments ordered by newest first)
-        $shipments = Shipment::latest()->get();
+        $user = auth()->user();
+        $query = Shipment::query();
+
+        if ($user->hasRole('carrier')) {
+            // Carriers only see shipments where they have placed a bid
+            $query->whereHas('bids', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            });
+        } elseif ($user->hasRole('shipper')) {
+            // Shippers see all pending shipments AND shipments they created
+            $query->where(function ($q) use ($user) {
+                $q->where('status', 'pending')
+                  ->orWhere('user_id', $user->id);
+            });
+        }
+
+        $shipments = $query->with('bids')->latest()->get();
 
         return view('pages.transport-firm-bid.index', [
             'title' => 'Transport Firm Bid - Shipments',
@@ -32,21 +47,42 @@ class TransportFirmBidController extends Controller
             'title' => 'Create Transport Firm Bid'
         ]);
     }
-    public function show(Shipment $shipment)
+    public function show(Request $request, Shipment $shipment)
     {
-        // Load lots and the specific bid belonging to the authenticated carrier
-        $shipment->load(['lots', 'bids' => function($query) {
-            $query->where('user_id', auth()->id())->with(['messages' => function($q) {
-                $q->oldest(); // Messages in chronological order
-            }, 'messages.user']);
-        }]);
+        $user = auth()->user();
+        $bidId = $request->query('bid_id');
+        $allBids = null;
         
-        $myBid = $shipment->bids->first();
+        if ($user->hasRole('shipper') || $user->hasRole('admin')) {
+            $allBids = $shipment->bids()->with('user')->get();
+        }
+
+        if ($bidId) {
+            $myBid = ShipmentBid::where('shipment_id', $shipment->id)
+                ->with(['messages.user'])
+                ->find($bidId);
+        } else {
+            // For carriers, find their own bid
+            $myBid = $shipment->bids()
+                ->where('user_id', $user->id)
+                ->with(['messages.user'])
+                ->first();
+                
+            // For shippers, if no bid_id is selected, pick the first one or just show the list
+            if (!$myBid && $allBids && $allBids->isNotEmpty()) {
+                $myBid = $allBids->first();
+                // Load messages for the default selected bid
+                $myBid->load(['messages.user']);
+            }
+        }
+        
+        $shipment->load('lots');
 
         return view('pages.transport-firm-bid.show', [
             'title' => 'Détails de l\'expédition #'.str_pad($shipment->id, 5, '0', STR_PAD_LEFT),
             'shipment' => $shipment,
-            'myBid' => $myBid
+            'myBid' => $myBid,
+            'allBids' => $allBids
         ]);
     }
 
@@ -116,6 +152,27 @@ class TransportFirmBidController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Message envoyé.');
+    }
+
+    public function acceptBid(ShipmentBid $bid)
+    {
+        $shipment = $bid->shipment;
+
+        // Ensure only the shipment owner can accept bids
+        if ($shipment->user_id !== auth()->id() && !auth()->user()->hasRole('admin')) {
+            return back()->with('error', 'Unauthorized action.');
+        }
+
+        // 1. Accept this bid
+        $bid->update(['status' => 'accepted']);
+
+        // 2. Reject all other bids for this shipment
+        $shipment->bids()->where('id', '!=', $bid->id)->update(['status' => 'rejected']);
+
+        // 3. Update shipment status
+        $shipment->update(['status' => 'active']);
+
+        return back()->with('success', 'Offre acceptée avec succès. L\'expédition est maintenant active.');
     }
 
     /**

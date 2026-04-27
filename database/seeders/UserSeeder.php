@@ -28,13 +28,15 @@ class UserSeeder extends Seeder
         $admin->assignRole($superAdminRole);
         $admin->assignRole($adminRole);
 
-        // 2. Create 10 random users
+        // 2. Create 10 Carriers
         \App\Models\User::factory(10)->create()->each(function ($user) {
-            // Assign a random role from the available ones
-            $roles = ['carrier', 'shipper', 'User', 'Manager'];
-            $randomRoleName = $roles[array_rand($roles)];
-            
-            $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $randomRoleName]);
+            $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'carrier']);
+            $user->assignRole($role);
+        });
+
+        // 3. Create 10 Shippers
+        \App\Models\User::factory(10)->create()->each(function ($user) {
+            $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'shipper']);
             $user->assignRole($role);
         });
     }

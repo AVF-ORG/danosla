@@ -14,18 +14,18 @@ class ShipmentSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get 3 random users with the 'shipper' role
-        $shippers = User::role('shipper')->inRandomOrder()->take(3)->get();
+        // Get all users with the 'shipper' role
+        $shippers = User::role('shipper')->get();
 
         if ($shippers->isEmpty()) {
             $this->command->warn('No users with "shipper" role found. Skipping ShipmentSeeder.');
             return;
         }
 
-        $this->command->info('Creating 20 shipments for ' . $shippers->count() . ' shippers...');
+        $this->command->info('Creating 50 shipments for ' . $shippers->count() . ' shippers...');
 
         Shipment::factory()
-            ->count(20)
+            ->count(50)
             ->make()
             ->each(function ($shipment) use ($shippers) {
                 // Assign to one of the 3 shippers

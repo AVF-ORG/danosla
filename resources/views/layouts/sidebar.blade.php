@@ -149,6 +149,7 @@
                     </ul>
                 </div>
 
+                @role('admin|Super Admin')
                 <!-- ===================== GROUP: Contact ===================== -->
                 <div>
                     <h2 class="mb-4 text-xs uppercase flex leading-[20px] text-gray-400"
@@ -203,7 +204,9 @@
                         </li>
                     </ul>
                 </div>
+                @endrole
 
+                @role('admin|Super Admin')
                 <!-- ===================== GROUP: Users ===================== -->
                 <div>
                     <h2 class="mb-4 text-xs uppercase flex leading-[20px] text-gray-400"
@@ -359,7 +362,9 @@
                         </li>
                     </ul>
                 </div>
+                @endrole
 
+                @role('admin|Super Admin')
                 <!-- ===================== GROUP: Statistics & Satisfaction ===================== -->
                 <div>
                     <h2 class="mb-4 text-xs uppercase flex leading-[20px] text-gray-400"
@@ -485,7 +490,9 @@
                         </li>
                     </ul>
                 </div>
+                @endrole
 
+                @role('admin|Super Admin')
                 <!-- ===================== GROUP: System ===================== -->
                 <div>
                     <h2 class="mb-4 text-xs uppercase flex leading-[20px] text-gray-400"
@@ -910,6 +917,7 @@
                         </li>
                     </ul>
                 </div>
+                @endrole
 
             </div>
         </nav>

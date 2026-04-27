@@ -34,6 +34,9 @@
             <span
                 class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">{{ auth()->user()->name }}</span>
             <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</span>
+            <span class="mt-1.5 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-widest bg-brand-50 text-brand-600 border border-brand-100 dark:bg-brand-900/20 dark:text-brand-400 dark:border-brand-800">
+                {{ auth()->user()->getRoleNames()->first() ?? 'User' }}
+            </span>
         </div>
 
         <!-- Menu Items -->

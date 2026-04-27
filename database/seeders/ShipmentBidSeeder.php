@@ -20,16 +20,19 @@ class ShipmentBidSeeder extends Seeder
         }
 
         foreach ($shipments as $shipment) {
-            // For testing, we make EVERY carrier bid on EVERY shipment
-            // This ensures no matter which user you log in as, you see data.
+            // For each shipment, pick 2-5 random carriers to place bids
+            $selectedCarriers = $carriers->random(rand(2, min(5, $carriers->count())));
             
-            // Also include the Admin (User #1) in the list of bidders
-            $allBidders = $carriers->collect();
-            if (User::find(1) && !$allBidders->pluck('id')->contains(1)) {
-                $allBidders->push(User::find(1));
+            // Also include User #1 if they are an admin or carrier
+            if (User::find(1) && !$selectedCarriers->pluck('id')->contains(1)) {
+                $selectedCarriers->push(User::find(1));
             }
 
-            foreach ($allBidders as $carrier) {
+            foreach ($selectedCarriers as $carrier) {
+                // Determine a random status for the bid
+                $statuses = ['pending', 'rejected', 'countered'];
+                $status = $statuses[array_rand($statuses)];
+
                 $bid = ShipmentBid::updateOrCreate(
                     ['shipment_id' => $shipment->id, 'user_id' => $carrier->id],
                     [
@@ -38,12 +41,12 @@ class ShipmentBidSeeder extends Seeder
                         'latest_pickup_time' => '09:00',
                         'latest_delivery_date' => now()->addDays(rand(6, 10)),
                         'latest_delivery_time' => '17:00',
-                        'status' => 'pending',
+                        'status' => $status,
                     ]
                 );
 
                 // Create a conversation for every bid
-                $messageCount = rand(3, 6);
+                $messageCount = rand(4, 8);
                 $parent = null;
 
                 for ($i = 0; $i < $messageCount; $i++) {
@@ -58,6 +61,14 @@ class ShipmentBidSeeder extends Seeder
                         'is_read' => true,
                     ]);
                 }
+            }
+
+            // For some shipments, pick one bid to be 'accepted'
+            if (rand(1, 10) <= 4) {
+                $winningBid = $shipment->bids->random();
+                $winningBid->update(['status' => 'accepted']);
+                $shipment->bids()->where('id', '!=', $winningBid->id)->update(['status' => 'rejected']);
+                $shipment->update(['status' => 'active']);
             }
         }
     }

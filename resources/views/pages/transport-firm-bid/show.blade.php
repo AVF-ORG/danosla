@@ -348,6 +348,15 @@
                         <button @click="openBidModal = true" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] hover:bg-brand-600 hover:text-white transition-all shadow-lg shadow-gray-200 dark:shadow-none">
                             Modifier l'offre
                         </button>
+
+                        @if(auth()->id() === $shipment->user_id && $myBid->status !== 'accepted')
+                            <form action="{{ route('transport-firm-bid.accept-bid', $myBid) }}" method="POST" class="mt-4">
+                                @csrf
+                                <button type="submit" class="w-full py-4 bg-green-500 text-white rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] hover:bg-green-600 transition-all shadow-lg shadow-green-500/20">
+                                    Accepter cette offre
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -415,21 +424,75 @@
         <div class="lg:col-span-8 space-y-6">
             <h2 class="text-sm font-black uppercase tracking-[0.2em] text-gray-400 px-1">Discussion avec le client</h2>
             
-            <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl shadow-gray-200/20 flex flex-col min-h-[600px]">
-                <!-- Chat Header -->
-                <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between bg-gray-50/30 dark:bg-gray-800/20">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center font-black text-sm">
-                            C
-                        </div>
-                        <div>
-                            <p class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-tight">Client</p>
-                            <p class="text-[10px] font-bold text-green-500 uppercase tracking-widest flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Client en ligne
-                            </p>
-                        </div>
+            <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl shadow-gray-200/20 flex flex-col md:flex-row min-h-[600px] overflow-hidden">
+                
+                <!-- Bids Sidebar (Only for Shippers/Admins) -->
+                @if((auth()->user()->hasRole('shipper') || auth()->user()->hasRole('admin')) && isset($allBids))
+                <div class="w-full md:w-72 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-800 flex flex-col bg-gray-50/20 dark:bg-gray-900/40">
+                    <div class="p-6 border-b border-gray-100 dark:border-gray-800">
+                        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400">Offres Reçues ({{ $allBids->count() }})</h3>
+                    </div>
+                    <div class="flex-1 overflow-y-auto custom-scrollbar">
+                        @foreach($allBids as $bid)
+                        <a href="{{ route('transport-firm-bid.show', ['shipment' => $shipment->id, 'bid_id' => $bid->id]) }}" 
+                           class="group block p-5 border-b border-gray-50 dark:border-gray-800/50 hover:bg-white dark:hover:bg-gray-800 transition-all relative {{ $myBid && $myBid->id === $bid->id ? 'bg-white dark:bg-gray-800 shadow-inner' : '' }}">
+                            
+                            @if($myBid && $myBid->id === $bid->id)
+                            <div class="absolute inset-y-0 left-0 w-1 bg-brand-500"></div>
+                            @endif
+
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-tight">Transporteur #{{ $bid->id }}</span>
+                                    <span class="text-[10px] font-bold text-gray-400">Ref: {{ str_pad($bid->id, 4, '0', STR_PAD_LEFT) }}</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xs font-black text-brand-600 dark:text-brand-400">{{ number_format($bid->price, 2) }}€</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between mt-3">
+                                <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full {{ $bid->status === 'accepted' ? 'bg-green-100 text-green-700' : ($bid->status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600') }}">
+                                    {{ $bid->status }}
+                                </span>
+                                <span class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">{{ $bid->updated_at->diffForHumans(null, true) }}</span>
+                            </div>
+                        </a>
+                        @endforeach
                     </div>
                 </div>
+                @endif
+
+                <!-- Chat Area -->
+                <div class="flex-1 flex flex-col bg-white dark:bg-gray-900">
+                    <!-- Chat Header -->
+                    <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between bg-gray-50/30 dark:bg-gray-800/20">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center font-black text-sm">
+                                {{ auth()->user()->hasRole('carrier') ? 'C' : 'T' }}
+                            </div>
+                            <div>
+                                <p class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-tight">
+                                    {{ auth()->user()->hasRole('carrier') ? 'Client' : 'Transporteur #' . ($myBid ? $myBid->id : '...') }}
+                                </p>
+                                <p class="text-[10px] font-bold text-green-500 uppercase tracking-widest flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> 
+                                    {{ auth()->user()->hasRole('carrier') ? 'Client en ligne' : 'Transporteur en ligne' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            @if((auth()->user()->hasRole('shipper') || auth()->user()->hasRole('admin')) && $myBid && $myBid->status !== 'accepted' && $shipment->status === 'pending')
+                            <form action="{{ route('transport-firm-bid.accept-bid', $myBid->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-6 py-2.5 bg-green-500 text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-green-500/30 hover:bg-green-600 transition-all">
+                                    Accepter cette offre
+                                </button>
+                            </form>
+                            @endif
+                        </div>
+                    </div>
 
                 <!-- Messages area -->
                 <div class="flex-1 p-8 space-y-8 overflow-y-auto max-h-[500px]">
@@ -439,7 +502,13 @@
                             <div class="flex {{ $isMe ? 'justify-end' : 'justify-start' }} group">
                                 <div class="max-w-[80%] space-y-1.5">
                                     <div class="flex items-center gap-3 px-1 {{ $isMe ? 'flex-row-reverse' : '' }}">
-                                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ $isMe ? 'Vous' : 'Client' }}</span>
+                                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                                            @if($isMe)
+                                                Vous
+                                            @else
+                                                {{ auth()->user()->hasRole('carrier') ? 'Client' : 'Transporteur' }}
+                                            @endif
+                                        </span>
                                         <span class="text-[9px] text-gray-300 font-bold">{{ $message->created_at->format('H:i') }}</span>
                                     </div>
                                     <div class="px-5 py-4 rounded-3xl shadow-sm border 

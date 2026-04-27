@@ -66,6 +66,9 @@
                                     Prix de livraison
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Offres
+                                </th>
+                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Statut
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-right text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -137,6 +140,13 @@
                                         <div class="text-sm font-black text-gray-900 dark:text-white">
                                             {{ $shipment->delivery_price ? number_format($shipment->delivery_price, 2, ',', ' ') . ' €' : '-' }}
                                         </div>
+                                    </td>
+
+                                    <!-- Offres -->
+                                    <td class="px-6 py-5 whitespace-nowrap text-center">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 border border-brand-100 dark:border-brand-800">
+                                            {{ $shipment->bids->count() }}
+                                        </span>
                                     </td>
 
                                     <!-- Status -->

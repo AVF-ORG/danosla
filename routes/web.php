@@ -150,6 +150,7 @@ Route::group([
         
         Route::post('/{shipment}/bid', [TransportFirmBidController::class, 'storeBid'])->name('store-bid');
         Route::post('/bid/{bid}/message', [TransportFirmBidController::class, 'storeMessage'])->name('store-message');
+        Route::post('/bid/{bid}/accept', [TransportFirmBidController::class, 'acceptBid'])->name('accept-bid');
     });
 
     // calender pages
