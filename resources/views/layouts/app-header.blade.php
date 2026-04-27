@@ -1,5 +1,5 @@
 <header
-    class="sticky top-0 flex w-full bg-white/80 backdrop-blur-md z-99999 xl:px-6 py-2"
+    class="sticky top-0 flex w-full bg-white/80 dark:bg-gray-dark/80 backdrop-blur-md z-99999 xl:px-6 py-2 border-b border-gray-100 dark:border-white/[0.05]"
     x-data="{
         isApplicationMenuOpen: false,
         toggleApplicationMenu() {
@@ -12,7 +12,7 @@
 
             <!-- Desktop Sidebar Toggle Button (visible on xl and up) -->
             <button
-                class="hidden xl:flex items-center justify-center w-10 h-10 text-gray-500 border border-gray-100 rounded-lg dark:border-gray-800 dark:text-gray-400 lg:h-11 lg:w-11"
+                class="hidden xl:flex items-center justify-center w-10 h-10 text-gray-500 border border-gray-100 rounded-lg transition-colors hover:bg-gray-100 dark:border-white/[0.05] dark:text-white/60 dark:hover:bg-white/[0.05] lg:h-11 lg:w-11"
                 @click="$store.sidebar.toggleExpanded()" aria-label="Toggle Sidebar">
                 <svg x-show="!$store.sidebar.isExpanded" width="16" height="12" viewBox="0 0 16 12" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -67,14 +67,14 @@
                     <div class="relative">
                         <span class="absolute -translate-y-1/2 pointer-events-none start-4 top-1/2">
                             <!-- Search Icon -->
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-gray-400 dark:text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </span>
                         <input type="text" placeholder="Search or type command..."
-                            class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-100 bg-white py-2.5 ps-12 pe-14 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-hidden focus:ring-0 dark:border-gray-800 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30 xl:w-[430px]" />
+                            class="h-11 w-full rounded-lg border border-gray-100 bg-white py-2.5 ps-12 pe-14 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-hidden focus:ring-0 dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/40 xl:w-[430px]" />
                         <button
-                            class="absolute end-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-100 bg-white px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-400 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400 shadow-sm">
+                            class="absolute end-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-100 bg-white/50 px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-400 dark:border-white/[0.05] dark:bg-white/[0.05] dark:text-white/50 shadow-sm">
                             <span> ⌘ </span>
                             <span> K </span>
                         </button>
@@ -89,7 +89,7 @@
             <div class="flex items-center gap-2 2xsm:gap-3">
                 <!-- Theme Toggle Button -->
                 <button
-                    class="relative flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-dark-900 h-11 w-11 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+                    class="relative flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full h-11 w-11 hover:bg-gray-100 hover:text-gray-700 dark:border-white/[0.1] dark:bg-white/[0.03] dark:text-white/60 dark:hover:bg-white/[0.08] dark:hover:text-white"
                     @click="$store.theme.toggle()">
                     <svg class="hidden dark:block" width="20" height="20" viewBox="0 0 20 20" fill="none"
                         xmlns="http://www.w3.org/2000/svg">

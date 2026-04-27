@@ -51,37 +51,41 @@
                     <div class="flex-1 p-5 md:p-6 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-800 overflow-hidden">
                         <div class="flex items-center justify-between mb-4">
                             <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Total Revenue</h5>
-                            <button class="text-gray-400">
+                            <button class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
                             </button>
                         </div>
-                        <div id="chartOne" class="h-[300px]"></div>
+                        <div id="chartOne" class="h-[315px]"></div>
                     </div>
                     <!-- Growth Sidebar -->
-                    <div class="w-full md:w-[280px] p-5 md:p-6 bg-gray-50/20 dark:bg-white/5 flex flex-col items-center justify-center">
-                        <div class="text-center mb-6">
-                            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-4 py-1.5 text-xs font-semibold text-gray-500 inline-flex items-center gap-2 mb-6 cursor-pointer hover:bg-gray-50">
-                                2025 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div class="w-full md:w-[280px] p-5 md:p-6 flex flex-col items-center">
+                        <div class="text-center w-full">
+                            <div class="mb-8">
+                                <div class="bg-brand-50 dark:bg-brand-500/10 rounded-md px-3 py-1.5 text-xs font-bold text-brand-600 inline-flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity">
+                                    2025 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </div>
                             </div>
-                            <div id="growthChart" class="h-40 w-full mb-4"></div>
-                            <p class="text-sm font-semibold text-gray-800 dark:text-white">62% Company Growth</p>
+                            
+                            <div id="growthChart" class="h-44 w-full mb-4"></div>
+                            <p class="text-sm font-semibold text-gray-800 dark:text-white/90 mb-8">62% Company Growth</p>
                         </div>
-                        <div class="flex items-center justify-between w-full border-t border-gray-100 dark:border-gray-800 pt-6">
+
+                        <div class="flex items-center justify-between w-full mt-auto">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded bg-brand-50 flex items-center justify-center text-brand-600 dark:bg-brand-500/10">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2" /></svg>
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-[11px] text-gray-400 mb-0 uppercase tracking-tighter">2025</p>
+                                    <p class="text-[11px] text-gray-400 font-bold uppercase tracking-tight mb-0.5">2025</p>
                                     <p class="text-sm font-bold text-gray-800 dark:text-white">$32.5k</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded bg-info-50 flex items-center justify-center text-info-600 dark:bg-info-500/10">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18" /></svg>
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-[11px] text-gray-400 mb-0 uppercase tracking-tighter">2024</p>
+                                    <p class="text-[11px] text-gray-400 font-bold uppercase tracking-tight mb-0.5">2024</p>
                                     <p class="text-sm font-bold text-gray-800 dark:text-white">$41.2k</p>
                                 </div>
                             </div>
@@ -315,32 +319,51 @@
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
                         </button>
                     </div>
-                    <div class="relative pl-8 space-y-10 after:content-[''] after:absolute after:left-3 after:top-1 after:bottom-1 after:w-[2px] after:bg-gray-100 dark:after:bg-gray-800">
+                    <div class="relative pl-6 space-y-8 after:content-[''] after:absolute after:left-1.5 after:top-2 after:bottom-2 after:w-[1px] after:bg-gray-100 dark:after:bg-gray-800">
+                        <!-- Activity Item 1 -->
                         <div class="relative">
-                            <div class="absolute -left-[35px] top-1 w-3 h-3 rounded-full bg-brand-500 ring-4 ring-brand-50 dark:ring-brand-500/10 z-10 transition-all"></div>
-                            <div class="flex items-center justify-between mb-2">
-                                <p class="text-sm font-semibold text-gray-800 dark:text-white">12 Invoices have been paid</p>
+                            <div class="absolute -left-[22px] top-1.5 w-2.5 h-2.5 rounded-full bg-brand-500 z-10"></div>
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white/90">12 Invoices have been paid</p>
                                 <span class="text-xs text-gray-400">12 min ago</span>
                             </div>
-                            <p class="text-sm text-gray-500 mb-4 font-medium">Invoices have been paid to the company</p>
-                            <div class="flex items-center gap-3 p-2 bg-gray-50 dark:bg-gray-900 rounded border border-gray-100 dark:border-gray-800 w-fit">
-                                <svg class="w-6 h-6 text-error-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm1 9h-4v2h4v-2zm0 4h-4v2h4v-2zm-5-8h5v5h-5V7z"/></svg>
-                                <span class="text-xs font-bold text-gray-600 dark:text-gray-400">invoices.pdf</span>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Invoices have been paid to the company</p>
+                            <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-50 dark:bg-white/[0.03] rounded border border-gray-100 dark:border-white/5 w-fit">
+                                <svg class="w-4 h-4 text-error-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm1 9h-4v2h4v-2zm0 4h-4v2h4v-2zm-5-8h5v5h-5V7z"/></svg>
+                                <span class="text-xs font-bold text-gray-700 dark:text-gray-300">invoices.pdf</span>
                             </div>
                         </div>
+
+                        <!-- Activity Item 2 -->
                         <div class="relative">
-                            <div class="absolute -left-[35px] top-1 w-3 h-3 rounded-full bg-info-500 ring-4 ring-info-50 dark:ring-info-500/10 z-10"></div>
-                            <div class="flex items-center justify-between mb-2">
-                                <p class="text-sm font-semibold text-gray-800 dark:text-white">Client Meeting</p>
+                            <div class="absolute -left-[22px] top-1.5 w-2.5 h-2.5 rounded-full bg-success-500 z-10"></div>
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white/90">Client Meeting</p>
                                 <span class="text-xs text-gray-400">45 min ago</span>
                             </div>
-                            <p class="text-sm text-gray-500 mb-4 font-medium">Project meeting with john @10:15am</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Project meeting with john @10:15am</p>
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold text-[10px]">JS</div>
+                                <img src="/images/user/user-01.jpg" class="w-9 h-9 rounded-full object-cover" alt="Client">
                                 <div>
-                                    <p class="text-xs font-bold text-gray-800 dark:text-white uppercase">John Smith (Client)</p>
-                                    <p class="text-[10px] text-gray-400">CEO of InfiniCorp</p>
+                                    <p class="text-xs font-bold text-gray-700 dark:text-gray-200">Lester McCarthy (Client)</p>
+                                    <p class="text-[10px] text-gray-400">CEO of ThemeSelection</p>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Item 3 -->
+                        <div class="relative">
+                            <div class="absolute -left-[22px] top-1.5 w-2.5 h-2.5 rounded-full bg-info-500 z-10"></div>
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white/90">Create a new project for client</p>
+                                <span class="text-xs text-gray-400">2 Day Ago</span>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">6 team members in a project</p>
+                            <div class="flex items-center -space-x-2">
+                                <img class="w-7 h-7 rounded-full border-2 border-white dark:border-gray-900 object-cover" src="/images/user/user-02.jpg" alt="">
+                                <img class="w-7 h-7 rounded-full border-2 border-white dark:border-gray-900 object-cover" src="/images/user/user-03.jpg" alt="">
+                                <img class="w-7 h-7 rounded-full border-2 border-white dark:border-gray-900 object-cover" src="/images/user/user-04.jpg" alt="">
+                                <div class="w-7 h-7 rounded-full border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-[10px] font-bold text-gray-500">+3</div>
                             </div>
                         </div>
                     </div>

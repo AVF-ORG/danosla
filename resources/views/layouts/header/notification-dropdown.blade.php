@@ -20,14 +20,14 @@
 }" @click.away="closeDropdown()">
     <!-- Notification Button -->
     <button
-        class="relative flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-dark-900 h-11 w-11 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+        class="relative flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-dark-900 h-11 w-11 hover:bg-gray-100 hover:text-gray-700 dark:border-white/[0.1] dark:bg-white/[0.03] dark:text-white/60 dark:hover:bg-white/[0.08] dark:hover:text-white"
         @click="toggleDropdown()"
         type="button"
     >
         <!-- Notification Badge -->
         <span
             x-show="notifying"
-            class="absolute right-0 top-0.5 z-1 h-2 w-2 rounded-full bg-orange-400"
+            class="absolute right-0 top-0.5 z-1 h-2 w-2 rounded-full bg-orange-400 ring-2 ring-white dark:ring-gray-dark"
         >
             <span
                 class="absolute inline-flex w-full h-full bg-orange-400 rounded-full opacity-75 -z-1 animate-ping"

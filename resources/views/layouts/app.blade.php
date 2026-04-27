@@ -38,10 +38,10 @@
                     const body = document.body;
                     if (this.theme === 'dark') {
                         html.classList.add('dark');
-                        body.classList.add('dark', 'bg-gray-900');
+                        body.classList.add('dark', 'bg-gray-dark');
                     } else {
                         html.classList.remove('dark');
-                        body.classList.remove('dark', 'bg-gray-900');
+                        body.classList.remove('dark', 'bg-gray-dark');
                     }
                 }
             });
@@ -78,6 +78,9 @@
             const theme = savedTheme || systemTheme;
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.body.classList.add('dark', 'bg-gray-dark');
+                });
             } else {
                 document.documentElement.classList.remove('dark');
             }
@@ -85,19 +88,14 @@
     </script>
 </head>
 
-<body x-data="{ loaded: true }" x-init="$store.sidebar.isExpanded = window.innerWidth >= 1280;
-
-const checkMobile = () => {
-    if (window.innerWidth < 1280) {
-        $store.sidebar.setMobileOpen(false);
-        $store.sidebar.isExpanded = false;
-    } else {
-        $store.sidebar.isMobileOpen = false;
-        $store.sidebar.isExpanded = true;
-    }
-};
-
-window.addEventListener('resize', checkMobile);">
+    <body x-data="{ loaded: true }" x-init="const checkMobile = () => {
+        if (window.innerWidth < 1280) {
+            $store.sidebar.setMobileOpen(false);
+            $store.sidebar.isExpanded = false;
+        }
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);">
     @include('components.preloader')
 
     <div class="min-h-screen xl:flex">

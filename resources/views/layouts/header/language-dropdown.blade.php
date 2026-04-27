@@ -83,7 +83,7 @@
     <button type="button" @click="toggle()"
         class="relative flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full
                hover:text-dark-900 h-11 w-11 hover:bg-gray-100 hover:text-gray-700
-               dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+               dark:border-white/[0.1] dark:bg-white/[0.03] dark:text-white/60 dark:hover:bg-white/[0.08] dark:hover:text-white"
         :aria-expanded="open" aria-haspopup="true">
 
         <!-- globe -->
@@ -102,7 +102,7 @@
         <span
             class="absolute -bottom-1 -right-1 flex h-5 min-w-5 px-1 items-center justify-center rounded-full
                    border border-white bg-white text-[10px] font-semibold text-gray-700 uppercase
-                   dark:border-gray-900 dark:bg-gray-900 dark:text-gray-200"
+                   dark:border-gray-dark dark:bg-brand-500 dark:text-white"
             x-text="currentLang().code"></span>
     </button>
 
