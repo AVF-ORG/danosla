@@ -1,3 +1,4 @@
+import ApexCharts from 'apexcharts';
 
 export const initChartThree = () => {
     const chartElement = document.querySelector('#chartThree');
@@ -5,97 +6,71 @@ export const initChartThree = () => {
     if (chartElement) {
         const chartThreeOptions = {
             series: [{
-                name: "Shipments",
-                data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
-            },
-            {
-                name: "Revenue",
-                data: [40, 30, 50, 40, 55, 40, 70, 100, 110, 120, 150, 140],
-            },
-            ],
-            legend: {
-                show: false,
-                position: "top",
-                horizontalAlign: "left",
-            },
-            colors: ["#465FFF", "#9CB9FF"],
+                name: "Income",
+                data: [180, 200, 150, 220, 190, 250, 210]
+            }],
             chart: {
-                fontFamily: "Outfit, sans-serif",
-                height: 310,
-                type: "area",
+                height: 200,
+                type: 'area',
                 toolbar: {
-                    show: false,
+                    show: false
                 },
+                sparkline: {
+                    enabled: false
+                },
+                fontFamily: 'Public Sans, sans-serif'
             },
-            fill: {
-                gradient: {
-                    enabled: true,
-                    opacityFrom: 0.55,
-                    opacityTo: 0,
-                },
+            colors: ['#696cff'],
+            dataLabels: {
+                enabled: false
             },
             stroke: {
-                curve: "straight",
-                width: ["2", "2"],
+                curve: 'smooth',
+                width: 3
             },
-            markers: {
-                size: 0,
-            },
-            labels: {
-                show: false,
-                position: "top",
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.5,
+                    opacityTo: 0.1,
+                    stops: [0, 90, 100]
+                }
             },
             grid: {
-                xaxis: {
-                    lines: {
-                        show: false,
-                    },
-                },
-                yaxis: {
-                    lines: {
-                        show: true,
-                    },
-                },
+                show: true,
+                borderColor: '#f1f1f1',
+                strokeDashArray: 10,
+                padding: {
+                    top: 0,
+                    bottom: 0,
+                    left: -10,
+                    right: 0
+                }
             },
-            dataLabels: {
-                enabled: false,
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    style: {
+                        colors: '#a1acb8',
+                        fontSize: '13px'
+                    }
+                }
+            },
+            yaxis: {
+                show: false
             },
             tooltip: {
                 x: {
-                    format: "dd MMM yyyy",
-                },
-            },
-            xaxis: {
-                type: "category",
-                categories: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
-                axisBorder: {
-                    show: false,
-                },
-                axisTicks: {
-                    show: false,
-                },
-                tooltip: false,
-            },
-            yaxis: {
-                title: {
-                    style: {
-                        fontSize: "0px",
-                    },
-                },
-            },
+                    show: false
+                }
+            }
         };
 
         const chart = new ApexCharts(chartElement, chartThreeOptions);

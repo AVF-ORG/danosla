@@ -36,14 +36,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('#chartThree')) {
         import('./components/chart/chart-3').then(module => module.initChartThree());
     }
+    if (document.querySelector('#profitChart') || document.querySelector('#salesChart')) {
+        import('./components/chart/sparklines').then(module => module.initSparklines());
+    }
+    if (document.querySelector('#orderChart')) {
+        import('./components/chart/chart-order').then(module => module.initOrderChart());
+    }
+    if (document.querySelector('#growthChart')) {
+        import('./components/chart/growth-chart').then(module => module.initGrowthChart());
+    }
+    if (document.querySelector('#chartThirteen')) {
+        import('./components/chart/chart-profile').then(module => module.initProfileChart());
+    }
     if (document.querySelector('#chartSix')) {
         import('./components/chart/chart-6').then(module => module.initChartSix());
     }
     if (document.querySelector('#chartEight')) {
         import('./components/chart/chart-8').then(module => module.initChartEight());
-    }
-    if (document.querySelector('#chartThirteen')) {
-        import('./components/chart/chart-13').then(module => module.initChartThirteen());
     }
 
     // Calendar init

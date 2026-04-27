@@ -62,33 +62,33 @@
         </div>
 
         {{-- Table --}}
-        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="sneat-card overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="border-b border-gray-200 bg-gray-50/50 dark:border-gray-800 dark:bg-white/[0.02]">
+                    <thead class="border-b border-gray-100 dark:border-gray-800">
                         <tr>
                             @if($roleToFilter)
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <th class="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                     Name
                                 </th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <th class="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                     Email
                                 </th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <th class="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                     Phone
                                 </th>
                             @else
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <th class="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                     User Details
                                 </th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <th class="px-6 py-4 text-center text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                     Roles
                                 </th>
                             @endif
-                            <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            <th class="px-6 py-4 text-center text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                 Status
                             </th>
-                            <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            <th class="px-6 py-4 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                 Actions
                             </th>
                         </tr>
@@ -144,13 +144,13 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @php
                                         $statusConfig = [
-                                            'active' => 'bg-green-500 text-white shadow-sm',
-                                            'pending' => 'bg-amber-500 text-white shadow-sm',
-                                            'inactive' => 'bg-red-500 text-white shadow-sm',
-                                            'blocked' => 'bg-red-500 text-white shadow-sm',
-                                        ][$user->status] ?? 'bg-gray-500 text-white shadow-sm';
+                                            'active' => 'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500',
+                                            'pending' => 'bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-warning-500',
+                                            'inactive' => 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500',
+                                            'blocked' => 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500',
+                                        ][$user->status] ?? 'bg-gray-100 text-gray-600 dark:bg-gray-500/15 dark:text-gray-400';
                                     @endphp
-                                    <span class="inline-flex items-center rounded-full px-3 py-0.5 text-[10px] font-bold uppercase tracking-widest {{ $statusConfig }}">
+                                    <span class="inline-flex items-center rounded px-3 py-1 text-[11px] font-semibold uppercase tracking-wider {{ $statusConfig }}">
                                         {{ $user->status }}
                                     </span>
                                 </td>

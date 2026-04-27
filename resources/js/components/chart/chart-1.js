@@ -1,4 +1,4 @@
-
+import ApexCharts from 'apexcharts';
 
 export const initChartOne = () => {
     const chartElement = document.querySelector('#chartOne');
@@ -6,14 +6,18 @@ export const initChartOne = () => {
 
     const chartOneOptions = {
         series: [{
-            name: "Shipments",
-            data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
-        },],
-        colors: ["#465fff"],
+            name: "2025",
+            data: [18, 7, 15, 29, 18, 12, 9],
+        }, {
+            name: "2024",
+            data: [-13, -18, -9, -14, -5, -17, -15],
+        }],
+        colors: ["#696cff", "#03c3ec"],
         chart: {
-            fontFamily: "Outfit, sans-serif",
+            fontFamily: "Public Sans, sans-serif",
             type: "bar",
-            height: 180,
+            height: 300,
+            stacked: true,
             toolbar: {
                 show: false,
             },
@@ -21,9 +25,10 @@ export const initChartOne = () => {
         plotOptions: {
             bar: {
                 horizontal: false,
-                columnWidth: "39%",
+                columnWidth: "33%",
                 borderRadius: 5,
                 borderRadiusApplication: "end",
+                borderRadiusWhenStacked: "last",
             },
         },
         dataLabels: {
@@ -31,61 +36,51 @@ export const initChartOne = () => {
         },
         stroke: {
             show: true,
-            width: 4,
+            width: 2,
             colors: ["transparent"],
         },
         xaxis: {
-            categories: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ],
+            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
             axisBorder: {
                 show: false,
             },
             axisTicks: {
                 show: false,
             },
-        },
-        legend: {
-            show: true,
-            position: "top",
-            horizontalAlign: "left",
-            fontFamily: "Outfit",
-            markers: {
-                radius: 99,
-            },
-        },
-        yaxis: {
-            title: false,
-        },
-        grid: {
-            yaxis: {
-                lines: {
-                    show: true,
+            labels: {
+                style: {
+                    colors: "#a1acb8",
+                    fontSize: "13px",
                 },
             },
+        },
+        legend: {
+            show: false,
+        },
+        yaxis: {
+            show: false,
+        },
+        grid: {
+            show: true,
+            borderColor: "#f1f1f1",
+            strokeDashArray: 10,
+            padding: {
+                top: 0,
+                bottom: -15,
+                left: -10,
+                right: 0
+            }
         },
         fill: {
             opacity: 1,
         },
-
         tooltip: {
             x: {
                 show: false,
             },
             y: {
                 formatter: function (val) {
-                    return val;
+                    return val + 'k';
                 },
             },
         },

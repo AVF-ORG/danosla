@@ -1,564 +1,404 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="grid grid-cols-12 gap-4 md:gap-6">
-        <div class="col-span-12 space-y-6 xl:col-span-7">
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
-                <div
-                    class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-                    <div class="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-                        <svg class="fill-gray-800 dark:fill-white/90" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M8.80443 5.60156C7.59109 5.60156 6.60749 6.58517 6.60749 7.79851C6.60749 9.01185 7.59109 9.99545 8.80443 9.99545C10.0178 9.99545 11.0014 9.01185 11.0014 7.79851C11.0014 6.58517 10.0178 5.60156 8.80443 5.60156ZM5.10749 7.79851C5.10749 5.75674 6.76267 4.10156 8.80443 4.10156C10.8462 4.10156 12.5014 5.75674 12.5014 7.79851C12.5014 9.84027 10.8462 11.4955 8.80443 11.4955C6.76267 11.4955 5.10749 9.84027 5.10749 7.79851ZM4.86252 15.3208C4.08769 16.0881 3.70377 17.0608 3.51705 17.8611C3.48384 18.0034 3.5211 18.1175 3.60712 18.2112C3.70161 18.3141 3.86659 18.3987 4.07591 18.3987H13.4249C13.6343 18.3987 13.7992 18.3141 13.8937 18.2112C13.9797 18.1175 14.017 18.0034 13.9838 17.8611C13.7971 17.0608 13.4132 16.0881 12.6383 15.3208C11.8821 14.572 10.6899 13.955 8.75042 13.955C6.81096 13.955 5.61877 14.572 4.86252 15.3208ZM3.8071 14.2549C4.87163 13.2009 6.45602 12.455 8.75042 12.455C11.0448 12.455 12.6292 13.2009 13.6937 14.2549C14.7397 15.2906 15.2207 16.5607 15.4446 17.5202C15.7658 18.8971 14.6071 19.8987 13.4249 19.8987H4.07591C2.89369 19.8987 1.73504 18.8971 2.05628 17.5202C2.28015 16.5607 2.76117 15.2906 3.8071 14.2549ZM15.3042 11.4955C14.4702 11.4955 13.7006 11.2193 13.0821 10.7533C13.3742 10.3314 13.6054 9.86419 13.7632 9.36432C14.1597 9.75463 14.7039 9.99545 15.3042 9.99545C16.5176 9.99545 17.5012 9.01185 17.5012 7.79851C17.5012 6.58517 16.5176 5.60156 15.3042 5.60156C14.7039 5.60156 14.1597 5.84239 13.7632 6.23271C13.6054 5.73284 13.3741 5.26561 13.082 4.84371C13.7006 4.37777 14.4702 4.10156 15.3042 4.10156C17.346 4.10156 19.0012 5.75674 19.0012 7.79851C19.0012 9.84027 17.346 11.4955 15.3042 11.4955ZM19.9248 19.8987H16.3901C16.7014 19.4736 16.9159 18.969 16.9827 18.3987H19.9248C20.1341 18.3987 20.2991 18.3141 20.3936 18.2112C20.4796 18.1175 20.5169 18.0034 20.4837 17.861C20.2969 17.0607 19.913 16.088 19.1382 15.3208C18.4047 14.5945 17.261 13.9921 15.4231 13.9566C15.2232 13.6945 14.9995 13.437 14.7491 13.1891C14.5144 12.9566 14.262 12.7384 13.9916 12.5362C14.3853 12.4831 14.8044 12.4549 15.2503 12.4549C17.5447 12.4549 19.1291 13.2008 20.1936 14.2549C21.2395 15.2906 21.7206 16.5607 21.9444 17.5202C22.2657 18.8971 21.107 19.8987 19.9248 19.8987Z"
-                                fill="" />
-                        </svg>
+    <div class="grid grid-cols-12 gap-6">
+        <!-- Row 1 -->
+        <div class="col-span-12 lg:col-span-8">
+            <div class="sneat-card p-5 md:p-6 overflow-hidden relative h-full">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="flex-1 text-center md:text-left">
+                        <h4 class="text-xl font-semibold text-brand-600 mb-1">Congratulations John! 🎉</h4>
+                        <p class="text-gray-500 mb-4 text-sm leading-relaxed">You have done 72% more sales today.<br>Check your new badge in your profile.</p>
+                        <a href="#" class="btn-primary px-4 py-2 text-sm">View Badges</a>
                     </div>
-
-                    <div class="flex items-end justify-between mt-5">
-                        <div>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">Customers</span>
-                            <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">3,782</h4>
-                        </div>
-
-                        <span
-                            class="flex items-center gap-1 rounded-full bg-success-50 py-0.5 pl-2 pr-2.5 text-sm font-medium text-success-600 dark:bg-success-500/15 dark:text-success-500">
-                            <svg class="fill-current" width="12" height="12" viewBox="0 0 12 12" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M5.56462 1.62393C5.70193 1.47072 5.90135 1.37432 6.12329 1.37432C6.1236 1.37432 6.12391 1.37432 6.12422 1.37432C6.31631 1.37415 6.50845 1.44731 6.65505 1.59381L9.65514 4.5918C9.94814 4.88459 9.94831 5.35947 9.65552 5.65246C9.36273 5.94546 8.88785 5.94562 8.59486 5.65283L6.87329 3.93247L6.87329 10.125C6.87329 10.5392 6.53751 10.875 6.12329 10.875C5.70908 10.875 5.37329 10.5392 5.37329 10.125L5.37329 3.93578L3.65516 5.65282C3.36218 5.94562 2.8873 5.94547 2.5945 5.65248C2.3017 5.35949 2.30185 4.88462 2.59484 4.59182L5.56462 1.62393Z"
-                                    fill="" />
-                            </svg>
-
-                            11.01%
-                        </span>
+                    <div class="mt-6 md:mt-0 md:absolute md:right-8 md:bottom-0">
+                        <img src="/images/cards/sneat-congratulations-v3.png" class="h-40 md:h-48" alt="Congratulations">
                     </div>
-                </div>
-
-                <div
-                    class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-                    <div class="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-                        <svg class="fill-gray-800 dark:fill-white/90" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M11.665 3.75621C11.8762 3.65064 12.1247 3.65064 12.3358 3.75621L18.7807 6.97856L12.3358 10.2009C12.1247 10.3065 11.8762 10.3065 11.665 10.2009L5.22014 6.97856L11.665 3.75621ZM4.29297 8.19203V16.0946C4.29297 16.3787 4.45347 16.6384 4.70757 16.7654L11.25 20.0366V11.6513C11.1631 11.6205 11.0777 11.5843 10.9942 11.5426L4.29297 8.19203ZM12.75 20.037L19.2933 16.7654C19.5474 16.6384 19.7079 16.3787 19.7079 16.0946V8.19202L13.0066 11.5426C12.9229 11.5844 12.8372 11.6208 12.75 11.6516V20.037ZM13.0066 2.41456C12.3732 2.09786 11.6277 2.09786 10.9942 2.41456L4.03676 5.89319C3.27449 6.27432 2.79297 7.05342 2.79297 7.90566V16.0946C2.79297 16.9469 3.27448 17.726 4.03676 18.1071L10.9942 21.5857L11.3296 20.9149L10.9942 21.5857C11.6277 21.9024 12.3732 21.9024 13.0066 21.5857L19.9641 18.1071C20.7264 17.726 21.2079 16.9469 21.2079 16.0946V7.90566C21.2079 7.05342 20.7264 6.27432 19.9641 5.89319L13.0066 2.41456Z"
-                                fill="" />
-                        </svg>
-                    </div>
-
-                    <div class="flex items-end justify-between mt-5">
-                        <div>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">Orders</span>
-                            <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">5,359</h4>
-                        </div>
-
-                        <span
-                            class="flex items-center gap-1 rounded-full bg-error-50 py-0.5 pl-2 pr-2.5 text-sm font-medium text-error-600 dark:bg-error-500/15 dark:text-error-500">
-                            <svg class="fill-current" width="12" height="12" viewBox="0 0 12 12" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M5.31462 10.3761C5.45194 10.5293 5.65136 10.6257 5.87329 10.6257C5.8736 10.6257 5.8739 10.6257 5.87421 10.6257C6.0663 10.6259 6.25845 10.5527 6.40505 10.4062L9.40514 7.4082C9.69814 7.11541 9.69831 6.64054 9.40552 6.34754C9.11273 6.05454 8.63785 6.05438 8.34486 6.34717L6.62329 8.06753L6.62329 1.875C6.62329 1.46079 6.28751 1.125 5.87329 1.125C5.45908 1.125 5.12329 1.46079 5.12329 1.875L5.12329 8.06422L3.40516 6.34719C3.11218 6.05439 2.6373 6.05454 2.3445 6.34752C2.0517 6.64051 2.05185 7.11538 2.34484 7.40818L5.31462 10.3761Z"
-                                    fill="" />
-                            </svg>
-
-                            9.05%
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 sm:px-6 sm:pt-6 dark:border-gray-800 dark:bg-white/[0.03]">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-                        Monthly Sales
-                    </h3>
-
-                    <!-- Dropdown Menu -->
-                    @props(['items' => ['View More', 'Delete']])
-                    <div x-data="{ openDropDown: false }" class="relative h-fit">
-                        <button @click="openDropDown = !openDropDown"
-                            :class="openDropDown ? 'text-gray-700 dark:text-white' :
-                                'text-gray-400 hover:text-gray-700 dark:hover:text-white'">
-                            <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M10.2441 6C10.2441 5.0335 11.0276 4.25 11.9941 4.25H12.0041C12.9706 4.25 13.7541 5.0335 13.7541 6C13.7541 6.9665 12.9706 7.75 12.0041 7.75H11.9941C11.0276 7.75 10.2441 6.9665 10.2441 6ZM10.2441 18C10.2441 17.0335 11.0276 16.25 11.9941 16.25H12.0041C12.9706 16.25 13.7541 17.0335 13.7541 18C13.7541 18.9665 12.9706 19.75 12.0041 19.75H11.9941C11.0276 19.75 10.2441 18.9665 10.2441 18ZM11.9941 10.25C11.0276 10.25 10.2441 11.0335 10.2441 12C10.2441 12.9665 11.0276 13.75 11.9941 13.75H12.0041C12.9706 13.75 13.7541 12.9665 13.7541 12C13.7541 11.0335 12.9706 10.25 12.0041 10.25H11.9941Z"
-                                    fill="" />
-                            </svg>
-                        </button>
-
-                        <div x-show="openDropDown" @click.outside="openDropDown = false"
-                            class="absolute right-0 z-40 w-40 p-2 space-y-1 bg-white border border-gray-200 shadow-theme-lg dark:bg-gray-dark top-full rounded-2xl dark:border-gray-800">
-                            @forelse($items as $item)
-                                <button
-                                    class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
-                                    {{ $item }}
-                                </button>
-                            @empty
-                                {{ $slot }}
-                            @endforelse
-                        </div>
-                    </div>
-                    <!-- End Dropdown Menu -->
-                </div>
-
-                <div class="max-w-full overflow-x-auto custom-scrollbar">
-                    <div id="chartOne" class="-ml-5 h-full min-w-[690px] pl-2 xl:min-w-full"></div>
                 </div>
             </div>
         </div>
-        <div class="col-span-12 xl:col-span-5">
-            <div class="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
-                <div class="shadow-default rounded-2xl bg-white px-5 pb-11 pt-5 dark:bg-gray-900 sm:px-6 sm:pt-6">
-                    <div class="flex justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-                                Monthly Target
-                            </h3>
-                            <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
-                                Target you’ve set for each month
-                            </p>
+
+        <div class="col-span-12 lg:col-span-4">
+            <div class="grid grid-cols-2 gap-6">
+                <!-- Order Card -->
+                <div class="sneat-card p-5">
+                    <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block mb-1">Order</span>
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">276k</h3>
+                    <div id="orderChart" class="h-10"></div>
+                </div>
+                <!-- Sales Card -->
+                <div class="sneat-card p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-10 h-10 rounded bg-info-50 flex items-center justify-center text-info-600 dark:bg-info-500/10">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
                         </div>
-                        <!-- Dropdown Menu -->
-                        @props(['items' => ['View More', 'Delete']])
-                        <div x-data="{ openDropDown: false }" class="relative h-fit">
-                            <button @click="openDropDown = !openDropDown"
-                                :class="openDropDown ? 'text-gray-700 dark:text-white' :
-                                    'text-gray-400 hover:text-gray-700 dark:hover:text-white'">
-                                <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M10.2441 6C10.2441 5.0335 11.0276 4.25 11.9941 4.25H12.0041C12.9706 4.25 13.7541 5.0335 13.7541 6C13.7541 6.9665 12.9706 7.75 12.0041 7.75H11.9941C11.0276 7.75 10.2441 6.9665 10.2441 6ZM10.2441 18C10.2441 17.0335 11.0276 16.25 11.9941 16.25H12.0041C12.9706 16.25 13.7541 17.0335 13.7541 18C13.7541 18.9665 12.9706 19.75 12.0041 19.75H11.9941C11.0276 19.75 10.2441 18.9665 10.2441 18ZM11.9941 10.25C11.0276 10.25 10.2441 11.0335 10.2441 12C10.2441 12.9665 11.0276 13.75 11.9941 13.75H12.0041C12.9706 13.75 13.7541 12.9665 13.7541 12C13.7541 11.0335 12.9706 10.25 12.0041 10.25H11.9941Z"
-                                        fill="" />
-                                </svg>
+                        <button class="text-gray-400 hover:text-gray-700">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
+                        </button>
+                    </div>
+                    <span class="text-sm text-gray-500 block mb-0.5">Sales</span>
+                    <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-1">$4,679</h4>
+                    <span class="text-success-600 text-xs font-semibold">↑ 28.42%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="col-span-12 lg:col-span-8">
+            <div class="sneat-card overflow-hidden">
+                <div class="flex flex-col md:flex-row">
+                    <!-- Main Revenue Chart -->
+                    <div class="flex-1 p-5 md:p-6 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-800 overflow-hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Total Revenue</h5>
+                            <button class="text-gray-400">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
                             </button>
-
-                            <div x-show="openDropDown" @click.outside="openDropDown = false"
-                                class="absolute right-0 z-40 w-40 p-2 space-y-1 bg-white border border-gray-200 shadow-theme-lg dark:bg-gray-dark top-full rounded-2xl dark:border-gray-800">
-                                @forelse($items as $item)
-                                    <button
-                                        class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
-                                        {{ $item }}
-                                    </button>
-                                @empty
-                                    {{ $slot }}
-                                @endforelse
+                        </div>
+                        <div id="chartOne" class="h-[300px]"></div>
+                    </div>
+                    <!-- Growth Sidebar -->
+                    <div class="w-full md:w-[280px] p-5 md:p-6 bg-gray-50/20 dark:bg-white/5 flex flex-col items-center justify-center">
+                        <div class="text-center mb-6">
+                            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-4 py-1.5 text-xs font-semibold text-gray-500 inline-flex items-center gap-2 mb-6 cursor-pointer hover:bg-gray-50">
+                                2025 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
+                            <div id="growthChart" class="h-40 w-full mb-4"></div>
+                            <p class="text-sm font-semibold text-gray-800 dark:text-white">62% Company Growth</p>
                         </div>
-                        <!-- End Dropdown Menu -->
-
-                    </div>
-                    <div class="relative max-h-[195px]">
-                        {{-- Chart --}}
-                        <div id="chartTwo" class="h-full"></div>
-                        <span
-                            class="absolute left-1/2 top-[85%] -translate-x-1/2 -translate-y-[85%] rounded-full bg-success-50 px-3 py-1 text-xs font-medium text-success-600 dark:bg-success-500/15 dark:text-success-500">+10%</span>
-                    </div>
-                    <p class="mx-auto mt-1.5 w-full max-w-[380px] text-center text-sm text-gray-500 sm:text-base">
-                        You earn $3287 today, it's higher than last month. Keep up your good work!
-                    </p>
-                </div>
-
-                <div class="flex items-center justify-center gap-5 px-6 py-3.5 sm:gap-8 sm:py-5">
-                    <div>
-                        <p class="mb-1 text-center text-theme-xs text-gray-500 dark:text-gray-400 sm:text-sm">
-                            Target
-                        </p>
-                        <p
-                            class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
-                            $20K
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M7.26816 13.6632C7.4056 13.8192 7.60686 13.9176 7.8311 13.9176C7.83148 13.9176 7.83187 13.9176 7.83226 13.9176C8.02445 13.9178 8.21671 13.8447 8.36339 13.6981L12.3635 9.70076C12.6565 9.40797 12.6567 8.9331 12.3639 8.6401C12.0711 8.34711 11.5962 8.34694 11.3032 8.63973L8.5811 11.36L8.5811 2.5C8.5811 2.08579 8.24531 1.75 7.8311 1.75C7.41688 1.75 7.0811 2.08579 7.0811 2.5L7.0811 11.3556L4.36354 8.63975C4.07055 8.34695 3.59568 8.3471 3.30288 8.64009C3.01008 8.93307 3.01023 9.40794 3.30321 9.70075L7.26816 13.6632Z"
-                                    fill="#D92D20" />
-                            </svg>
-                        </p>
-                    </div>
-
-                    <div class="h-7 w-px bg-gray-200 dark:bg-gray-800"></div>
-
-                    <div>
-                        <p class="mb-1 text-center text-theme-xs text-gray-500 dark:text-gray-400 sm:text-sm">
-                            Revenue
-                        </p>
-                        <p
-                            class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
-                            $20K
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M7.60141 2.33683C7.73885 2.18084 7.9401 2.08243 8.16435 2.08243C8.16475 2.08243 8.16516 2.08243 8.16556 2.08243C8.35773 2.08219 8.54998 2.15535 8.69664 2.30191L12.6968 6.29924C12.9898 6.59203 12.9899 7.0669 12.6971 7.3599C12.4044 7.6529 11.9295 7.65306 11.6365 7.36027L8.91435 4.64004L8.91435 13.5C8.91435 13.9142 8.57856 14.25 8.16435 14.25C7.75013 14.25 7.41435 13.9142 7.41435 13.5L7.41435 4.64442L4.69679 7.36025C4.4038 7.65305 3.92893 7.6529 3.63613 7.35992C3.34333 7.06693 3.34348 6.59206 3.63646 6.29926L7.60141 2.33683Z"
-                                    fill="#039855" />
-                            </svg>
-                        </p>
-                    </div>
-
-                    <div class="h-7 w-px bg-gray-200 dark:bg-gray-800"></div>
-
-                    <div>
-                        <p class="mb-1 text-center text-theme-xs text-gray-500 dark:text-gray-400 sm:text-sm">
-                            Today
-                        </p>
-                        <p
-                            class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
-                            $20K
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M7.60141 2.33683C7.73885 2.18084 7.9401 2.08243 8.16435 2.08243C8.16475 2.08243 8.16516 2.08243 8.16556 2.08243C8.35773 2.08219 8.54998 2.15535 8.69664 2.30191L12.6968 6.29924C12.9898 6.59203 12.9899 7.0669 12.6971 7.3599C12.4044 7.6529 11.9295 7.65306 11.6365 7.36027L8.91435 4.64004L8.91435 13.5C8.91435 13.9142 8.57856 14.25 8.16435 14.25C7.75013 14.25 7.41435 13.9142 7.41435 13.5L7.41435 4.64442L4.69679 7.36025C4.4038 7.65305 3.92893 7.6529 3.63613 7.35992C3.34333 7.06693 3.34348 6.59206 3.63646 6.29926L7.60141 2.33683Z"
-                                    fill="#039855" />
-                            </svg>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
-
-        <div class="col-span-12">
-            <div
-                class="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
-                <div class="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
-                    <div class="w-full">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-                            Statistics
-                        </h3>
-                        <p class="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-                            Target you’ve set for each month
-                        </p>
-                    </div>
-
-                    <div class="flex items-start w-full gap-3 sm:justify-end">
-                        <div x-data="{ selected: 'overview' }"
-                            class="inline-flex w-fit items-center gap-0.5 rounded-lg bg-gray-100 p-0.5 dark:bg-gray-900">
-
-                            @php
-                                $options = [
-                                    ['value' => 'overview', 'label' => 'Overview'],
-                                    ['value' => 'sales', 'label' => 'Sales'],
-                                    ['value' => 'revenue', 'label' => 'Revenue'],
-                                ];
-                            @endphp
-
-                            @foreach ($options as $option)
-                                <button @click="selected = '{{ $option['value'] }}'"
-                                    :class="selected === '{{ $option['value'] }}' ?
-                                        'shadow-theme-xs text-gray-900 dark:text-white bg-white dark:bg-gray-800' :
-                                        'text-gray-500 dark:text-gray-400'"
-                                    class="px-3 py-2 font-medium rounded-md text-theme-sm hover:text-gray-900 dark:hover:text-white">
-                                    {{ $option['label'] }}
-                                </button>
-                            @endforeach
-                        </div>
-
-                        <div x-data="{
-                            init() {
-                                flatpickr(this.$refs.datepicker, {
-                                    mode: 'range',
-                                    static: true,
-                                    monthSelectorType: 'static',
-                                    dateFormat: 'M j',
-                                    defaultDate: [new Date(Date.now() - 6 * 24 * 60 * 60 * 1000), new Date()],
-                                    prevArrow: '<svg class=\'stroke-current\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M15.25 6L9 12.25L15.25 18.5\' stroke=\'\' stroke-width=\'1.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/></svg>',
-                                    nextArrow: '<svg class=\'stroke-current\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M8.75 19L15 12.75L8.75 6.5\' stroke=\'\' stroke-width=\'1.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/></svg>',
-                                    onReady: (selectedDates, dateStr, instance) => {
-                                        instance.element.value = dateStr.replace('to', '-');
-                                        const customClass = instance.element.getAttribute('data-class');
-                                        if (instance.calendarContainer) {
-                                            instance.calendarContainer.classList.add(customClass);
-                                        }
-                                    },
-                                    onChange: (selectedDates, dateStr, instance) => {
-                                        instance.element.value = dateStr.replace('to', '-');
-                                    },
-                                })
-                            }
-                        }" class="relative max-w-40">
-                            <input x-ref="datepicker"
-                                class="h-10 w-full max-w-11 rounded-lg border border-gray-200 bg-white py-2.5 pl-[34px] pr-4 text-theme-sm font-medium text-gray-700 shadow-theme-xs focus:outline-hidden focus:ring-0 focus-visible:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 xl:max-w-fit xl:pl-11"
-                                placeholder="Select dates" data-class="flatpickr-right" readonly="readonly" />
-                            <div class="absolute inset-0 right-auto flex items-center pointer-events-none left-4">
-                                <svg class="fill-gray-700 dark:fill-gray-400" width="20" height="20"
-                                    viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M6.66683 1.54199C7.08104 1.54199 7.41683 1.87778 7.41683 2.29199V3.00033H12.5835V2.29199C12.5835 1.87778 12.9193 1.54199 13.3335 1.54199C13.7477 1.54199 14.0835 1.87778 14.0835 2.29199V3.00033L15.4168 3.00033C16.5214 3.00033 17.4168 3.89576 17.4168 5.00033V7.50033V15.8337C17.4168 16.9382 16.5214 17.8337 15.4168 17.8337H4.5835C3.47893 17.8337 2.5835 16.9382 2.5835 15.8337V7.50033V5.00033C2.5835 3.89576 3.47893 3.00033 4.5835 3.00033L5.91683 3.00033V2.29199C5.91683 1.87778 6.25262 1.54199 6.66683 1.54199ZM6.66683 4.50033H4.5835C4.30735 4.50033 4.0835 4.72418 4.0835 5.00033V6.75033H15.9168V5.00033C15.9168 4.72418 15.693 4.50033 15.4168 4.50033H13.3335H6.66683ZM15.9168 8.25033H4.0835V15.8337C4.0835 16.1098 4.30735 16.3337 4.5835 16.3337H15.4168C15.693 16.3337 15.9168 16.1098 15.9168 15.8337V8.25033Z"
-                                        fill="" />
-                                </svg>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="max-w-full overflow-x-auto custom-scrollbar">
-                    <div id="chartThree" class="-ml-4 min-w-[700px] pl-2 xl:min-w-full"></div>
-                </div>
-            </div>
-
-
-        </div>
-
-        <div class="col-span-12 xl:col-span-5">
-            @props(['countries' => []])
-
-            @php
-                $defaultCountries = [
-                    [
-                        'name' => 'Algeria',
-                        'flag' => './images/country/country-01.svg',
-                        'customers' => '4,120',
-                        'percentage' => 85,
-                    ],
-                    [
-                        'name' => 'France',
-                        'flag' => './images/country/country-02.svg',
-                        'customers' => '1,240',
-                        'percentage' => 35,
-                    ],
-                    [
-                        'name' => 'UAE',
-                        'flag' => './images/country/country-03.svg',
-                        'customers' => '890',
-                        'percentage' => 22,
-                    ],
-                ];
-
-                $countriesList = !empty($countries) ? $countries : $defaultCountries;
-            @endphp
-
-            <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
-                <div class="flex justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-                            Customers Demographic
-                        </h3>
-                        <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
-                            Number of customer based on country
-                        </p>
-                    </div>
-
-                    <!-- Dropdown Menu -->
-                    @props(['items' => ['View More', 'Delete']])
-                    <div x-data="{ openDropDown: false }" class="relative h-fit">
-                        <button @click="openDropDown = !openDropDown"
-                            :class="openDropDown ? 'text-gray-700 dark:text-white' :
-                                'text-gray-400 hover:text-gray-700 dark:hover:text-white'">
-                            <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M10.2441 6C10.2441 5.0335 11.0276 4.25 11.9941 4.25H12.0041C12.9706 4.25 13.7541 5.0335 13.7541 6C13.7541 6.9665 12.9706 7.75 12.0041 7.75H11.9941C11.0276 7.75 10.2441 6.9665 10.2441 6ZM10.2441 18C10.2441 17.0335 11.0276 16.25 11.9941 16.25H12.0041C12.9706 16.25 13.7541 17.0335 13.7541 18C13.7541 18.9665 12.9706 19.75 12.0041 19.75H11.9941C11.0276 19.75 10.2441 18.9665 10.2441 18ZM11.9941 10.25C11.0276 10.25 10.2441 11.0335 10.2441 12C10.2441 12.9665 11.0276 13.75 11.9941 13.75H12.0041C12.9706 13.75 13.7541 12.9665 13.7541 12C13.7541 11.0335 12.9706 10.25 12.0041 10.25H11.9941Z"
-                                    fill="" />
-                            </svg>
-                        </button>
-
-                        <div x-show="openDropDown" @click.outside="openDropDown = false"
-                            class="absolute right-0 z-40 w-40 p-2 space-y-1 bg-white border border-gray-200 shadow-theme-lg dark:bg-gray-dark top-full rounded-2xl dark:border-gray-800">
-                            @forelse($items as $item)
-                                <button
-                                    class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
-                                    {{ $item }}
-                                </button>
-                            @empty
-                                {{ $slot }}
-                            @endforelse
-                        </div>
-                    </div>
-                    <!-- End Dropdown Menu -->
-                </div>
-
-                <div
-                    class="border-gary-200 my-6 overflow-hidden rounded-2xl border bg-gray-50 px-4 py-6 dark:border-gray-800 dark:bg-gray-900 sm:px-6">
-                    <div id="mapOne"
-                        class="mapOne map-btn -mx-4 -my-6 h-[212px] w-[252px] 2xsm:w-[307px] xsm:w-[358px] sm:-mx-6 md:w-[668px] lg:w-[634px] xl:w-[393px] 2xl:w-[554px]">
-                    </div>
-                </div>
-
-                <div class="space-y-5">
-                    @foreach ($countriesList as $country)
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between w-full border-t border-gray-100 dark:border-gray-800 pt-6">
                             <div class="flex items-center gap-3">
-                                <div class="w-full max-w-8 items-center rounded-full">
-                                    <img src="{{ $country['flag'] }}" alt="{{ strtolower($country['name']) }}" />
+                                <div class="w-10 h-10 rounded bg-brand-50 flex items-center justify-center text-brand-600 dark:bg-brand-500/10">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2" /></svg>
                                 </div>
                                 <div>
-                                    <p class="text-theme-sm font-semibold text-gray-800 dark:text-white/90">
-                                        {{ $country['name'] }}
-                                    </p>
-                                    <span class="block text-theme-xs text-gray-500 dark:text-gray-400">
-                                        {{ $country['customers'] }} Customers
-                                    </span>
+                                    <p class="text-[11px] text-gray-400 mb-0 uppercase tracking-tighter">2025</p>
+                                    <p class="text-sm font-bold text-gray-800 dark:text-white">$32.5k</p>
                                 </div>
                             </div>
-
-                            <div class="flex w-full max-w-[140px] items-center gap-3">
-                                <div
-                                    class="relative block h-2 w-full max-w-[100px] rounded-sm bg-gray-200 dark:bg-gray-800">
-                                    <div class="absolute left-0 top-0 flex h-full items-center justify-center rounded-sm bg-brand-500 text-xs font-medium text-white"
-                                        style="width: {{ $country['percentage'] }}%"></div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded bg-info-50 flex items-center justify-center text-info-600 dark:bg-info-500/10">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18" /></svg>
                                 </div>
-                                <p class="text-theme-sm font-medium text-gray-800 dark:text-white/90">
-                                    {{ $country['percentage'] }}%
-                                </p>
+                                <div>
+                                    <p class="text-[11px] text-gray-400 mb-0 uppercase tracking-tighter">2024</p>
+                                    <p class="text-sm font-bold text-gray-800 dark:text-white">$41.2k</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-12 lg:col-span-4">
+            <div class="grid grid-cols-2 gap-6 h-full">
+                <!-- Payments Card -->
+                <div class="sneat-card p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-10 h-10 rounded bg-brand-50 flex items-center justify-center text-brand-600 dark:bg-brand-500/10">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" /></svg>
+                        </div>
+                        <button class="text-gray-400 hover:text-gray-700">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
+                        </button>
+                    </div>
+                    <span class="text-sm text-gray-500 block mb-0.5">Payments</span>
+                    <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-1">$2,456</h4>
+                    <span class="text-error-600 text-xs font-semibold">↓ 14.82%</span>
+                </div>
+                <!-- Revenue Card -->
+                <div class="sneat-card p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-10 h-10 rounded bg-info-50 flex items-center justify-center text-info-600 dark:bg-info-500/10">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                        </div>
+                        <button class="text-gray-400 hover:text-gray-700">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
+                        </button>
+                    </div>
+                    <span class="text-sm text-gray-500 block mb-0.5">Revenue</span>
+                    <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-1">425k</h4>
+                    <div class="flex gap-0.5 mt-2 overflow-hidden items-end h-6">
+                        <div class="w-1.5 h-2 bg-brand-100 rounded-sm"></div>
+                        <div class="w-1.5 h-4 bg-brand-100 rounded-sm"></div>
+                        <div class="w-1.5 h-3 bg-brand-100 rounded-sm"></div>
+                        <div class="w-1.5 h-5 bg-brand-100 rounded-sm"></div>
+                        <div class="w-1.5 h-6 bg-brand-600 rounded-sm"></div>
+                        <div class="w-1.5 h-4 bg-brand-100 rounded-sm"></div>
+                        <div class="w-1.5 h-3 bg-brand-100 rounded-sm"></div>
+                    </div>
+                </div>
+
+                <!-- Profile Report -->
+                <div class="col-span-2">
+                    <div class="sneat-card p-5 md:p-6 h-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h5 class="text-lg font-semibold text-gray-800 dark:text-white mb-0">Profile Report</h5>
+                                <span class="inline-block bg-warning-50 text-warning-600 text-[10px] px-2 py-0.5 rounded font-bold uppercase dark:bg-warning-500/10 mt-1">YEAR 2022</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-4">
+                            <div>
+                                <span class="text-success-600 text-sm font-semibold">↑ 68.2%</span>
+                                <h4 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">$84,686</h4>
+                            </div>
+                            <div class="flex-1 max-w-[150px]">
+                                <div id="chartThirteen" class="h-20"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="col-span-12 lg:col-span-4">
+            <div class="sneat-card p-5 md:p-6 h-full flex flex-col">
+                <div class="flex items-center justify-between mb-2">
+                    <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Order Statistics</h5>
+                    <button class="text-gray-400">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500 mb-6">42.82k Total Sales</p>
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white">8,258</h3>
+                        <p class="text-sm text-gray-400">Total Orders</p>
+                    </div>
+                    <div id="chartTwo" class="w-24 h-24"></div>
+                </div>
+                <div class="mt-auto space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded bg-brand-50 flex items-center justify-center text-brand-600 dark:bg-brand-500/10">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white">Electronic</p>
+                                <p class="text-xs text-gray-400 leading-tighter">Mobile, Earbuds, TV</p>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-gray-800 dark:text-white">82.5k</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded bg-success-50 flex items-center justify-center text-success-600 dark:bg-success-500/10">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white">Fashion</p>
+                                <p class="text-xs text-gray-400 leading-tighter">T-shirt, Jeans, Shoes</p>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-gray-800 dark:text-white">23.8k</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded bg-info-50 flex items-center justify-center text-info-600 dark:bg-info-500/10">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white">Decor</p>
+                                <p class="text-xs text-gray-400 leading-tighter">Fine Art, Dining</p>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-gray-800 dark:text-white">849k</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded bg-secondary-50 flex items-center justify-center text-secondary-600 dark:bg-secondary-500/10">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white">Sports</p>
+                                <p class="text-xs text-gray-400 leading-tighter">Football, Cricket Kit</p>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-gray-800 dark:text-white">99k</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-12 lg:col-span-4">
+            <div class="sneat-card h-full overflow-hidden">
+                <div x-data="{ activeTab: 'income' }" class="flex flex-col h-full">
+                    <div class="p-5 md:p-6 border-b border-gray-100 dark:border-gray-800">
+                        <ul class="flex items-center gap-6">
+                            <li><button @click="activeTab = 'income'" :class="activeTab === 'income' ? 'text-brand-600 border-b-2 border-brand-600 pb-2' : 'text-gray-500 hover:text-gray-700 pb-2'" class="text-sm font-semibold">Income</button></li>
+                            <li><button @click="activeTab = 'expenses'" :class="activeTab === 'expenses' ? 'text-brand-600 border-b-2 border-brand-600 pb-2' : 'text-gray-500 hover:text-gray-700 pb-2'" class="text-sm font-semibold">Expenses</button></li>
+                            <li><button @click="activeTab = 'profit'" :class="activeTab === 'profit' ? 'text-brand-600 border-b-2 border-brand-600 pb-2' : 'text-gray-500 hover:text-gray-700 pb-2'" class="text-sm font-semibold">Profit</button></li>
+                        </ul>
+                    </div>
+                    <div class="p-5 md:p-6 flex-1 flex flex-col">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 rounded bg-brand-50 flex items-center justify-center text-brand-600 dark:bg-brand-500/10">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7 15h2c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H7c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm4-3c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1h-2zM3 10V8c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v2H3zm18 2v6c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2v-6h18z"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400 font-semibold mb-0">Total Balance</p>
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-xl font-bold text-gray-800 dark:text-white">$459.10</h4>
+                                    <span class="text-success-600 text-xs font-semibold">↑ 42.9%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-h-[160px]">
+                            <div id="chartThree" class="h-full w-full"></div>
+                        </div>
+                        <div class="mt-6 flex items-center justify-center gap-3">
+                            <div class="relative w-12 h-12 flex items-center justify-center">
+                                <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                                    <path class="text-gray-100 dark:text-gray-800" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path class="text-brand-600" stroke-width="3" stroke-dasharray="65, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                </svg>
+                                <span class="absolute text-[10px] font-bold text-gray-800 dark:text-white">$65</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white mb-0">Income this week</p>
+                                <p class="text-xs text-gray-400">$39k less than last week</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-12 lg:col-span-4">
+            <div class="sneat-card p-5 md:p-6 h-full flex flex-col">
+                <div class="flex items-center justify-between mb-6">
+                    <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Transactions</h5>
+                    <button class="text-gray-400">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
+                    </button>
+                </div>
+                <div class="space-y-6 flex-1">
+                    @foreach([
+                        ['icon' => 'pay-paypal', 'title' => 'Paypal', 'subtitle' => 'Send money', 'amount' => '+82.6', 'color' => 'error'],
+                        ['icon' => 'wallet', 'title' => 'Wallet', 'subtitle' => 'Mac\'D', 'amount' => '+270.69', 'color' => 'success'],
+                        ['icon' => 'chart-pie', 'title' => 'Transfer', 'subtitle' => 'Refund', 'amount' => '+637.91', 'color' => 'info'],
+                        ['icon' => 'credit-card', 'title' => 'Credit Card', 'subtitle' => 'Ordered Food', 'amount' => '-838.71', 'color' => 'brand'],
+                        ['icon' => 'wallet', 'title' => 'Wallet', 'subtitle' => 'Starbucks', 'amount' => '+203.33', 'color' => 'success'],
+                        ['icon' => 'briefcase', 'title' => 'Mastercard', 'subtitle' => 'Ordered Food', 'amount' => '-92.45', 'color' => 'warning']
+                    ] as $transaction)
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded bg-{{ $transaction['color'] }}-50 flex items-center justify-center text-{{ $transaction['color'] }}-600 dark:bg-{{ $transaction['color'] }}-500/10">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                </div>
+                                <div class="flex flex-col">
+                                    <p class="text-sm font-semibold text-gray-800 dark:text-white leading-tight">{{ $transaction['title'] }}</p>
+                                    <p class="text-xs text-gray-400">{{ $transaction['subtitle'] }}</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <p class="text-sm font-bold text-gray-800 dark:text-white leading-tight">{{ $transaction['amount'] }}</p>
+                                <p class="text-[10px] text-gray-400 font-bold uppercase">USD</p>
                             </div>
                         </div>
                     @endforeach
                 </div>
             </div>
-
+        </div>
         </div>
 
-        <div class="col-span-12 xl:col-span-7">
-            @props(['products' => []])
-
-            @php
-                $defaultProducts = [
-                    [
-                        'name' => 'Full Container Load (40ft)',
-                        'variants' => 'CNTR-9921',
-                        'image' => '/images/product/product-01.jpg',
-                        'category' => 'Sea Freight',
-                        'price' => '$4,350.00',
-                        'status' => 'Delivered',
-                    ],
-                    [
-                        'name' => 'Heavy Machinery Parts',
-                        'variants' => 'PLT-4432',
-                        'image' => '/images/product/product-02.jpg',
-                        'category' => 'Air Freight',
-                        'price' => '$1,270.00',
-                        'status' => 'Pending',
-                    ],
-                    [
-                        'name' => 'Automotive Parts (Express)',
-                        'variants' => 'EXP-1029',
-                        'image' => '/images/product/product-03.jpg',
-                        'category' => 'Land Transport',
-                        'price' => '$850.00',
-                        'status' => 'Delivered',
-                    ],
-                    [
-                        'name' => 'Perishable Goods',
-                        'variants' => 'REF-5521',
-                        'image' => '/images/product/product-04.jpg',
-                        'category' => 'Cold Chain',
-                        'price' => '$2,100.00',
-                        'status' => 'Canceled',
-                    ],
-                    [
-                        'name' => 'Industrial Chemicals',
-                        'variants' => 'HAZ-3329',
-                        'image' => '/images/product/product-05.jpg',
-                        'category' => 'Specialized',
-                        'price' => '$3,400.00',
-                        'status' => 'Delivered',
-                    ],
-                ];
-
-                $productsList = !empty($products) ? $products : $defaultProducts;
-
-                // Helper function for status classes
-                $getStatusClasses = function ($status) {
-                    $baseClasses = 'rounded-full px-2 py-0.5 text-theme-xs font-medium';
-
-                    return match ($status) {
-                        'Delivered' => $baseClasses .
-                            ' bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500',
-                        'Pending' => $baseClasses .
-                            ' bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-orange-400',
-                        'Canceled' => $baseClasses .
-                            ' bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500',
-                        default => $baseClasses . ' bg-gray-50 text-gray-600 dark:bg-gray-500/15 dark:text-gray-400',
-                    };
-                };
-            @endphp
-
-            <div
-                class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
-                <div class="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Recent Orders</h3>
+        <!-- Row 4 -->
+        <div class="grid grid-cols-12 gap-6 mt-6">
+            <div class="col-span-12 lg:col-span-7">
+                <div class="sneat-card p-5 md:p-6 h-full">
+                    <div class="flex items-center justify-between mb-8">
+                        <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Activity Timeline</h5>
+                        <button class="text-gray-400">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
+                        </button>
                     </div>
-
-                    <div class="flex items-center gap-3">
-                        <button
-                            class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
-                            <svg class="stroke-current fill-white dark:fill-gray-800" width="20" height="20"
-                                viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.29004 5.90393H17.7067" stroke="" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M17.7075 14.0961H2.29085" stroke="" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                                <path
-                                    d="M12.0826 3.33331C13.5024 3.33331 14.6534 4.48431 14.6534 5.90414C14.6534 7.32398 13.5024 8.47498 12.0826 8.47498C10.6627 8.47498 9.51172 7.32398 9.51172 5.90415C9.51172 4.48432 10.6627 3.33331 12.0826 3.33331Z"
-                                    fill="" stroke="" stroke-width="1.5" />
-                                <path
-                                    d="M7.91745 11.525C6.49762 11.525 5.34662 12.676 5.34662 14.0959C5.34661 15.5157 6.49762 16.6667 7.91745 16.6667C9.33728 16.6667 10.4883 15.5157 10.4883 14.0959C10.4883 12.676 9.33728 11.525 7.91745 11.525Z"
-                                    fill="" stroke="" stroke-width="1.5" />
-                            </svg>
-                            Filter
-                        </button>
-
-                        <button
-                            class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
-                            See all
-                        </button>
+                    <div class="relative pl-8 space-y-10 after:content-[''] after:absolute after:left-3 after:top-1 after:bottom-1 after:w-[2px] after:bg-gray-100 dark:after:bg-gray-800">
+                        <div class="relative">
+                            <div class="absolute -left-[35px] top-1 w-3 h-3 rounded-full bg-brand-500 ring-4 ring-brand-50 dark:ring-brand-500/10 z-10 transition-all"></div>
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white">12 Invoices have been paid</p>
+                                <span class="text-xs text-gray-400">12 min ago</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-4 font-medium">Invoices have been paid to the company</p>
+                            <div class="flex items-center gap-3 p-2 bg-gray-50 dark:bg-gray-900 rounded border border-gray-100 dark:border-gray-800 w-fit">
+                                <svg class="w-6 h-6 text-error-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm1 9h-4v2h4v-2zm0 4h-4v2h4v-2zm-5-8h5v5h-5V7z"/></svg>
+                                <span class="text-xs font-bold text-gray-600 dark:text-gray-400">invoices.pdf</span>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[35px] top-1 w-3 h-3 rounded-full bg-info-500 ring-4 ring-info-50 dark:ring-info-500/10 z-10"></div>
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="text-sm font-semibold text-gray-800 dark:text-white">Client Meeting</p>
+                                <span class="text-xs text-gray-400">45 min ago</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-4 font-medium">Project meeting with john @10:15am</p>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold text-[10px]">JS</div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800 dark:text-white uppercase">John Smith (Client)</p>
+                                    <p class="text-[10px] text-gray-400">CEO of InfiniCorp</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="max-w-full overflow-x-auto custom-scrollbar">
-                    <table class="min-w-full">
-                        <thead>
-                            <tr class="border-t border-gray-100 dark:border-gray-800">
-                                <th class="py-3 text-left">
-                                    <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Shipment Type</p>
-                                </th>
-                                <th class="py-3 text-left">
-                                    <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Category</p>
-                                </th>
-                                <th class="py-3 text-left">
-                                    <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Shipping Cost</p>
-                                </th>
-                                <th class="py-3 text-left">
-                                    <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Status</p>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($productsList as $product)
-                                <tr class="border-t border-gray-100 dark:border-gray-800">
-                                    <td class="py-3 whitespace-nowrap">
-                                        <div class="flex items-center gap-3">
-                                            <div class="h-[50px] w-[50px] overflow-hidden rounded-md">
-                                                <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" />
-                                            </div>
-                                            <div>
-                                                <p class="font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                                                    {{ $product['name'] }}
-                                                </p>
-                                                <span class="text-gray-500 text-theme-xs dark:text-gray-400">
-                                                    Ref: {{ $product['variants'] }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 whitespace-nowrap">
-                                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                            {{ $product['category'] }}</p>
-                                    </td>
-                                    <td class="py-3 whitespace-nowrap">
-                                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">{{ $product['price'] }}
-                                        </p>
-                                    </td>
-                                    <td class="py-3 whitespace-nowrap">
-                                        <span class="{{ $getStatusClasses($product['status']) }}">
-                                            {{ $product['status'] }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="col-span-12 lg:col-span-5">
+                <div class="sneat-card h-full overflow-hidden">
+                    <div x-data="{ activeTab: 'browser' }" class="flex flex-col h-full">
+                        <div class="p-5 md:p-6 border-b border-gray-100 dark:border-gray-800">
+                            <ul class="flex items-center gap-6">
+                                <li><button @click="activeTab = 'browser'" :class="activeTab === 'browser' ? 'text-brand-600 border-b-2 border-brand-600 pb-2' : 'text-gray-500 hover:text-gray-700 pb-2'" class="text-xs font-bold uppercase tracking-widest">Browser</button></li>
+                                <li><button @click="activeTab = 'os'" :class="activeTab === 'os' ? 'text-brand-600 border-b-2 border-brand-600 pb-2' : 'text-gray-500 hover:text-gray-700 pb-2'" class="text-xs font-bold uppercase tracking-widest">Operating System</button></li>
+                                <li><button @click="activeTab = 'country'" :class="activeTab === 'country' ? 'text-brand-600 border-b-2 border-brand-600 pb-2' : 'text-gray-500 hover:text-gray-700 pb-2'" class="text-xs font-bold uppercase tracking-widest">Country</button></li>
+                            </ul>
+                        </div>
+                        <div class="p-5 md:p-6 flex-1">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="text-[10px] text-gray-400 uppercase font-bold border-b border-gray-50 dark:border-gray-800/50">
+                                        <th class="pb-3">No</th>
+                                        <th class="pb-3">Browser</th>
+                                        <th class="pb-3">Visits</th>
+                                        <th class="pb-3 text-right">Data</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-50 dark:divide-gray-800/50">
+                                    @foreach([
+                                        ['no' => 1, 'name' => 'Chrome', 'visits' => '8.92k', 'percent' => '64.91%', 'color' => 'success'],
+                                        ['no' => 2, 'name' => 'Safari', 'visits' => '1.29k', 'percent' => '19.03%', 'color' => 'brand'],
+                                        ['no' => 3, 'name' => 'Firefox', 'visits' => '328', 'percent' => '3.26%', 'color' => 'info'],
+                                        ['no' => 4, 'name' => 'Edge', 'visits' => '142', 'percent' => '1.56%', 'color' => 'warning']
+                                    ] as $browser)
+                                        <tr>
+                                            <td class="py-4 text-sm font-bold text-gray-500">{{ $browser['no'] }}</td>
+                                            <td class="py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-600 dark:bg-orange-500/10">
+                                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+                                                    </div>
+                                                    <span class="text-sm font-bold text-gray-800 dark:text-white">{{ $browser['name'] }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 text-sm font-bold text-gray-800 dark:text-white">{{ $browser['visits'] }}</td>
+                                            <td class="py-4">
+                                                <div class="flex items-center gap-3 justify-end">
+                                                    <div class="w-24 h-1.5 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                                                        <div class="h-full bg-{{ $browser['color'] }}-500 rounded-full" style="width: {{ $browser['percent'] }}"></div>
+                                                    </div>
+                                                    <span class="text-xs font-bold text-gray-500">{{ $browser['percent'] }}</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

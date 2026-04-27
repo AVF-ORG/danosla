@@ -29,7 +29,7 @@
 
             <div class="space-y-6">
                 {{-- Basic Info --}}
-                <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="sneat-card p-6">
                     <div class="mb-5">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">General Information</h3>
                     </div>
@@ -50,7 +50,7 @@
                 </div>
 
                 {{-- Permissions --}}
-                <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="sneat-card p-6">
                     <div class="mb-5">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">Assign Permissions</h3>
                         <p class="text-sm text-gray-500 dark:text-gray-400">Select the permissions assigned to this role.</p>
@@ -77,7 +77,7 @@
 
                 <div class="flex justify-end gap-3">
                     <button type="submit"
-                        class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-brand-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-brand-500 transition-all active:scale-95">
+                        class="btn-primary flex items-center gap-2">
                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                         </svg>

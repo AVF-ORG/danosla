@@ -60,7 +60,7 @@
 
                 <div class="flex flex-wrap items-center gap-3">
                     <button @click="openCreateModal()"
-                        class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-brand-500 transition-all active:scale-95">
+                        class="btn-primary flex items-center gap-2">
                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                         </svg>
@@ -88,18 +88,18 @@
         </div>
 
         {{-- Table --}}
-        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="sneat-card overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="border-b border-gray-200 bg-gray-50/50 dark:border-gray-800 dark:bg-white/[0.02]">
+                    <thead class="border-b border-gray-100 dark:border-gray-800">
                         <tr>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            <th class="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                 Permission Name
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            <th class="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                 Created
                             </th>
-                            <th class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            <th class="px-6 py-4 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                                 Actions
                             </th>
                         </tr>
@@ -235,7 +235,7 @@
                         Cancel
                     </button>
                     <button type="submit"
-                        class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-brand-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-brand-500 transition-all active:scale-95">
+                        class="btn-primary flex items-center gap-2">
                         <span x-text="isEdit ? 'Update Permission' : 'Create Permission'"></span>
                     </button>
                 </div>

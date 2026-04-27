@@ -1,55 +1,65 @@
+import ApexCharts from 'apexcharts';
 
 export const initChartTwo = () => {
     const chartElement = document.querySelector('#chartTwo');
 
     if (chartElement) {
         const chartTwoOptions = {
-            series: [75.55],
-            colors: ["#465FFF"],
+            series: [85, 45, 40, 50],
+            labels: ['Electronic', 'Fashion', 'Decor', 'Sports'],
+            colors: ["#696cff", "#03c3ec", "#71dd37", "#8592a3"],
             chart: {
-                fontFamily: "Outfit, sans-serif",
-                type: "radialBar",
-                height: 330,
+                fontFamily: "Public Sans, sans-serif",
+                type: "donut",
+                height: 165,
                 sparkline: {
-                    enabled: true,
+                    enabled: false,
                 },
             },
             plotOptions: {
-                radialBar: {
-                    startAngle: -90,
-                    endAngle: 90,
-                    hollow: {
-                        size: "80%",
-                    },
-                    track: {
-                        background: "#E4E7EC",
-                        strokeWidth: "100%",
-                        margin: 5, // margin is in pixels
-                    },
-                    dataLabels: {
-                        name: {
-                            show: false,
-                        },
-                        value: {
-                            fontSize: "36px",
-                            fontWeight: "600",
-                            offsetY: 60,
-                            color: "#1D2939",
-                            formatter: function (val) {
-                                return val + "%";
-                            },
-                        },
-                    },
+                bar: {
+                    horizontal: false,
+                    columnWidth: "33%",
+                    borderRadius: 5,
+                    borderRadiusApplication: "end",
+                    borderRadiusWhenStacked: "last",
                 },
-            },
-            fill: {
-                type: "solid",
-                colors: ["#465FFF"],
+                pie: {
+                    donut: {
+                        size: '75%',
+                        labels: {
+                            show: true,
+                            value: {
+                                fontSize: '1.2rem',
+                                fontWeight: '600',
+                                color: '#566a7f',
+                                offsetY: -10,
+                                formatter: function (val) {
+                                    return val + '%';
+                                }
+                            },
+                            total: {
+                                show: true,
+                                label: 'Weekly',
+                                color: '#a1acb8',
+                                formatter: function (w) {
+                                    return '38%';
+                                }
+                            }
+                        }
+                    }
+                }
             },
             stroke: {
-                lineCap: "round",
+                width: 5,
+                colors: ["#ffffff"],
             },
-            labels: ["Progress"],
+            dataLabels: {
+                enabled: false,
+            },
+            legend: {
+                show: false,
+            },
         };
 
         const chart = new ApexCharts(chartElement, chartTwoOptions);

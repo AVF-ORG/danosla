@@ -3,7 +3,7 @@
 @section('content')
     @include('components.breadcrumb')
 
-    <div class="rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12">
+    <div class="sneat-card p-5 xl:p-8">
         @if (session('success'))
             <div
                 class="mb-4 rounded-lg bg-success-50 p-4 text-sm text-success-600 dark:bg-success-500/15 dark:text-success-500">
@@ -14,7 +14,7 @@
         <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Active Languages</h3>
             <a href="{{ route('dashboard.localization.languages.create') }}"
-                class="flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600">
+                class="btn-primary flex items-center gap-2">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" />
@@ -25,8 +25,8 @@
 
         <div class="overflow-x-auto">
             <table class="w-full min-w-[720px] text-left text-sm">
-                <thead class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                    <tr class="border-b border-gray-100 dark:border-gray-800">
+                <thead class="border-b border-gray-100 dark:border-gray-800">
+                    <tr class="text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                         <th class="px-4 py-3">Code</th>
                         <th class="px-4 py-3">Name</th>
                         <th class="px-4 py-3">Native Name</th>
@@ -43,7 +43,7 @@
                             <td class="px-4 py-3 text-gray-700 dark:text-gray-300">{{ $language->native_name }}</td>
                             <td class="px-4 py-3 text-center">
                                 <span
-                                    class="inline-flex items-center rounded-full px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm {{ $language->active ? 'bg-green-500' : 'bg-red-500' }}">
+                                    class="inline-flex items-center rounded px-3 py-1 text-[11px] font-semibold uppercase tracking-wider {{ $language->active ? 'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500' : 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500' }}">
                                     {{ $language->active ? 'Yes' : 'No' }}
                                 </span>
                             </td>

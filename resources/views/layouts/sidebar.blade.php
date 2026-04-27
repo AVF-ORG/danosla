@@ -8,8 +8,8 @@
 
 
 <aside id="sidebar"
-    class="fixed flex flex-col mt-0 top-0 px-5 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-99999
-           {{ $isRtl ? 'right-0 border-l' : 'left-0 border-r' }} border-gray-200"
+    class="fixed flex flex-col mt-0 top-0 px-4 bg-white dark:bg-gray-dark text-gray-900 h-screen transition-all duration-300 ease-in-out z-99999
+           {{ $isRtl ? 'right-0 border-l' : 'left-0 border-r' }} border-gray-100"
     x-data="{
         openSubmenus: {},
         init() { this.initializeActiveMenus(); },
@@ -76,8 +76,7 @@
                         <template
                             x-if="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen">
                             <div class="flex items-center gap-3 w-full">
-                                <span class="w-4 h-px bg-gray-300 dark:bg-gray-700"></span>
-                                <span class="whitespace-nowrap">Dashboard</span>
+                                <span class="whitespace-nowrap font-semibold text-gray-500">Dashboard</span>
                             </div>
                         </template>
 
@@ -370,8 +369,7 @@
                         <template
                             x-if="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen">
                             <div class="flex items-center gap-3 w-full">
-                                <span class="w-4 h-px bg-gray-300 dark:bg-gray-700"></span>
-                                <span class="whitespace-nowrap">Statistics & Satisfaction</span>
+                                <span class="whitespace-nowrap font-semibold text-gray-500">Statistics & Satisfaction</span>
                             </div>
                         </template>
 

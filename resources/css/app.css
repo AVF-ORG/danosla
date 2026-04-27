@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap') layer(base);
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') layer(base);
 @import 'prismjs/themes/prism.min.css';
 @import 'tailwindcss';
 
@@ -13,7 +13,7 @@
 
 @theme {
   --font-*: initial;
-  --font-outfit: Outfit, sans-serif;
+  --font-public-sans: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;
@@ -47,18 +47,17 @@
   --color-white: #ffffff;
   --color-black: #101828;
 
-  --color-brand-25: #f2f7ff;
-  --color-brand-50: #ecf3ff;
-  --color-brand-100: #dde9ff;
-  --color-brand-200: #c2d6ff;
-  --color-brand-300: #9cb9ff;
-  --color-brand-400: #7592ff;
-  --color-brand-500: #465fff;
-  --color-brand-600: #3641f5;
-  --color-brand-700: #2a31d8;
-  --color-brand-800: #252dae;
-  --color-brand-900: #262e89;
-  --color-brand-950: #161950;
+  --color-brand-50: #e7e7ff;
+  --color-brand-100: #d2d2ff;
+  --color-brand-200: #b8b8ff;
+  --color-brand-300: #9e9eff;
+  --color-brand-400: #8484ff;
+  --color-brand-500: #696cff;
+  --color-brand-600: #5f61e6;
+  --color-brand-700: #5255cc;
+  --color-brand-800: #4648b3;
+  --color-brand-900: #3a3c99;
+  --color-brand-950: #2e3080;
 
   --color-blue-light-25: #f5fbff;
   --color-blue-light-50: #f0f9ff;
@@ -74,18 +73,18 @@
   --color-blue-light-950: #062c41;
 
   --color-gray-25: #fcfcfd;
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f2f4f7;
-  --color-gray-200: #e4e7ec;
-  --color-gray-300: #d0d5dd;
-  --color-gray-400: #98a2b3;
-  --color-gray-500: #667085;
-  --color-gray-600: #475467;
-  --color-gray-700: #344054;
-  --color-gray-800: #1d2939;
-  --color-gray-900: #101828;
-  --color-gray-950: #0c111d;
-  --color-gray-dark: #1a2231;
+  --color-gray-50: #f5f5f9;
+  --color-gray-100: #eceef1;
+  --color-gray-200: #d9dee3;
+  --color-gray-300: #c7cfd6;
+  --color-gray-400: #b4bdc6;
+  --color-gray-500: #a1acb8;
+  --color-gray-600: #8e9ba9;
+  --color-gray-700: #697a8d;
+  --color-gray-800: #566a7f;
+  --color-gray-900: #435971;
+  --color-gray-950: #32475c;
+  --color-gray-dark: #232333;
 
   --color-orange-25: #fffaf5;
   --color-orange-50: #fff6ed;
@@ -127,29 +126,27 @@
   --color-error-950: #55160c;
 
   --color-warning-25: #fffcf5;
-  --color-warning-50: #fffaeb;
-  --color-warning-100: #fef0c7;
-  --color-warning-200: #fedf89;
-  --color-warning-300: #fec84b;
-  --color-warning-400: #fdb022;
-  --color-warning-500: #f79009;
-  --color-warning-600: #dc6803;
-  --color-warning-700: #b54708;
-  --color-warning-800: #93370d;
-  --color-warning-900: #7a2e0e;
-  --color-warning-950: #4e1d09;
+  --color-warning-50: #fffcf0;
+  --color-warning-100: #fff4e0;
+  --color-warning-200: #ffe6b3;
+  --color-warning-300: #ffd985;
+  --color-warning-400: #ffcc57;
+  --color-warning-500: #ffab00;
+  --color-warning-600: #e69a00;
+  --color-warning-700: #cc8900;
+  --color-warning-800: #b37800;
+  --color-warning-900: #996700;
+  --color-warning-950: #805600;
 
   --color-theme-pink-500: #ee46bc;
 
   --color-theme-purple-500: #7a5af8;
 
-  --shadow-theme-md: 0px 4px 8px -2px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
-  --shadow-theme-lg: 0px 12px 16px -4px rgba(16, 24, 40, 0.08),
-    0px 4px 6px -2px rgba(16, 24, 40, 0.03);
-  --shadow-theme-sm: 0px 1px 3px 0px rgba(16, 24, 40, 0.1), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
-  --shadow-theme-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-  --shadow-theme-xl: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
-    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  --shadow-theme-md: 0 2px 6px 0 rgba(67, 89, 113, 0.12);
+  --shadow-theme-lg: 0 0.5rem 1rem 0 rgba(67, 89, 113, 0.15);
+  --shadow-theme-sm: 0 0.125rem 0.25rem 0 rgba(67, 89, 113, 0.075);
+  --shadow-theme-xs: 0 0.125rem 0.25rem 0 rgba(67, 89, 113, 0.05);
+  --shadow-theme-xl: 0 1rem 2rem 0 rgba(67, 89, 113, 0.2);
   --shadow-datepicker: -5px 0 0 #262d3c, 5px 0 0 #262d3c;
   --shadow-focus-ring: 0px 0px 0px 4px rgba(70, 95, 255, 0.12);
   --shadow-slider-navigation: 0px 1px 2px 0px rgba(16, 24, 40, 0.1),
@@ -189,7 +186,7 @@
     cursor: pointer;
   }
   body {
-    @apply relative font-normal font-outfit z-1 bg-gray-50;
+    @apply relative font-normal font-public-sans z-1 bg-gray-50;
   }
 }
 
@@ -198,11 +195,11 @@
 }
 
 @utility menu-item-active {
-  @apply bg-brand-50 text-brand-500 dark:bg-brand-500/[0.12] dark:text-brand-400;
+  @apply bg-brand-50 text-brand-500 dark:bg-brand-500/[0.12] dark:text-brand-400 font-semibold;
 }
 
 @utility menu-item-inactive {
-  @apply text-gray-700 hover:bg-gray-100 group-hover:text-gray-700 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-gray-300;
+  @apply text-gray-700 hover:bg-black/[0.04] group-hover:text-gray-700 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-gray-300;
 }
 
 @utility menu-item-icon {
@@ -234,11 +231,11 @@
 }
 
 @utility menu-dropdown-item-active {
-  @apply bg-brand-50 text-brand-500 dark:bg-brand-500/[0.12] dark:text-brand-400;
+  @apply bg-brand-50 text-brand-500 dark:bg-brand-500/[0.12] dark:text-brand-400 font-semibold;
 }
 
 @utility menu-dropdown-item-inactive {
-  @apply text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5;
+  @apply text-gray-700 hover:bg-black/[0.04] dark:text-gray-300 dark:hover:bg-white/5;
 }
 
 @utility menu-dropdown-item {
@@ -300,7 +297,19 @@
   }
 }
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #344054;
+  background-color: #32475c;
+}
+
+@utility sneat-card {
+  @apply bg-white dark:bg-gray-dark rounded-xl shadow-theme-md transition-shadow duration-300 hover:shadow-theme-lg;
+}
+
+@utility btn-primary {
+  @apply bg-brand-500 text-white px-5 py-2.5 rounded-lg font-medium shadow-theme-sm hover:bg-brand-600 transition-all duration-200 active:scale-95;
+}
+
+@utility btn-label-primary {
+  @apply bg-brand-50 text-brand-500 px-5 py-2.5 rounded-lg font-medium hover:bg-brand-500 hover:text-white transition-all duration-200;
 }
 @layer utilities {
   /* For Remove Date Icon */

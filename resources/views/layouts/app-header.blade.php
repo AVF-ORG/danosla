@@ -1,14 +1,14 @@
 <header
-    class="sticky top-0 flex w-full bg-white border-gray-200 z-99999 dark:border-gray-800 dark:bg-gray-900 xl:border-b"
+    class="sticky top-0 flex w-full bg-white/80 backdrop-blur-md z-99999 xl:px-6 py-2"
     x-data="{
         isApplicationMenuOpen: false,
         toggleApplicationMenu() {
             this.isApplicationMenuOpen = !this.isApplicationMenuOpen;
         }
     }">
-    <div class="flex flex-col items-center justify-between grow xl:flex-row xl:px-6">
+    <div class="flex flex-col items-center justify-between grow xl:flex-row">
         <div
-            class="flex items-center justify-between w-full gap-2 px-3 py-3 border-b border-gray-200 dark:border-gray-800 sm:gap-4 xl:justify-normal xl:border-b-0 xl:px-0 lg:py-4">
+            class="flex items-center justify-between w-full gap-2 px-3 py-3 sm:gap-4 xl:justify-normal xl:border-b-0 xl:px-0 lg:py-4">
 
             <!-- Desktop Sidebar Toggle Button (visible on xl and up) -->
             <button
@@ -78,8 +78,8 @@
                                     fill="" />
                             </svg>
                         </span>
-                        <input type="text" placeholder="Search or type command..."
-                            class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 ps-12 pe-14 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-white/3 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[430px]" />
+                        <input type="text" placeholder="Search..."
+                            class="dark:bg-dark-900 h-11 w-full rounded-lg border-none bg-transparent py-2.5 ps-12 pe-14 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-hidden focus:ring-0 dark:text-white/90 dark:placeholder:text-white/30 xl:w-[430px]" />
                         <button
                             class="absolute end-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-500 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400">
                             <span> ⌘ </span>

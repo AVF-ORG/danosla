@@ -18,7 +18,7 @@
         </div>
 
         {{-- Filters & Search --}}
-        <div class="mb-6 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="sneat-card p-5">
             <form action="{{ route('dashboard.contacts.index') }}" method="GET" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {{-- Search --}}
                 <div class="relative">
@@ -65,17 +65,17 @@
         </div>
 
         {{-- Table --}}
-        <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="sneat-card overflow-hidden mt-6">
             <div class="border-t border-gray-100 p-6 dark:border-gray-800">
                 <div class="overflow-x-auto">
                     <table class="min-w-full">
                         <thead>
                             <tr class="border-y border-gray-100 dark:border-white/[0.05]">
-                                <th class="px-6 py-4 text-left text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Sender</th>
-                                <th class="px-6 py-4 text-left text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Subject</th>
-                                <th class="px-6 py-4 text-center text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Status</th>
-                                <th class="px-6 py-4 text-left text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Date</th>
-                                <th class="px-6 py-4 text-right text-theme-xs font-semibold uppercase tracking-wider text-gray-500">Actions</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">Sender</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">Subject</th>
+                                <th class="px-6 py-4 text-center text-[11px] font-semibold uppercase tracking-wider text-gray-500">Status</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">Date</th>
+                                <th class="px-6 py-4 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500">Actions</th>
                             </tr>
                         </thead>
 
@@ -101,11 +101,11 @@
 
                                     <td class="px-6 py-4 text-center">
                                         @if ($contact->isReplied())
-                                            <span class="inline-flex items-center rounded-full bg-green-500 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
+                                            <span class="inline-flex items-center rounded px-3 py-1 text-[11px] font-semibold uppercase tracking-wider bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500">
                                                 Replied
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center rounded-full bg-amber-500 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
+                                            <span class="inline-flex items-center rounded px-3 py-1 text-[11px] font-semibold uppercase tracking-wider bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-warning-500">
                                                 Pending
                                             </span>
                                         @endif
