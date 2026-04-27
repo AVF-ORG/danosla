@@ -147,6 +147,9 @@ Route::group([
         Route::get('/{shipment}', [TransportFirmBidController::class, 'show'])->name('show');
         Route::get('/{shipment}/edit', [TransportFirmBidController::class, 'edit'])->name('edit');
         Route::delete('/{shipment}', [TransportFirmBidController::class, 'destroy'])->name('destroy');
+        
+        Route::post('/{shipment}/bid', [TransportFirmBidController::class, 'storeBid'])->name('store-bid');
+        Route::post('/bid/{bid}/message', [TransportFirmBidController::class, 'storeMessage'])->name('store-message');
     });
 
     // calender pages

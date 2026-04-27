@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             SectorSeeder::class,
             UserSeeder::class,
             ShipmentSeeder::class,
+            ShipmentBidSeeder::class,
         ]);
     }
 }

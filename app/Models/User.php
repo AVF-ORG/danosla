@@ -68,4 +68,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Sector::class);
     }
+
+    public function bids(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ShipmentBid::class);
+    }
+
+    public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(BidMessage::class);
+    }
 }

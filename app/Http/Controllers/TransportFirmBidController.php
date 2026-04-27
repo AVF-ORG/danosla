@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Shipment;
+use App\Models\ShipmentBid;
+use App\Models\BidMessage;
 
 class TransportFirmBidController extends Controller
 {
@@ -30,16 +32,21 @@ class TransportFirmBidController extends Controller
             'title' => 'Create Transport Firm Bid'
         ]);
     }
-    /**
-     * Display the specified shipment.
-     */
     public function show(Shipment $shipment)
     {
-        $shipment->load('lots');
+        // Load lots and the specific bid belonging to the authenticated carrier
+        $shipment->load(['lots', 'bids' => function($query) {
+            $query->where('user_id', auth()->id())->with(['messages' => function($q) {
+                $q->oldest(); // Messages in chronological order
+            }, 'messages.user']);
+        }]);
         
+        $myBid = $shipment->bids->first();
+
         return view('pages.transport-firm-bid.show', [
             'title' => 'Détails de l\'expédition #'.str_pad($shipment->id, 5, '0', STR_PAD_LEFT),
-            'shipment' => $shipment
+            'shipment' => $shipment,
+            'myBid' => $myBid
         ]);
     }
 
@@ -54,6 +61,61 @@ class TransportFirmBidController extends Controller
             'title' => 'Éditer l\'expédition #'.str_pad($shipment->id, 5, '0', STR_PAD_LEFT),
             'shipment' => $shipment
         ]);
+    }
+
+    /**
+     * Store a new bid for the shipment.
+     */
+    public function storeBid(Request $request, Shipment $shipment)
+    {
+        $validated = $request->validate([
+            'price' => 'required|numeric|min:0',
+            'latest_pickup_date' => 'required|date',
+            'latest_pickup_time' => 'required',
+            'latest_delivery_date' => 'required|date',
+            'latest_delivery_time' => 'required',
+            'message' => 'nullable|string',
+        ]);
+
+        $bid = ShipmentBid::updateOrCreate(
+            ['shipment_id' => $shipment->id, 'user_id' => auth()->id()],
+            [
+                'price' => $validated['price'],
+                'latest_pickup_date' => $validated['latest_pickup_date'],
+                'latest_pickup_time' => $validated['latest_pickup_time'],
+                'latest_delivery_date' => $validated['latest_delivery_date'],
+                'latest_delivery_time' => $validated['latest_delivery_time'],
+                'status' => 'pending',
+            ]
+        );
+
+        if (!empty($validated['message'])) {
+            BidMessage::create([
+                'bid_id' => $bid->id,
+                'user_id' => auth()->id(),
+                'message' => $validated['message'],
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Votre proposition a été envoyée avec succès.');
+    }
+
+    /**
+     * Store a new message for a specific bid.
+     */
+    public function storeMessage(Request $request, ShipmentBid $bid)
+    {
+        $validated = $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        BidMessage::create([
+            'bid_id' => $bid->id,
+            'user_id' => auth()->id(),
+            'message' => $validated['message'],
+        ]);
+
+        return redirect()->back()->with('success', 'Message envoyé.');
     }
 
     /**

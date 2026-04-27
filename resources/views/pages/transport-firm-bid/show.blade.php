@@ -296,5 +296,192 @@
         </div>
     </div>
 
+    <!-- Negotiation & Discussion Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-12">
+        <!-- Left: Proposition Details (4 cols) -->
+        <div class="lg:col-span-4 space-y-6" x-data="{ openBidModal: false }">
+            <h2 class="text-sm font-black uppercase tracking-[0.2em] text-gray-400 px-1">Votre Proposition</h2>
+            
+            @if($myBid)
+            <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl shadow-gray-200/20 p-8 relative overflow-hidden group">
+                <!-- Status Background Decor -->
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-brand-500/5 rounded-full blur-2xl group-hover:bg-brand-500/10 transition-colors"></div>
+                
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest 
+                            {{ $myBid->status === 'accepted' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-amber-50 text-amber-600 border border-amber-100' }}">
+                            {{ $myBid->status === 'accepted' ? 'Proposition Acceptée' : 'Proposition en cours' }}
+                        </div>
+                        <span class="text-[10px] font-bold text-gray-400">Màj {{ $myBid->updated_at->diffForHumans() }}</span>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Prix Proposé</p>
+                            <h3 class="text-3xl font-black text-gray-900 dark:text-white">
+                                {{ number_format($myBid->price, 2, ',', ' ') }} <span class="text-lg font-bold text-gray-300">€</span>
+                            </h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800">
+                                <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">Collecte Proposée</p>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300">
+                                        {{ $myBid->latest_pickup_date->format('d/m/Y') }} à {{ \Carbon\Carbon::parse($myBid->latest_pickup_time)->format('H:i') }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800">
+                                <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">Livraison Proposée</p>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300">
+                                        {{ $myBid->latest_delivery_date->format('d/m/Y') }} à {{ \Carbon\Carbon::parse($myBid->latest_delivery_time)->format('H:i') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button @click="openBidModal = true" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] hover:bg-brand-600 hover:text-white transition-all shadow-lg shadow-gray-200 dark:shadow-none">
+                            Modifier l'offre
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @else
+            <div class="bg-gradient-to-br from-brand-500 to-brand-600 rounded-3xl p-8 text-white shadow-xl shadow-brand-500/20">
+                <h3 class="text-xl font-black mb-4">Aucune offre soumise</h3>
+                <p class="text-sm text-brand-50 font-medium mb-6 leading-relaxed">Proposez vos tarifs et vos dates pour commencer la négociation avec le client.</p>
+                <button @click="openBidModal = true" class="w-full py-4 bg-white text-brand-600 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] hover:bg-brand-50 transition-all">
+                    Faire une proposition
+                </button>
+            </div>
+            @endif
+
+            <!-- Proposition Modal -->
+            <x-ui.modal model="openBidModal" title="{{ $myBid ? 'Modifier votre offre' : 'Faire une proposition' }}" maxWidth="max-w-xl">
+                <form action="{{ route('transport-firm-bid.store-bid', $shipment) }}" method="POST" class="p-8 space-y-6">
+                    @csrf
+                    <div class="grid grid-cols-1 gap-6">
+                        <!-- Price -->
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Votre Prix (€)</label>
+                            <input type="number" name="price" step="0.01" value="{{ $myBid ? $myBid->price : $shipment->delivery_price }}" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 text-sm font-bold focus:ring-brand-500">
+                        </div>
+
+                        <!-- Pickup -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Date Collecte</label>
+                                <input type="date" name="latest_pickup_date" value="{{ $myBid ? $myBid->latest_pickup_date->format('Y-m-d') : $shipment->latest_pickup_date->format('Y-m-d') }}" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 text-sm font-bold focus:ring-brand-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Heure Collecte</label>
+                                <input type="time" name="latest_pickup_time" value="{{ $myBid ? $myBid->latest_pickup_time : $shipment->latest_pickup_time }}" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 text-sm font-bold focus:ring-brand-500">
+                            </div>
+                        </div>
+
+                        <!-- Delivery -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Date Livraison</label>
+                                <input type="date" name="latest_delivery_date" value="{{ $myBid ? $myBid->latest_delivery_date->format('Y-m-d') : $shipment->latest_delivery_date->format('Y-m-d') }}" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 text-sm font-bold focus:ring-brand-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Heure Livraison</label>
+                                <input type="time" name="latest_delivery_time" value="{{ $myBid ? $myBid->latest_delivery_time : $shipment->latest_delivery_time }}" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 text-sm font-bold focus:ring-brand-500">
+                            </div>
+                        </div>
+
+                        <!-- Message -->
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Message (Optionnel)</label>
+                            <textarea name="message" rows="3" class="w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 text-sm font-medium focus:ring-brand-500" placeholder="Ajoutez un commentaire à votre offre..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 pt-6">
+                        <button type="button" @click="openBidModal = false" class="flex-1 py-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all">Annuler</button>
+                        <button type="submit" class="flex-1 py-4 bg-brand-500 text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-brand-500/30 hover:bg-brand-600 transition-all">Envoyer l'offre</button>
+                    </div>
+                </form>
+            </x-ui.modal>
+        </div>
+
+        <!-- Right: Discussion Thread (8 cols) -->
+        <div class="lg:col-span-8 space-y-6">
+            <h2 class="text-sm font-black uppercase tracking-[0.2em] text-gray-400 px-1">Discussion avec le client</h2>
+            
+            <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl shadow-gray-200/20 flex flex-col min-h-[600px]">
+                <!-- Chat Header -->
+                <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between bg-gray-50/30 dark:bg-gray-800/20">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center font-black text-sm">
+                            C
+                        </div>
+                        <div>
+                            <p class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-tight">Client</p>
+                            <p class="text-[10px] font-bold text-green-500 uppercase tracking-widest flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Client en ligne
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages area -->
+                <div class="flex-1 p-8 space-y-8 overflow-y-auto max-h-[500px]">
+                    @if($myBid && $myBid->messages->count() > 0)
+                        @foreach($myBid->messages as $message)
+                            @php $isMe = $message->user_id === auth()->id(); @endphp
+                            <div class="flex {{ $isMe ? 'justify-end' : 'justify-start' }} group">
+                                <div class="max-w-[80%] space-y-1.5">
+                                    <div class="flex items-center gap-3 px-1 {{ $isMe ? 'flex-row-reverse' : '' }}">
+                                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ $isMe ? 'Vous' : 'Client' }}</span>
+                                        <span class="text-[9px] text-gray-300 font-bold">{{ $message->created_at->format('H:i') }}</span>
+                                    </div>
+                                    <div class="px-5 py-4 rounded-3xl shadow-sm border 
+                                        {{ $isMe 
+                                            ? 'bg-brand-500 text-white border-brand-400 rounded-tr-none' 
+                                            : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-100 dark:border-gray-700 rounded-tl-none' }}">
+                                        <p class="text-sm font-medium leading-relaxed">{{ $message->message }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="h-full flex flex-col items-center justify-center text-center opacity-40">
+                            <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                            <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Aucun message pour le moment</p>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Input area -->
+                <div class="p-6 bg-gray-50/50 dark:bg-gray-800/20 border-t border-gray-50 dark:border-gray-800">
+                    @if($myBid)
+                        <form action="{{ route('transport-firm-bid.store-message', $myBid) }}" method="POST" class="flex items-center gap-4">
+                            @csrf
+                            <div class="relative flex-1">
+                                <input type="text" name="message" required placeholder="Écrire un message..." class="w-full bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 rounded-2xl px-6 py-4 text-sm font-medium focus:ring-brand-500 focus:border-brand-500 transition-all pr-12 shadow-sm">
+                                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-brand-500 transition-colors p-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                                </button>
+                            </div>
+                            <button type="submit" class="w-14 h-14 bg-brand-500 text-white rounded-2xl flex items-center justify-center hover:bg-brand-600 shadow-lg shadow-brand-500/30 transition-all flex-none group">
+                                <svg class="w-6 h-6 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                            </button>
+                        </form>
+                    @else
+                        <div class="flex items-center justify-center p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-800 rounded-2xl">
+                            <p class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">Veuillez faire une proposition pour commencer la discussion.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

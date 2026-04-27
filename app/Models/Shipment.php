@@ -53,4 +53,9 @@ class Shipment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function bids(): HasMany
+    {
+        return $this->hasMany(ShipmentBid::class);
+    }
 }
