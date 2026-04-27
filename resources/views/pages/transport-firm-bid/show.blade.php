@@ -345,11 +345,13 @@
                             </div>
                         </div>
 
+                        @if($shipment->status === 'pending' && $shipment->user_id !== auth()->id())
                         <button @click="openBidModal = true" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] hover:bg-brand-600 hover:text-white transition-all shadow-lg shadow-gray-200 dark:shadow-none">
                             Modifier l'offre
                         </button>
+                        @endif
 
-                        @if(auth()->id() === $shipment->user_id && $myBid->status !== 'accepted')
+                        @if(auth()->id() === $shipment->user_id && $shipment->status === 'pending')
                             <form action="{{ route('transport-firm-bid.accept-bid', $myBid) }}" method="POST" class="mt-4">
                                 @csrf
                                 <button type="submit" class="w-full py-4 bg-green-500 text-white rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] hover:bg-green-600 transition-all shadow-lg shadow-green-500/20">
@@ -483,7 +485,7 @@
                         </div>
 
                         <div class="flex items-center gap-4">
-                            @if((auth()->user()->hasRole('shipper') || auth()->user()->hasRole('admin')) && $myBid && $myBid->status !== 'accepted' && $shipment->status === 'pending')
+                            @if((auth()->user()->hasRole('shipper') || auth()->user()->hasRole('admin')) && $myBid && $shipment->status === 'pending')
                             <form action="{{ route('transport-firm-bid.accept-bid', $myBid->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="px-6 py-2.5 bg-green-500 text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-green-500/30 hover:bg-green-600 transition-all">
@@ -492,7 +494,7 @@
                             </form>
                             @endif
 
-                            @if((auth()->user()->hasRole('shipper') || auth()->user()->hasRole('admin')) && $shipment->status === 'active')
+                            @if((auth()->user()->hasRole('shipper') || auth()->user()->hasRole('admin')) && $shipment->status === 'active' && $myBid && $myBid->status === 'accepted')
                             <form action="{{ route('transport-firm-bid.complete-shipment', $shipment->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="px-6 py-2.5 bg-brand-500 text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-brand-500/30 hover:bg-brand-600 transition-all">
@@ -504,7 +506,7 @@
                     </div>
 
                     <!-- Rating/Review Section -->
-                    @if($shipment->status === 'completed')
+                    @if($shipment->status === 'completed' && $myBid && $myBid->status === 'accepted')
                         @if(!$shipment->review)
                             @if(auth()->id() === $shipment->user_id)
                                 <!-- Rating Form -->
