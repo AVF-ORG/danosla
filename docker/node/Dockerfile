@@ -7,6 +7,4 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
-
-CMD ["sh", "-c", "tail -f /dev/null"]
+CMD ["sh", "-c", "rm -f /var/www/public/hot && npm run build && tail -f /dev/null"]
