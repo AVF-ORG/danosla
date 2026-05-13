@@ -3,22 +3,12 @@ import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-    server: {
-        cors: true,
-        host: '0.0.0.0',
-        origin: 'http://localhost:5173',
-        hmr: {
-            host: 'localhost',
-        },
-        watch: {
-            usePolling: true,
-        },
-    },
     plugins: [
+        tailwindcss(),
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
-        tailwindcss(),
     ],
 });
+
