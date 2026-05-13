@@ -46,21 +46,25 @@ class ShipmentBidSeeder extends Seeder
                     ]
                 );
 
-                // Create a conversation for every bid
-                $messageCount = rand(4, 8);
-                $parent = null;
+                // Only create a conversation if shipment is active/completed OR if pending and within 3h of validity
+                $isWithinWindow = $shipment->validity_date && now()->diffInHours($shipment->validity_date, false) <= 3;
+                
+                if (in_array($shipment->status, ['active', 'completed']) || $isWithinWindow) {
+                    $messageCount = rand(4, 8);
+                    $parent = null;
 
-                for ($i = 0; $i < $messageCount; $i++) {
-                    $senderId = ($i % 2 === 0) ? $carrier->id : $shipment->user_id;
-                    if (!$senderId) continue;
+                    for ($i = 0; $i < $messageCount; $i++) {
+                        $senderId = ($i % 2 === 0) ? $carrier->id : $shipment->user_id;
+                        if (!$senderId) continue;
 
-                    $parent = BidMessage::create([
-                        'bid_id' => $bid->id,
-                        'user_id' => $senderId,
-                        'parent_id' => $parent ? $parent->id : null,
-                        'message' => $this->getRandomMessage($i),
-                        'is_read' => true,
-                    ]);
+                        $parent = BidMessage::create([
+                            'bid_id' => $bid->id,
+                            'user_id' => $senderId,
+                            'parent_id' => $parent ? $parent->id : null,
+                            'message' => $this->getRandomMessage($i),
+                            'is_read' => true,
+                        ]);
+                    }
                 }
             }
 

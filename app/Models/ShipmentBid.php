@@ -20,12 +20,14 @@ class ShipmentBid extends Model
         'latest_delivery_date',
         'latest_delivery_time',
         'status',
+        'is_negotiable',
     ];
 
     protected $casts = [
         'latest_pickup_date' => 'date',
         'latest_delivery_date' => 'date',
         'price' => 'decimal:2',
+        'is_negotiable' => 'boolean',
     ];
 
     public function shipment(): BelongsTo

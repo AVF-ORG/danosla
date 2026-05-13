@@ -30,20 +30,27 @@ class ShipmentSeeder extends Seeder
             ->each(function ($shipment) use ($shippers) {
                 // Assign to one of the 3 shippers
                 $shipment->user_id = $shippers->random()->id;
+                
+                // Mix of validity dates: 30% within 3 hours, 70% further away
+                if (rand(1, 10) <= 3) {
+                    $shipment->validity_date = now()->addHours(rand(1, 3))->addMinutes(rand(0, 59));
+                } else {
+                    $shipment->validity_date = now()->addDays(rand(1, 5));
+                }
+                
                 $shipment->save();
 
-                // Create 1-4 random lots for each shipment
+                // Create exactly one lot for each shipment
                 Lot::factory()
-                    ->count(rand(1, 4))
                     ->create([
                         'shipment_id' => $shipment->id,
                     ]);
 
-                // Update shipment totals after lots are created
+                // Update shipment totals after lot is created
                 $shipment->refresh();
                 $shipment->update([
-                    'total_volume' => $shipment->lots->sum('volume'),
-                    'total_weight' => $shipment->lots->sum(fn ($lot) => (float)$lot->weight * (int)$lot->quantity),
+                    'total_volume' => $shipment->lot->volume,
+                    'total_weight' => (float)$shipment->lot->weight * (int)$shipment->lot->quantity,
                 ]);
             });
             

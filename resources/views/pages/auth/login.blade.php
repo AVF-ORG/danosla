@@ -38,7 +38,7 @@
                                     type="email"
                                     id="email"
                                     name="email"
-                                    value="{{ old('email') }}"
+                                    value="{{ old('email', app()->isLocal() ? 'admin@danosla.com' : '') }}"
                                     placeholder="you@example.com"
                                     autofocus
                                     class="h-12 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 
@@ -65,6 +65,7 @@
                                         id="password"
                                         name="password"
                                         placeholder="Enter your password"
+                                        value="{{ app()->isLocal() ? 'admin' : '' }}"
                                         class="h-12 w-full rounded-xl border border-gray-300 bg-white py-3 pr-12 pl-4 text-sm text-gray-800 
                                                placeholder:text-gray-400 transition-all duration-200
                                                focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 focus:outline-none

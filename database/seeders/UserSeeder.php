@@ -14,10 +14,11 @@ class UserSeeder extends Seeder
     {
         // 1. Create the specific Admin user
         $admin = \App\Models\User::firstOrCreate(
-            ['email' => 'medjadjiabdelkadir22@gmail.com'],
+            ['email' => 'admin@danosla.com'],
             [
-                'name' => 'Admin (Medjadji)',
-                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
+                'name' => 'Admin',
+                'password' => \Illuminate\Support\Facades\Hash::make('admin'),
+                'status' => 'active',
             ]
         );
         
@@ -29,13 +30,17 @@ class UserSeeder extends Seeder
         $admin->assignRole($adminRole);
 
         // 2. Create 10 Carriers
-        \App\Models\User::factory(10)->create()->each(function ($user) {
+        \App\Models\User::factory(10)->create([
+            'status' => 'active'
+        ])->each(function ($user) {
             $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'carrier']);
             $user->assignRole($role);
         });
 
         // 3. Create 10 Shippers
-        \App\Models\User::factory(10)->create()->each(function ($user) {
+        \App\Models\User::factory(10)->create([
+            'status' => 'active'
+        ])->each(function ($user) {
             $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'shipper']);
             $user->assignRole($role);
         });

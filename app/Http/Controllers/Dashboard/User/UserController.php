@@ -161,4 +161,54 @@ class UserController extends Controller
             ->route('dashboard.users.index')
             ->with('success', 'User deleted successfully.');
     }
+
+    /**
+     * Impersonate a user.
+     */
+    public function impersonate(User $user)
+    {
+        // Only admins can impersonate
+        if (!auth()->user()->hasRole('admin')) {
+            abort(403);
+        }
+
+        // Prevent impersonating yourself
+        if (auth()->id() == $user->id) {
+            return back()->with('error', 'You cannot impersonate yourself.');
+        }
+
+        // Store the original admin ID in the session
+        session(['impersonated_by' => auth()->id()]);
+
+        // Login as the target user
+        auth()->login($user);
+
+        return redirect()
+            ->route('dashboard.index')
+            ->with('success', 'You are now logged in as ' . $user->name);
+    }
+
+    /**
+     * Stop impersonating and return to the admin account.
+     */
+    public function stopImpersonate()
+    {
+        $adminId = session('impersonated_by');
+
+        if (!$adminId) {
+            return redirect()->route('dashboard.index');
+        }
+
+        $admin = User::findOrFail($adminId);
+
+        // Login back as the admin
+        auth()->login($admin);
+
+        // Clear the impersonation session
+        session()->forget('impersonated_by');
+
+        return redirect()
+            ->route('dashboard.index')
+            ->with('success', 'Returned to admin account.');
+    }
 }

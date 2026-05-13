@@ -1,5 +1,4 @@
 import './bootstrap';
-// import Alpine from 'alpinejs';
 import ApexCharts from 'apexcharts';
 import Swal from 'sweetalert2';
 
@@ -9,15 +8,13 @@ import 'flatpickr/dist/flatpickr.min.css';
 // FullCalendar
 import { Calendar } from '@fullcalendar/core';
 
-
-
-// window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
 window.flatpickr = flatpickr;
 window.FullCalendar = Calendar;
 window.Swal = Swal;
 
-// Alpine.start();
+// Livewire 3/4 handles Alpine.js automatically.
+// We should NOT import or start it here to avoid conflicts.
 
 // Initialize components on DOM ready
 document.addEventListener('DOMContentLoaded', () => {

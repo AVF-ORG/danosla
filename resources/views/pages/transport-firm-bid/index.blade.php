@@ -52,23 +52,23 @@
                 </div>
             @else
                 <!-- Data Table -->
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto min-h-[250px]">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead>
                             <tr class="bg-gray-50/50 dark:bg-gray-800/50">
                                 <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Trajet
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Date Départ
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Date Arrivée
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Validité
                                 </th>
-                                <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Prix de livraison
                                 </th>
                                 <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -102,11 +102,11 @@
 
                                     <!-- Date Départ -->
                                     <td class="px-6 py-5 whitespace-nowrap">
-                                        <div class="flex items-center">
+                                        <div class="flex items-center justify-center">
                                             <div class="flex-shrink-0 h-10 w-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-brand-500 dark:text-brand-400">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                             </div>
-                                            <div class="ml-4">
+                                            <div class="ml-4 text-left">
                                                 <div class="text-sm font-bold text-gray-900 dark:text-white">
                                                     {{ $shipment->latest_pickup_date ? \Carbon\Carbon::parse($shipment->latest_pickup_date)->format('d M Y') : '-' }}
                                                 </div>
@@ -118,7 +118,7 @@
                                     </td>
 
                                     <!-- Date Arrivée -->
-                                    <td class="px-6 py-5 whitespace-nowrap">
+                                    <td class="px-6 py-5 whitespace-nowrap text-center">
                                         <div class="text-sm font-bold text-gray-900 dark:text-white">
                                             {{ $shipment->latest_delivery_date ? \Carbon\Carbon::parse($shipment->latest_delivery_date)->format('d M Y') : '-' }}
                                         </div>
@@ -128,7 +128,7 @@
                                     </td>
 
                                     <!-- Validity -->
-                                    <td class="px-6 py-5 whitespace-nowrap">
+                                    <td class="px-6 py-5 whitespace-nowrap text-center">
                                         @if($shipment->validity_date)
                                             <div class="text-sm font-bold text-brand-600 dark:text-brand-400">
                                                 {{ $shipment->validity_date->format('d M Y') }}
@@ -142,34 +142,61 @@
                                     </td>
 
                                     <!-- Price -->
-                                    <td class="px-6 py-5 whitespace-nowrap">
+                                    <td class="px-6 py-5 whitespace-nowrap text-center">
                                         <div class="text-sm font-black text-gray-900 dark:text-white">
                                             {{ $shipment->delivery_price ? number_format($shipment->delivery_price, 2, ',', ' ') . ' €' : '-' }}
                                         </div>
                                     </td>
 
                                     <!-- Offres -->
-                                    <td class="px-6 py-5 whitespace-nowrap text-center">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 border border-brand-100 dark:border-brand-800">
-                                            {{ $shipment->bids->count() }}
-                                        </span>
-                                    </td>
-
-                                    <!-- Status -->
-                                    <td class="px-6 py-5 whitespace-nowrap text-center">
-                                        @php
-                                            $shipmentStatusConfig = [
-                                                'pending' => 'bg-amber-500',
-                                                'completed' => 'bg-green-500',
-                                                'active' => 'bg-green-500',
-                                                'canceled' => 'bg-red-500',
-                                                'cancelled' => 'bg-red-500',
-                                            ][$shipment->status] ?? 'bg-gray-500';
-                                        @endphp
-                                        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {{ $shipmentStatusConfig }} text-white shadow-sm">
-                                            {{ $shipment->status === 'pending' ? 'En attente' : ($shipment->status === 'completed' ? 'Terminé' : ($shipment->status === 'active' ? 'Actif' : ($shipment->status === 'cancelled' || $shipment->status === 'canceled' ? 'Annulé' : ucfirst($shipment->status)))) }}
-                                        </span>
-                                    </td>
+                                     <td class="px-6 py-5 whitespace-nowrap text-center">
+                                         @php
+                                             $myBid = $shipment->bids->where('user_id', auth()->id())->first();
+                                             $otherBidsCount = $shipment->bids->where('user_id', '!=', auth()->id())->count();
+                                         @endphp
+                                         <div class="flex flex-col items-center gap-1">
+                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 border border-brand-100 dark:border-brand-800">
+                                                 {{ $otherBidsCount }}
+                                             </span>
+                                             @if($myBid)
+                                                 <span class="text-[9px] font-black text-brand-500 uppercase tracking-tighter">Déjà postulé</span>
+                                             @endif
+                                         </div>
+                                     </td>
+ 
+                                     <!-- Status -->
+                                     <td class="px-6 py-5 whitespace-nowrap text-center">
+                                         @php
+                                             $displayStatus = $shipment->status;
+                                             $statusLabel = $shipment->status === 'pending' ? 'En attente' : ($shipment->status === 'completed' ? 'Terminé' : ($shipment->status === 'active' ? 'Actif' : ($shipment->status === 'cancelled' || $shipment->status === 'canceled' ? 'Annulé' : ucfirst($shipment->status))));
+                                             $statusColor = [
+                                                 'pending' => 'bg-amber-500',
+                                                 'completed' => 'bg-green-500',
+                                                 'active' => 'bg-green-500',
+                                                 'canceled' => 'bg-red-500',
+                                                 'cancelled' => 'bg-red-500',
+                                             ][$shipment->status] ?? 'bg-gray-500';
+ 
+                                             if (auth()->user()->hasRole('carrier') && $myBid) {
+                                                 $displayStatus = $myBid->status;
+                                                 $statusLabel = match($myBid->status) {
+                                                     'pending' => 'Offre envoyée',
+                                                     'accepted' => 'Offre acceptée',
+                                                     'rejected' => 'Offre déclinée',
+                                                     default => ucfirst($myBid->status)
+                                                 };
+                                                 $statusColor = match($myBid->status) {
+                                                     'pending' => 'bg-blue-500',
+                                                     'accepted' => 'bg-green-500',
+                                                     'rejected' => 'bg-red-500',
+                                                     default => 'bg-gray-500'
+                                                 };
+                                             }
+                                         @endphp
+                                         <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {{ $statusColor }} text-white shadow-sm">
+                                             {{ $statusLabel }}
+                                         </span>
+                                     </td>
 
                                     <td class="px-6 py-5 whitespace-nowrap text-right">
                                         <div x-data="{ dropdownOpen: false, openDeleteModal: false }" class="relative inline-block text-left" @click.away="dropdownOpen = false">
@@ -188,22 +215,37 @@
                                                  x-transition:leave="transition ease-in duration-75"
                                                  x-transition:leave-start="transform opacity-100 scale-100"
                                                  x-transition:leave-end="transform opacity-0 scale-95"
-                                                 class="absolute right-0 z-50 mt-2 w-40 rounded-xl bg-white dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700 focus:outline-none"
+                                                 class="absolute right-0 z-50 mt-2 w-48 rounded-xl bg-white dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700 focus:outline-none"
                                                  style="display: none;">
                                                     <div class="py-1">
-                                                        <a href="{{ route('transport-firm-bid.show', $shipment) }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" onclick="event.stopPropagation();">
-                                                            <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                                            Voir plus
-                                                        </a>
+                                                        @if(auth()->user()->hasRole('carrier'))
+                                                            @php $myBid = $shipment->bids->where('user_id', auth()->id())->first(); @endphp
+                                                            <a href="{{ route('transport-firm-bid.show', $shipment) }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors" onclick="event.stopPropagation();">
+                                                                <svg class="w-4 h-4 mr-3 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    @if($myBid)
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                                    @else
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                                    @endif
+                                                                </svg>
+                                                                <span class="font-bold">{{ $myBid ? 'Modifier mon offre' : 'Faire une offre' }}</span>
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ route('transport-firm-bid.show', $shipment) }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" onclick="event.stopPropagation();">
+                                                                <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                                Voir plus
+                                                            </a>
+                                                        @endif
+
                                                         @if($shipment->user_id === auth()->id() || auth()->user()->hasRole('admin|Super Admin'))
-                                                        <a href="{{ route('transport-firm-bid.edit', $shipment) }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" onclick="event.stopPropagation();">
-                                                            <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                                            Éditer
-                                                        </a>
-                                                        <button @click.stop.prevent="dropdownOpen = false; openDeleteModal = true" type="button" class="flex w-full items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                                                            <svg class="w-4 h-4 mr-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                                            Supprimer
-                                                        </button>
+                                                            <a href="{{ route('transport-firm-bid.edit', $shipment) }}" class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" onclick="event.stopPropagation();">
+                                                                <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                                                Éditer
+                                                            </a>
+                                                            <button @click.stop.prevent="dropdownOpen = false; openDeleteModal = true" type="button" class="flex w-full items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                                                <svg class="w-4 h-4 mr-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                                Supprimer
+                                                            </button>
                                                         @endif
                                                     </div>
                                             </div>

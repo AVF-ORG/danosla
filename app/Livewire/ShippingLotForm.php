@@ -17,6 +17,7 @@ class ShippingLotForm extends Component
     public function mount(Shipment $shipmentRecord = null)
     {
         if ($shipmentRecord && $shipmentRecord->exists) {
+            $this->authorize('update', $shipmentRecord);
             $this->shipmentRecord = $shipmentRecord;
 
             $this->description = $shipmentRecord->description;
@@ -51,39 +52,25 @@ class ShippingLotForm extends Component
             $this->hasAdditionalRequirements = $reqs['hasAdditionalRequirements'] ?? false;
             $this->additionalRequirementsDescription = $reqs['additionalRequirementsDescription'] ?? '';
 
-            $shipmentRecord->load('lots');
-            $this->lots = $shipmentRecord->lots->map(function ($lot) {
-                return [
-                    'type' => $lot->type,
-                    'quantity' => $lot->quantity,
-                    'weight' => $lot->weight,
-                    'length' => $lot->length,
-                    'width' => $lot->width,
-                    'height' => $lot->height,
-                    'palette_type' => $lot->palette_type,
-                    'container_type' => $lot->container_type,
-                    'brand' => $lot->brand,
-                    'model' => $lot->model,
-                    'vehicle_weight' => $lot->vehicle_weight,
-                    'is_rolling' => $lot->is_rolling,
-                    'is_stackable' => $lot->is_stackable,
-                    'volume' => $lot->volume,
-                ];
-            })->toArray();
-
-            $this->calculateGlobalTotals();
-            // Optional: reset lot builder to defaults
-            $this->resetLotFields();
-
-            if (count($this->lots) > 0) {
-                $this->editLot(0);
+            $shipmentRecord->load('lot');
+            if ($shipmentRecord->lot) {
+                $lot = $shipmentRecord->lot;
+                $this->type = $lot->type;
+                $this->quantity = $lot->quantity;
+                $this->weight = $lot->weight;
+                $this->length = $lot->length;
+                $this->width = $lot->width;
+                $this->height = $lot->height;
+                $this->palette_type = $lot->palette_type;
+                $this->container_type = $lot->container_type;
+                $this->brand = $lot->brand;
+                $this->model = $lot->model;
+                $this->vehicle_weight = $lot->vehicle_weight;
+                $this->is_rolling = $lot->is_rolling;
+                $this->is_stackable = $lot->is_stackable;
             }
         }
     }
-
-    public $lots = [];
-
-    public $editingLotIndex = null;
 
     // Step 2: Current Lot fields
     public $type = 'colis';
@@ -218,9 +205,6 @@ class ShippingLotForm extends Component
     protected function rules()
     {
         $rules = [
-            // Require at least one lot on final submit:
-            'lots' => 'required|array|min:1',
-
             'description' => 'required|string|min:5',
             'comment' => 'nullable|string|max:2000',
 
@@ -258,7 +242,7 @@ class ShippingLotForm extends Component
             'additionalRequirementsDescription' => 'nullable|string|max:2000',
         ];
 
-        return $rules;
+        return array_merge($rules, $this->lotRules());
     }
 
     /**
@@ -291,126 +275,6 @@ class ShippingLotForm extends Component
         }
 
         return $rules;
-    }
-
-    public function addLot()
-    {
-        $this->validate($this->lotRules());
-
-        $l = $this->length;
-        $w = $this->width;
-        $h = $this->height;
-        $weight_val = $this->weight;
-
-        if ($this->type === 'palette_standard') {
-            $dims = $this->palette_dimensions[$this->palette_type] ?? ['l' => 0, 'L' => 0];
-            $l = $dims['L'];
-            $w = $dims['l'];
-        }
-
-        if ($this->type === 'vehicule') {
-            $weight_map = [
-                '1t' => 1000,
-                '1.5t' => 1500,
-                '2t' => 2000,
-                '3t' => 3000,
-            ];
-            $weight_val = $weight_map[$this->vehicle_weight] ?? 1000;
-        }
-
-        $lotData = [
-            'type' => $this->type,
-            'quantity' => (int) $this->quantity,
-            'weight' => (float) $weight_val,
-            'length' => (float) $l,
-            'width' => (float) $w,
-            'height' => (float) $this->height,
-            'palette_type' => $this->palette_type,
-            'container_type' => $this->container_type,
-            'brand' => $this->brand,
-            'model' => $this->model,
-            'vehicle_weight' => $this->vehicle_weight,
-            'is_rolling' => (bool) $this->is_rolling,
-            'is_stackable' => (bool) $this->is_stackable,
-            'volume' => (float) $this->current_lot_volume,
-        ];
-
-        if ($this->editingLotIndex !== null) {
-            $this->lots[$this->editingLotIndex] = $lotData;
-            $this->editingLotIndex = null;
-        } else {
-            $this->lots[] = $lotData;
-        }
-
-        $this->resetLotFields();
-        $this->calculateGlobalTotals();
-
-        // Clear any "lots required" error after first add
-        $this->resetErrorBag('lots');
-    }
-
-    public function editLot($index)
-    {
-        $lot = $this->lots[$index];
-
-        $this->type = $lot['type'];
-        $this->quantity = $lot['quantity'];
-        $this->weight = $lot['weight'];
-        $this->length = $lot['length'];
-        $this->width = $lot['width'];
-        $this->height = $lot['height'];
-        $this->palette_type = $lot['palette_type'];
-        $this->container_type = $lot['container_type'];
-        $this->brand = $lot['brand'];
-        $this->model = $lot['model'];
-        $this->vehicle_weight = $lot['vehicle_weight'];
-        $this->is_rolling = $lot['is_rolling'];
-        $this->is_stackable = $lot['is_stackable'] ?? true;
-
-        $this->editingLotIndex = $index;
-    }
-
-    public function removeLot($index)
-    {
-        unset($this->lots[$index]);
-        $this->lots = array_values($this->lots);
-
-        $this->calculateGlobalTotals();
-    }
-
-    public function cancelEdit()
-    {
-        $this->resetLotFields();
-        $this->editingLotIndex = null;
-        $this->resetErrorBag();
-    }
-
-    private function resetLotFields()
-    {
-        $this->type = 'colis';
-        $this->quantity = 1;
-        $this->weight = '';
-        $this->length = '';
-        $this->width = '';
-        $this->height = '';
-        $this->palette_type = '80_120';
-        $this->container_type = '20_dry';
-        $this->brand = '';
-        $this->model = '';
-        $this->vehicle_weight = '1t';
-        $this->is_rolling = true;
-        $this->is_stackable = true;
-    }
-
-    public function calculateGlobalTotals()
-    {
-        $this->total_volume = 0.0;
-        $this->total_weight = 0.0;
-
-        foreach ($this->lots as $lot) {
-            $this->total_volume += (float) ($lot['volume'] ?? 0);
-            $this->total_weight += ((float) ($lot['weight'] ?? 0) * (int) ($lot['quantity'] ?? 1));
-        }
     }
 
     // Preview volume of one packaging
@@ -496,16 +360,42 @@ class ShippingLotForm extends Component
 
     public function submit()
     {
+        if ($this->shipmentRecord && $this->shipmentRecord->exists) {
+            $this->authorize('update', $this->shipmentRecord);
+        } else {
+            $this->authorize('create', Shipment::class);
+        }
+
         $this->validate();
 
         \Illuminate\Support\Facades\DB::transaction(function () {
+            $l = $this->length;
+            $w = $this->width;
+            $weight_val = $this->weight;
+
+            if ($this->type === 'palette_standard') {
+                $dims = $this->palette_dimensions[$this->palette_type] ?? ['l' => 0, 'L' => 0];
+                $l = $dims['L'];
+                $w = $dims['l'];
+            }
+
+            if ($this->type === 'vehicule') {
+                $weight_map = [
+                    '1t' => 1000,
+                    '1.5t' => 1500,
+                    '2t' => 2000,
+                    '3t' => 3000,
+                ];
+                $weight_val = $weight_map[$this->vehicle_weight] ?? 1000;
+            }
+
             $data = [
                 'user_id' => auth()->id(),
                 'description' => $this->description,
                 'comment' => $this->comment,
                 'total_value' => (float) $this->totalValue ?: null,
-                'total_volume' => (float) $this->total_volume,
-                'total_weight' => (float) $this->total_weight,
+                'total_volume' => (float) $this->current_lot_volume,
+                'total_weight' => (float) $weight_val * (int) $this->quantity,
                 'pickup_address' => $this->pickupAddress,
                 'pickup_options' => $this->pickupOptions,
                 'delivery_address' => $this->deliveryAddress,
@@ -537,30 +427,28 @@ class ShippingLotForm extends Component
 
             if ($this->shipmentRecord && $this->shipmentRecord->exists) {
                 $this->shipmentRecord->update($data);
-                $this->shipmentRecord->lots()->delete();
+                $this->shipmentRecord->lot()->delete();
                 $shipment = $this->shipmentRecord;
             } else {
                 $shipment = \App\Models\Shipment::create($data);
             }
 
-            foreach ($this->lots as $lot) {
-                $shipment->lots()->create([
-                    'type' => $lot['type'],
-                    'quantity' => $lot['quantity'],
-                    'weight' => $lot['weight'],
-                    'length' => $lot['length'],
-                    'width' => $lot['width'],
-                    'height' => $lot['height'],
-                    'palette_type' => $lot['palette_type'],
-                    'container_type' => $lot['container_type'],
-                    'brand' => $lot['brand'],
-                    'model' => $lot['model'],
-                    'vehicle_weight' => $lot['vehicle_weight'],
-                    'is_rolling' => $lot['is_rolling'],
-                    'is_stackable' => $lot['is_stackable'] ?? true,
-                    'volume' => $lot['volume'],
-                ]);
-            }
+            $shipment->lot()->create([
+                'type' => $this->type,
+                'quantity' => (int) $this->quantity,
+                'weight' => (float) $weight_val,
+                'length' => (float) $l,
+                'width' => (float) $w,
+                'height' => (float) $this->height,
+                'palette_type' => $this->palette_type,
+                'container_type' => $this->container_type,
+                'brand' => $this->brand,
+                'model' => $this->model,
+                'vehicle_weight' => $this->vehicle_weight,
+                'is_rolling' => (bool) $this->is_rolling,
+                'is_stackable' => (bool) $this->is_stackable,
+                'volume' => (float) $this->current_lot_volume,
+            ]);
         });
 
         $this->isSubmitted = true;
@@ -594,7 +482,7 @@ class ShippingLotForm extends Component
 
     public function getIsMarchandisesCompleteProperty()
     {
-        return count($this->lots) > 0;
+        return !empty($this->type) && $this->quantity > 0;
     }
 
     public function getIsTermsCompleteProperty()

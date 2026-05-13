@@ -41,6 +41,23 @@
 
         <!-- Menu Items -->
         <ul class="flex flex-col gap-1 pt-4 pb-3 border-b border-gray-200 dark:border-gray-800">
+            @if(session()->has('impersonated_by'))
+                <li>
+                    <form action="{{ route('dashboard.users.stop-impersonation') }}" method="POST">
+                        @csrf
+                        <button type="submit"
+                            class="flex items-center w-full gap-3 px-3 py-2 font-medium text-red-600 rounded-lg group text-theme-sm hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10">
+                            <span class="text-red-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3m0 18a9.823 9.823 0 004.13-7.633V12c0-3.314-2.686-6-6-6s-6 2.686-6 6v.633A9.823 9.823 0 008.13 20" />
+                                </svg>
+                            </span>
+                            Return to Admin
+                        </button>
+                    </form>
+                </li>
+                <hr class="my-1 border-gray-100 dark:border-gray-700">
+            @endif
             @php
                 $menuItems = [
                     [
@@ -105,7 +122,7 @@
                 <span class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                            d="M18.364 5.636a9 9 0 11-12.728 0m1.414 1.414a7 7 0 109.9 0M12 3v9">
                         </path>
                     </svg>
                 </span>

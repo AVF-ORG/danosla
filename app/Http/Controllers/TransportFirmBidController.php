@@ -7,6 +7,8 @@ use App\Models\Shipment;
 use App\Models\ShipmentBid;
 use App\Models\BidMessage;
 use App\Models\Review;
+use App\Events\NewBidMessage;
+use App\Events\BidUpdated;
 
 class TransportFirmBidController extends Controller
 {
@@ -19,16 +21,16 @@ class TransportFirmBidController extends Controller
         $query = Shipment::query();
 
         if ($user->hasRole('carrier')) {
-            // Carriers only see shipments where they have placed a bid
-            $query->whereHas('bids', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
+            // Carriers see all pending shipments OR shipments where they have bid
+            $query->where(function($q) use ($user) {
+                $q->where('status', 'pending')
+                  ->orWhereHas('bids', function($bq) use ($user) {
+                      $bq->where('user_id', $user->id);
+                  });
             });
         } elseif ($user->hasRole('shipper')) {
-            // Shippers see all pending shipments AND shipments they created
-            $query->where(function ($q) use ($user) {
-                $q->where('status', 'pending')
-                  ->orWhere('user_id', $user->id);
-            });
+            // Shippers only see their own shipments
+            $query->where('user_id', $user->id);
         }
 
         $shipments = $query->with('bids')->latest()->get();
@@ -50,12 +52,22 @@ class TransportFirmBidController extends Controller
     }
     public function show(Request $request, Shipment $shipment)
     {
+        $this->authorize('view', $shipment);
         $user = auth()->user();
         $bidId = $request->query('bid_id');
         $allBids = null;
         
         if ($user->hasRole('shipper') || $user->hasRole('admin')) {
-            $allBids = $shipment->bids()->with('user')->get();
+            $allBids = $shipment->bids()->with(['user', 'messages'])->get()->map(function($bid) use ($user) {
+                return [
+                    'id' => $bid->id,
+                    'price' => $bid->price,
+                    'status' => $bid->status,
+                    'updated_at_human' => $bid->updated_at->diffForHumans(null, true),
+                    'unread_count' => $bid->messages->where('user_id', '!=', $user->id)->where('is_read', false)->count(),
+                    'last_message' => $bid->messages->last()?->message ?? 'Pas de message'
+                ];
+            });
         }
 
         if ($bidId) {
@@ -71,13 +83,24 @@ class TransportFirmBidController extends Controller
                 
             // For shippers, if no bid_id is selected, pick the first one or just show the list
             if (!$myBid && $allBids && $allBids->isNotEmpty()) {
-                $myBid = $allBids->first();
-                // Load messages for the default selected bid
-                $myBid->load(['messages.user']);
+                $myBid = ShipmentBid::with(['messages.user'])->find($allBids->first()['id']);
             }
         }
         
-        $shipment->load('lots');
+        if ($request->expectsJson()) {
+            return response()->json([
+                'bid' => $myBid,
+                'messages' => $myBid ? $myBid->messages->map(fn($m) => [
+                    'id' => $m->id,
+                    'message' => $m->message,
+                    'user_id' => $m->user_id,
+                    'user_name' => $m->user_id === $user->id ? 'Vous' : ($user->hasRole('carrier') ? 'Client' : 'Transporteur'),
+                    'created_at' => $m->created_at->format('H:i')
+                ]) : []
+            ]);
+        }
+
+        $shipment->load('lot');
 
         return view('pages.transport-firm-bid.show', [
             'title' => 'Détails de l\'expédition #'.str_pad($shipment->id, 5, '0', STR_PAD_LEFT),
@@ -88,11 +111,26 @@ class TransportFirmBidController extends Controller
     }
 
     /**
+     * Mark all messages in a bid as read for the current user.
+     */
+    public function markAsRead(ShipmentBid $bid)
+    {
+        $this->authorize('view', $bid->shipment);
+        
+        $bid->messages()
+            ->where('user_id', '!=', auth()->id())
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * Show the form for editing the specified shipment.
      */
     public function edit(Shipment $shipment)
     {
-        $shipment->load('lots');
+        $shipment->load('lot');
         
         return view('pages.transport-firm-bid.edit', [
             'title' => 'Éditer l\'expédition #'.str_pad($shipment->id, 5, '0', STR_PAD_LEFT),
@@ -105,14 +143,40 @@ class TransportFirmBidController extends Controller
      */
     public function storeBid(Request $request, Shipment $shipment)
     {
-        $validated = $request->validate([
-            'price' => 'required|numeric|min:0',
-            'latest_pickup_date' => 'required|date',
-            'latest_pickup_time' => 'required',
-            'latest_delivery_date' => 'required|date',
-            'latest_delivery_time' => 'required',
-            'message' => 'nullable|string',
-        ]);
+        $this->authorize('create', [ShipmentBid::class, $shipment]);
+
+        $isNegotiable = $request->boolean('is_negotiable', true);
+        
+        // Rule: Negotiation only allowed if validity_date < 3h
+        $now = now();
+        $validityDate = $shipment->validity_date;
+        $diffInHours = $validityDate ? $now->diffInHours($validityDate, false) : 999;
+        $canNegotiate = $diffInHours >= 0 && $diffInHours < 3;
+
+        if ($isNegotiable && !$canNegotiate) {
+            return redirect()->back()->with('error', 'La négociation n\'est pas autorisée pour cette expédition.');
+        }
+
+        if ($isNegotiable) {
+            $validated = $request->validate([
+                'price' => 'required|numeric|min:0',
+                'latest_pickup_date' => 'required|date',
+                'latest_pickup_time' => 'required',
+                'latest_delivery_date' => 'required|date',
+                'latest_delivery_time' => 'required',
+                'message' => 'nullable|string',
+            ]);
+        } else {
+            $validated = $request->validate([
+                'message' => 'nullable|string',
+            ]);
+            // For direct request, we leave terms as NULL as requested
+            $validated['price'] = null;
+            $validated['latest_pickup_date'] = null;
+            $validated['latest_pickup_time'] = null;
+            $validated['latest_delivery_date'] = null;
+            $validated['latest_delivery_time'] = null;
+        }
 
         $bid = ShipmentBid::updateOrCreate(
             ['shipment_id' => $shipment->id, 'user_id' => auth()->id()],
@@ -122,19 +186,34 @@ class TransportFirmBidController extends Controller
                 'latest_pickup_time' => $validated['latest_pickup_time'],
                 'latest_delivery_date' => $validated['latest_delivery_date'],
                 'latest_delivery_time' => $validated['latest_delivery_time'],
+                'is_negotiable' => $isNegotiable,
                 'status' => 'pending',
             ]
         );
 
         if (!empty($validated['message'])) {
-            BidMessage::create([
+            // Only allow messages if negotiable OR if it's the initial message of a direct request (optional, but keeping it for now if provided)
+            $message = BidMessage::create([
                 'bid_id' => $bid->id,
                 'user_id' => auth()->id(),
                 'message' => $validated['message'],
             ]);
+
+            broadcast(new NewBidMessage($message->load('user')))->toOthers();
         }
 
-        return redirect()->back()->with('success', 'Votre proposition a été envoyée avec succès.');
+        broadcast(new BidUpdated($bid))->toOthers();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $isNegotiable ? 'Votre proposition a été envoyée.' : 'Votre demande directe a été envoyée.',
+                'bid' => $bid->load('user', 'messages'),
+            ]);
+        }
+
+        $message = $isNegotiable ? 'Votre proposition a été envoyée.' : 'Votre demande directe a été envoyée.';
+        return redirect()->back()->with('success', $message);
     }
 
     /**
@@ -142,27 +221,36 @@ class TransportFirmBidController extends Controller
      */
     public function storeMessage(Request $request, ShipmentBid $bid)
     {
+        $this->authorize('negotiate', $bid);
+
         $validated = $request->validate([
             'message' => 'required|string',
         ]);
 
-        BidMessage::create([
+        $message = BidMessage::create([
             'bid_id' => $bid->id,
             'user_id' => auth()->id(),
             'message' => $validated['message'],
         ]);
+
+        broadcast(new NewBidMessage($message->load('user')))->toOthers();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Message envoyé.',
+                'bid_message' => $message->load('user'),
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Message envoyé.');
     }
 
     public function acceptBid(ShipmentBid $bid)
     {
-        $shipment = $bid->shipment;
+        $this->authorize('accept', $bid);
 
-        // Ensure only the shipment owner can accept bids
-        if ($shipment->user_id !== auth()->id() && !auth()->user()->hasRole('admin')) {
-            return back()->with('error', 'Unauthorized action.');
-        }
+        $shipment = $bid->shipment;
 
         // 1. Accept this bid
         $bid->update(['status' => 'accepted']);
@@ -173,21 +261,37 @@ class TransportFirmBidController extends Controller
         // 3. Update shipment status
         $shipment->update(['status' => 'active']);
 
+        broadcast(new BidUpdated($bid))->toOthers();
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Offre acceptée avec succès. L\'expédition est maintenant active.',
+                'bid' => $bid,
+                'shipment_status' => $shipment->status,
+            ]);
+        }
+
         return back()->with('success', 'Offre acceptée avec succès. L\'expédition est maintenant active.');
     }
 
     public function completeShipment(Shipment $shipment)
     {
-        // Ensure only the shipment owner can complete it
-        if ($shipment->user_id !== auth()->id() && !auth()->user()->hasRole('admin')) {
-            return back()->with('error', 'Unauthorized action.');
-        }
+        $this->authorize('update', $shipment);
 
         if ($shipment->status !== 'active') {
             return back()->with('error', 'Seules les expéditions actives peuvent être marquées comme terminées.');
         }
 
         $shipment->update(['status' => 'completed']);
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Expédition terminée ! Vous pouvez maintenant laisser un avis au transporteur.',
+                'shipment_status' => $shipment->status,
+            ]);
+        }
 
         return back()->with('success', 'Expédition terminée ! Vous pouvez maintenant laisser un avis au transporteur.');
     }
@@ -236,8 +340,9 @@ class TransportFirmBidController extends Controller
      */
     public function destroy(Shipment $shipment)
     {
+        $this->authorize('delete', $shipment);
         // First delete associated lots to maintain database integrity
-        $shipment->lots()->delete();
+        $shipment->lot()->delete();
         $shipment->delete();
 
         return redirect()->route('transport-firm-bid.index')

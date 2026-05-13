@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             RegionCountrySeeder::class,
             SectorSeeder::class,
             UserSeeder::class,
-            ShipmentSeeder::class,
-            ShipmentBidSeeder::class,
+            // ShipmentSeeder::class,
+            // ShipmentBidSeeder::class,
         ]);
     }
 }

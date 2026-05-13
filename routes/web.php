@@ -120,6 +120,8 @@ Route::group([
             Route::get('users/shippers', [UserController::class, 'index'])->defaults('role', 'shipper')->name('users.shippers');
 
             Route::resource('users', UserController::class);
+            Route::post('users/{user}/impersonate', [UserController::class, 'impersonate'])->name('users.impersonate');
+            Route::post('users/stop-impersonation', [UserController::class, 'stopImpersonate'])->name('users.stop-impersonation');
         });
 
     });
@@ -151,6 +153,7 @@ Route::group([
         Route::post('/{shipment}/bid', [TransportFirmBidController::class, 'storeBid'])->name('store-bid');
         Route::post('/bid/{bid}/message', [TransportFirmBidController::class, 'storeMessage'])->name('store-message');
         Route::post('/bid/{bid}/accept', [TransportFirmBidController::class, 'acceptBid'])->name('accept-bid');
+        Route::post('/bid/{bid}/mark-as-read', [TransportFirmBidController::class, 'markAsRead'])->name('mark-as-read');
         Route::post('/{shipment}/complete', [TransportFirmBidController::class, 'completeShipment'])->name('complete-shipment');
         Route::post('/{shipment}/review', [TransportFirmBidController::class, 'storeReview'])->name('store-review');
     });

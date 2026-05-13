@@ -64,7 +64,42 @@ services:
     container_name: laravel_redis
     ports:
       - "6379:6379"
-    profiles: ["optional"]
+    networks:
+      - danosla_network
+
+  reverb:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: laravel_reverb
+    working_dir: /var/www
+    env_file:
+      - .env.docker
+    command: php artisan reverb:start --host=0.0.0.0 --port=8080
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./:/var/www
+    networks:
+      - danosla_network
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: laravel_worker
+    working_dir: /var/www
+    env_file:
+      - .env.docker
+    command: php artisan queue:listen
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./:/var/www
     networks:
       - danosla_network
 

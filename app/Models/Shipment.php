@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Shipment extends Model
 {
@@ -44,9 +45,9 @@ class Shipment extends Model
         'delivery_price' => 'decimal:2',
     ];
 
-    public function lots(): HasMany
+    public function lot(): HasOne
     {
-        return $this->hasMany(Lot::class);
+        return $this->hasOne(Lot::class);
     }
 
     public function user(): BelongsTo
@@ -59,7 +60,7 @@ class Shipment extends Model
         return $this->hasMany(ShipmentBid::class);
     }
 
-    public function review()
+    public function review(): HasOne
     {
         return $this->hasOne(Review::class);
     }
