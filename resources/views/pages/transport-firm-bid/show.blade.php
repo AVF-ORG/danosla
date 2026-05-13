@@ -34,8 +34,9 @@
 
             $now = now();
             $validityDate = $shipment->validity_date;
-            $diffInHours = $validityDate ? $now->diffInHours($validityDate, false) : 999;
-            $isUrgentValidity = $diffInHours >= 0 && $diffInHours <= 3;
+            $diffInMinutes = $validityDate ? $now->diffInMinutes($validityDate, false) : 9999;
+            $isUrgentValidity = $diffInMinutes >= 0 && $diffInMinutes <= 180;
+            $isExpired = $diffInMinutes < 0;
         @endphp
         <!-- Header -->
         <div class="mb-8">
@@ -475,6 +476,7 @@
                 allBids: config.allBids || [],
                 userId: config.userId,
                 isUrgentValidity: config.isUrgentValidity,
+                isExpired: config.isExpired,
                 submittingBid: false,
                 acceptingBid: false,
                 openBidModal: false,
@@ -813,6 +815,7 @@
             allBids: @js($allBids ?? []),
             userId: @js(auth()->id()),
             isUrgentValidity: @js($isUrgentValidity),
+            isExpired: @js($isExpired),
             messages: @js(
     $myBid
         ? $myBid->messages->map(
@@ -909,7 +912,7 @@
                                 </div>
 
                                 <template
-                                    x-if="shipment.status === 'pending' && shipment.user_id !== {{ auth()->id() }} && myBid.is_negotiable">
+                                    x-if="shipment.status === 'pending' && shipment.user_id !== {{ auth()->id() }} && myBid.is_negotiable && isUrgentValidity && !isExpired">
                                     <button @click="openBidModal = true"
                                         class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] hover:bg-brand-600 hover:text-white transition-all shadow-lg shadow-gray-200 dark:shadow-none">
                                         Modifier l'offre
@@ -948,7 +951,19 @@
                     </div>
                 </template>
 
-                <template x-if="!myBid && shipment.user_id !== {{ auth()->id() }} && shipment.status === 'pending'">
+                <template x-if="!myBid && isExpired && shipment.status === 'pending' && shipment.user_id !== {{ auth()->id() }}">
+                    <div class="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-800 rounded-3xl p-8 text-center">
+                        <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-black text-red-700 dark:text-red-400 mb-2 uppercase tracking-tight">Expédition Expirée</h3>
+                        <p class="text-sm text-red-600/80 dark:text-red-400/60 font-medium">La date limite de validité est dépassée. Vous ne pouvez plus soumettre d'offres pour cette expédition.</p>
+                    </div>
+                </template>
+
+                <template x-if="!myBid && !isExpired && shipment.user_id !== {{ auth()->id() }} && shipment.status === 'pending'">
                     <div
                         class="bg-gradient-to-br from-brand-500 to-brand-600 rounded-3xl p-8 text-white shadow-xl shadow-brand-500/20">
                         <h3 class="text-xl font-black mb-4"

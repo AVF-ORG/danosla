@@ -21,12 +21,18 @@ class TransportFirmBidController extends Controller
         $query = Shipment::query();
 
         if ($user->hasRole('carrier')) {
-            // Carriers see all pending shipments OR shipments where they have bid
+            // Carriers see non-expired pending shipments OR shipments where they have bid
             $query->where(function($q) use ($user) {
-                $q->where('status', 'pending')
-                  ->orWhereHas('bids', function($bq) use ($user) {
-                      $bq->where('user_id', $user->id);
-                  });
+                $q->where(function($sq) {
+                    $sq->where('status', 'pending')
+                       ->where(function($vq) {
+                           $vq->where('validity_date', '>=', now())
+                              ->orWhereNull('validity_date');
+                       });
+                })
+                ->orWhereHas('bids', function($bq) use ($user) {
+                    $bq->where('user_id', $user->id);
+                });
             });
         } elseif ($user->hasRole('shipper')) {
             // Shippers only see their own shipments
@@ -150,8 +156,16 @@ class TransportFirmBidController extends Controller
         // Rule: Negotiation only allowed if validity_date < 3h
         $now = now();
         $validityDate = $shipment->validity_date;
-        $diffInHours = $validityDate ? $now->diffInHours($validityDate, false) : 999;
-        $canNegotiate = $diffInHours >= 0 && $diffInHours < 3;
+        $diffInMinutes = $validityDate ? $now->diffInMinutes($validityDate, false) : 9999;
+        
+        if ($diffInMinutes < 0) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Cette expédition a expiré.'], 422);
+            }
+            return redirect()->back()->with('error', 'Cette expédition a expiré.');
+        }
+
+        $canNegotiate = $diffInMinutes >= 0 && $diffInMinutes <= 180;
 
         if ($isNegotiable && !$canNegotiate) {
             return redirect()->back()->with('error', 'La négociation n\'est pas autorisée pour cette expédition.');
