@@ -540,6 +540,19 @@
                                     // Listen to chat for this new bid too
                                     this.listenToBidChannel(e.bid_id);
                                 }
+
+                                // 3. Mass rejection logic: If a bid is accepted, all others are rejected
+                                if (e.status === 'accepted' && e.shipment_status === 'active') {
+                                    console.log('--- Bid accepted, rejecting all others in UI');
+                                    this.allBids.forEach(b => {
+                                        if (String(b.id) !== String(e.bid_id)) {
+                                            b.status = 'rejected';
+                                        }
+                                    });
+                                    if (this.myBid && String(this.myBid.id) !== String(e.bid_id)) {
+                                        this.myBid.status = 'rejected';
+                                    }
+                                }
                             });
 
                         // 2. Bid Channels (Chat)
