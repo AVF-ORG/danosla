@@ -10,9 +10,15 @@
             window.Echo.private(`App.Models.User.{{ auth()->id() }}`)
                 .notification((notification) => {
                     console.log('New notification received:', notification);
+                    
+                    // Laravel/Reverb usually wraps notification data in a 'data' key.
+                    // We handle both wrapped and unwrapped scenarios.
+                    let payload = notification.data || notification;
+                    if (payload.data) payload = payload.data;
+
                     this.notifications.unshift({
-                        id: notification.id,
-                        data: notification.data,
+                        id: notification.id || ('temp-' + Date.now()),
+                        data: payload,
                         created_at: notification.created_at || new Date().toISOString(),
                         read_at: null
                     });
@@ -112,10 +118,33 @@
                         :href="'{{ route('notifications.read', ['id' => '__ID__']) }}'.replace('__ID__', notification.id)"
                     >
                         <span class="relative block w-full h-10 rounded-full z-1 max-w-10 flex items-center justify-center rounded-2xl"
-                            :class="notification.read_at ? 'bg-gray-100 text-gray-400' : 'bg-brand-500 text-white shadow-lg shadow-brand-500/20'">
-                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                            :class="notification.read_at ? 'bg-gray-100 text-gray-400' : (
+                                notification.data.status_type === 'accepted' ? 'bg-success-500 text-white shadow-lg shadow-success-500/20' : (
+                                    notification.data.status_type === 'rejected' ? 'bg-gray-400 text-white' : (
+                                        notification.data.status_type === 'completed' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'bg-brand-500 text-white shadow-lg shadow-brand-500/20'
+                                    )
+                                )
+                            )">
+                            <template x-if="notification.data.status_type === 'accepted'">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </template>
+                            <template x-if="notification.data.status_type === 'rejected'">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </template>
+                            <template x-if="notification.data.status_type === 'bid_received'">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </template>
+                            <template x-if="!notification.data.status_type || (notification.data.status_type !== 'accepted' && notification.data.status_type !== 'rejected' && notification.data.status_type !== 'bid_received')">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </template>
                         </span>
 
                         <span class="block min-w-0 flex-1">
