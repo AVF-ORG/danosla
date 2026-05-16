@@ -23,8 +23,26 @@
                         read_at: null
                     });
                     if (this.notifications.length > 10) this.notifications.pop();
+                    // Show Toast
+                    this.showToast(payload);
                 });
         }
+    },
+    toast: {
+        show: false,
+        title: '',
+        message: '',
+        status_type: ''
+    },
+    showToast(data) {
+        this.toast.title = data.title || 'Notification';
+        this.toast.message = data.message || '';
+        this.toast.status_type = data.status_type || '';
+        this.toast.show = true;
+        
+        setTimeout(() => {
+            this.toast.show = false;
+        }, 5000);
     },
     toggleDropdown() {
         this.dropdownOpen = !this.dropdownOpen;
@@ -140,7 +158,12 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </template>
-                            <template x-if="!notification.data.status_type || (notification.data.status_type !== 'accepted' && notification.data.status_type !== 'rejected' && notification.data.status_type !== 'bid_received')">
+                            <template x-if="notification.data.status_type === 'message_received'">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                </svg>
+                            </template>
+                            <template x-if="!notification.data.status_type || (notification.data.status_type !== 'accepted' && notification.data.status_type !== 'rejected' && notification.data.status_type !== 'bid_received' && notification.data.status_type !== 'message_received')">
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -190,4 +213,46 @@
         </a>
     </div>
     <!-- Dropdown End -->
+
+    <!-- Toast Notification -->
+    <div 
+        x-show="toast.show"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform translate-y-4"
+        x-transition:enter-end="opacity-100 transform translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 transform translate-y-0"
+        x-transition:leave-end="opacity-0 transform translate-y-4"
+        class="fixed bottom-5 right-5 z-[9999] w-80 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-4 pointer-events-auto"
+        style="display: none;"
+    >
+        <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-brand-500 text-white shadow-lg shadow-brand-500/20">
+                <template x-if="toast.status_type === 'message_received'">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                </template>
+                <template x-if="toast.status_type === 'bid_received'">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </template>
+                <template x-if="!toast.status_type || (toast.status_type !== 'message_received' && toast.status_type !== 'bid_received')">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </template>
+            </div>
+            <div class="flex-grow">
+                <h4 class="text-sm font-bold text-gray-900 dark:text-white" x-text="toast.title"></h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" x-text="toast.message"></p>
+            </div>
+            <button @click="toast.show = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
 </div>

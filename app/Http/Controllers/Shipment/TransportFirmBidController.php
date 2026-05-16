@@ -12,6 +12,7 @@ use App\Events\Shipment\NewBidMessage;
 use App\Events\Shipment\BidUpdated;
 use App\Notifications\Shipment\ShipmentStatusChangedNotification;
 use App\Notifications\Shipment\NewBidNotification;
+use App\Notifications\Shipment\NewMessageNotification;
 use Illuminate\Support\Facades\Notification;
 
 class TransportFirmBidController extends Controller
@@ -253,6 +254,11 @@ class TransportFirmBidController extends Controller
         ]);
 
         broadcast(new NewBidMessage($message->load('user')))->toOthers();
+
+        // --- Notify Recipient ---
+        $recipient = auth()->id() === $bid->user_id ? $bid->shipment->user : $bid->user;
+        $recipient->notify(new NewMessageNotification($bid->shipment, $bid, $message));
+        // ------------------------
 
         if ($request->expectsJson()) {
             return response()->json([
