@@ -11,7 +11,8 @@ use App\Http\Controllers\Dashboard\Sector\SectorController;
 use App\Http\Controllers\Dashboard\ContactSubject\ContactSubjectController;
 use App\Http\Controllers\Dashboard\Contact\ContactController;
 use App\Http\Controllers\Dashboard\User\UserController;
-use App\Http\Controllers\TransportFirmBidController;
+use App\Http\Controllers\Shipment\TransportFirmBidController;
+use App\Http\Controllers\Notification\NotificationController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -125,9 +126,9 @@ Route::group([
         });
 
         Route::prefix('notifications')->name('notifications.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\NotificationController::class, 'index'])->name('index');
-            Route::get('/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('read');
-            Route::post('/mark-all-as-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+            Route::get('/', [NotificationController::class, 'index'])->name('index');
+            Route::get('/{id}/read', [NotificationController::class, 'markAsRead'])->name('read');
+            Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
         });
 
     });

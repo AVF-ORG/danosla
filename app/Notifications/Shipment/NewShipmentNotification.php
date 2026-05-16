@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Shipment;
 
 use App\Models\Shipment;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
@@ -39,19 +38,12 @@ class NewShipmentNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return [
-            'shipment_id' => $this->shipment->id,
-            'pickup_address' => $this->shipment->pickup_address,
-            'delivery_address' => $this->shipment->delivery_address,
-            'pickup_at' => ($this->shipment->latest_pickup_date?->format('d/m') ?? '--') . ' ' . ($this->shipment->latest_pickup_time ?? '--'),
-            'delivery_at' => ($this->shipment->latest_delivery_date?->format('d/m') ?? '--') . ' ' . ($this->shipment->latest_delivery_time ?? '--'),
-            'validity_at' => $this->shipment->validity_date?->format('d/m H:i') ?? '--',
-            'price' => number_format($this->shipment->delivery_price ?? 0, 2) . ' €',
+        return array_merge($this->shipment->toNotificationData(), [
             'shipper_name' => 'Expéditeur',
             'title' => 'Nouvelle expédition disponible',
             'message' => "De {$this->shipment->pickup_address} vers {$this->shipment->delivery_address}",
             'url' => route('transport-firm-bid.show', $this->shipment->id),
-        ];
+        ]);
     }
 
     /**

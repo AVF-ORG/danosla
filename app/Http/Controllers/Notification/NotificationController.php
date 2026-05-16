@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Notification;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -46,4 +47,3 @@ class NotificationController extends Controller
         ]);
     }
 }
-

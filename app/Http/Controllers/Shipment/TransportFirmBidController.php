@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shipment;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Shipment;
 use App\Models\ShipmentBid;
 use App\Models\BidMessage;
 use App\Models\Review;
-use App\Events\NewBidMessage;
-use App\Events\BidUpdated;
-use App\Notifications\ShipmentStatusChangedNotification;
-use App\Notifications\NewBidNotification;
+use App\Events\Shipment\NewBidMessage;
+use App\Events\Shipment\BidUpdated;
+use App\Notifications\Shipment\ShipmentStatusChangedNotification;
+use App\Notifications\Shipment\NewBidNotification;
 use Illuminate\Support\Facades\Notification;
 
 class TransportFirmBidController extends Controller

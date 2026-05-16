@@ -147,5 +147,17 @@ class Shipment extends Model
             ],
         };
     }
+    public function toNotificationData(): array
+    {
+        return [
+            'shipment_id' => $this->id,
+            'pickup_address' => $this->pickup_address,
+            'delivery_address' => $this->delivery_address,
+            'pickup_at' => ($this->latest_pickup_date?->format('d/m') ?? '--') . ' ' . ($this->latest_pickup_time ?? '--'),
+            'delivery_at' => ($this->latest_delivery_date?->format('d/m') ?? '--') . ' ' . ($this->latest_delivery_time ?? '--'),
+            'validity_at' => $this->validity_date?->format('d/m H:i') ?? '--',
+            'price' => number_format($this->delivery_price ?? 0, 2) . ' €',
+        ];
+    }
 }
 

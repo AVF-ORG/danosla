@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Shipment;
 
 use App\Models\Shipment;
 use Illuminate\Bus\Queueable;
@@ -54,20 +54,13 @@ class ShipmentStatusChangedNotification extends Notification
             'cancelled' => "L'expédition vers {$this->shipment->delivery_address} a été annulée.",
         ];
 
-        return [
-            'shipment_id' => $this->shipment->id,
-            'pickup_address' => $this->shipment->pickup_address,
-            'delivery_address' => $this->shipment->delivery_address,
-            'pickup_at' => ($this->shipment->latest_pickup_date?->format('d/m') ?? '--') . ' ' . ($this->shipment->latest_pickup_time ?? '--'),
-            'delivery_at' => ($this->shipment->latest_delivery_date?->format('d/m') ?? '--') . ' ' . ($this->shipment->latest_delivery_time ?? '--'),
-            'validity_at' => $this->shipment->validity_date?->format('d/m H:i') ?? '--',
-            'price' => number_format($this->shipment->delivery_price ?? 0, 2) . ' €',
+        return array_merge($this->shipment->toNotificationData(), [
             'shipper_name' => 'Système',
             'title' => $statusLabels[$this->type] ?? 'Mise à jour d\'expédition',
             'message' => $messages[$this->type] ?? "Le statut de l'expédition a changé.",
             'url' => route('transport-firm-bid.show', $this->shipment->id),
             'status_type' => $this->type,
-        ];
+        ]);
     }
 
     /**

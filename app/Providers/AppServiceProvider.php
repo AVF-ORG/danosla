@@ -22,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register Policies manually after relocation
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Shipment::class, \App\Policies\Shipment\ShipmentPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\ShipmentBid::class, \App\Policies\Shipment\ShipmentBidPolicy::class);
+
         try {
             $languages = Cache::remember('active_languages', 3600, function () {
                 return Language::query()
