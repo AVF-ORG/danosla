@@ -3,40 +3,7 @@
 @section('content')
     <div class="px-4 py-4 md:px-4 md:py-4">
         @php
-            $statusConfig = match ($shipment->status) {
-                'pending' => [
-                    'label' => 'En Attente',
-                    'color' => 'bg-amber-50 text-amber-700 border-amber-100',
-                    'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
-                ],
-                'active' => [
-                    'label' => 'En Cours',
-                    'color' => 'bg-blue-50 text-blue-700 border-blue-100',
-                    'icon' => 'M13 10V3L4 14h7v7l9-11h-7z',
-                ],
-                'completed' => [
-                    'label' => 'Livré',
-                    'color' => 'bg-success-50 text-success-700 border-success-100',
-                    'icon' => 'M5 13l4 4L19 7',
-                ],
-                'cancelled', 'canceled' => [
-                    'label' => 'Annulé',
-                    'color' => 'bg-red-50 text-red-700 border-red-100',
-                    'icon' =>
-                        'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z',
-                ],
-                default => [
-                    'label' => ucfirst($shipment->status),
-                    'color' => 'bg-gray-50 text-gray-700 border-gray-100',
-                    'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-                ],
-            };
-
-            $now = now();
-            $validityDate = $shipment->validity_date;
-            $diffInMinutes = $validityDate ? $now->diffInMinutes($validityDate, false) : 9999;
-            $isUrgentValidity = $diffInMinutes >= 0 && $diffInMinutes <= 180;
-            $isExpired = $diffInMinutes < 0;
+            $statusConfig = $shipment->status_config;
         @endphp
         <!-- Header -->
         <div class="mb-8">
@@ -477,6 +444,7 @@
                 userId: config.userId,
                 isUrgentValidity: config.isUrgentValidity,
                 isExpired: config.isExpired,
+                canDemand: config.canDemand,
                 submittingBid: false,
                 acceptingBid: false,
                 openBidModal: false,
@@ -814,21 +782,22 @@
             myBid: @js($myBid),
             allBids: @js($allBids ?? []),
             userId: @js(auth()->id()),
-            isUrgentValidity: @js($isUrgentValidity),
-            isExpired: @js($isExpired),
+            isUrgentValidity: @js($shipment->can_negotiate),
+            isExpired: @js($shipment->is_expired),
+            canDemand: @js($shipment->can_demand),
             messages: @js(
-    $myBid
-        ? $myBid->messages->map(
-            fn($m) => [
-                'id' => $m->id,
-                'message' => $m->message,
-                'user_id' => $m->user_id,
-                'user_name' => $m->user_id === auth()->id() ? 'Vous' : (auth()->user()->hasRole('carrier') ? 'Client' : 'Transporteur'),
-                'created_at' => $m->created_at->format('H:i'),
-            ],
-        )
-        : [],
-)
+                $myBid
+                    ? $myBid->messages->map(
+                        fn($m) => [
+                            'id' => $m->id,
+                            'message' => $m->message,
+                            'user_id' => $m->user_id,
+                            'user_name' => $m->user_id === auth()->id() ? 'Vous' : (auth()->user()->hasRole('carrier') ? 'Client' : 'Transporteur'),
+                            'created_at' => $m->created_at->format('H:i'),
+                        ],
+                    )
+                    : [],
+            )
         })">
             <!-- Left: Proposition Details (4 cols) -->
             <div class="lg:col-span-4 space-y-6">
@@ -912,7 +881,7 @@
                                 </div>
 
                                 <template
-                                    x-if="shipment.status === 'pending' && shipment.user_id !== {{ auth()->id() }} && myBid.is_negotiable && isUrgentValidity && !isExpired">
+                                    x-if="(shipment.status === 'pending' || shipment.status === 'expired') && shipment.user_id !== {{ auth()->id() }} && myBid.is_negotiable && isUrgentValidity && !isExpired">
                                     <button @click="openBidModal = true"
                                         class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] hover:bg-brand-600 hover:text-white transition-all shadow-lg shadow-gray-200 dark:shadow-none">
                                         Modifier l'offre
@@ -921,7 +890,7 @@
 
                                 @if (auth()->user()->hasRole('shipper') || auth()->user()->hasRole('admin'))
                                     <template
-                                        x-if="shipment.user_id === {{ auth()->id() }} && shipment.status === 'pending'">
+                                        x-if="shipment.user_id === {{ auth()->id() }} && (shipment.status === 'pending' || shipment.status === 'expired')">
                                         <form
                                             :action="'{{ route('transport-firm-bid.accept-bid', ['bid' => ':bidId']) }}'.replace
                                                 (':bidId', myBid.id)"
@@ -951,7 +920,7 @@
                     </div>
                 </template>
 
-                <template x-if="!myBid && isExpired && shipment.status === 'pending' && shipment.user_id !== {{ auth()->id() }}">
+                <template x-if="!myBid && isExpired && (shipment.status === 'pending' || shipment.status === 'expired') && shipment.user_id !== {{ auth()->id() }}">
                     <div class="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-800 rounded-3xl p-8 text-center">
                         <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -963,7 +932,7 @@
                     </div>
                 </template>
 
-                <template x-if="!myBid && !isExpired && shipment.user_id !== {{ auth()->id() }} && shipment.status === 'pending'">
+                <template x-if="!myBid && !isExpired && canDemand && shipment.user_id !== {{ auth()->id() }} && (shipment.status === 'pending' || shipment.status === 'expired')">
                     <div
                         class="bg-gradient-to-br from-brand-500 to-brand-600 rounded-3xl p-8 text-white shadow-xl shadow-brand-500/20">
                         <h3 class="text-xl font-black mb-4"
@@ -1098,7 +1067,7 @@
                             class="w-full md:w-72 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-800 flex flex-col bg-gray-50/20 dark:bg-gray-900/40">
                             <div class="p-6 border-b border-gray-100 dark:border-gray-800">
                                 <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400">
-                                    {{ $isUrgentValidity ? 'Offres Reçues' : 'Demandes Reçues' }} (<span
+                                    {{ $shipment->can_negotiate ? 'Offres Reçues' : 'Demandes Reçues' }} (<span
                                         x-text="allBids.length"></span>)
                                 </h3>
                             </div>

@@ -431,6 +431,10 @@ class ShippingLotForm extends Component
                 $shipment = $this->shipmentRecord;
             } else {
                 $shipment = \App\Models\Shipment::create($data);
+                
+                // Notify all carriers
+                $carriers = \App\Models\User::role('carrier')->get();
+                \Illuminate\Support\Facades\Notification::send($carriers, new \App\Notifications\NewShipmentNotification($shipment));
             }
 
             $shipment->lot()->create([

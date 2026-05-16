@@ -167,18 +167,11 @@
                                      <!-- Status -->
                                      <td class="px-6 py-5 whitespace-nowrap text-center">
                                          @php
-                                             $displayStatus = $shipment->status;
-                                             $statusLabel = $shipment->status === 'pending' ? 'En attente' : ($shipment->status === 'completed' ? 'Terminé' : ($shipment->status === 'active' ? 'Actif' : ($shipment->status === 'cancelled' || $shipment->status === 'canceled' ? 'Annulé' : ucfirst($shipment->status))));
-                                             $statusColor = [
-                                                 'pending' => 'bg-amber-500',
-                                                 'completed' => 'bg-green-500',
-                                                 'active' => 'bg-green-500',
-                                                 'canceled' => 'bg-red-500',
-                                                 'cancelled' => 'bg-red-500',
-                                             ][$shipment->status] ?? 'bg-gray-500';
- 
+                                             $statusConfig = $shipment->status_config;
+                                             $statusLabel = $statusConfig['label'];
+                                             $statusColor = $statusConfig['badge'];
+
                                              if (auth()->user()->hasRole('carrier') && $myBid) {
-                                                 $displayStatus = $myBid->status;
                                                  $statusLabel = match($myBid->status) {
                                                      'pending' => 'Offre envoyée',
                                                      'accepted' => 'Offre acceptée',

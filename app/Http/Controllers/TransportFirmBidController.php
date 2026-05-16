@@ -153,22 +153,19 @@ class TransportFirmBidController extends Controller
 
         $isNegotiable = $request->boolean('is_negotiable', true);
         
-        // Rule: Negotiation only allowed if validity_date < 3h
-        $now = now();
-        $validityDate = $shipment->validity_date;
-        $diffInMinutes = $validityDate ? $now->diffInMinutes($validityDate, false) : 9999;
-        
-        if ($diffInMinutes < 0) {
+        if ($shipment->is_expired) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'Cette expédition a expiré.'], 422);
             }
             return redirect()->back()->with('error', 'Cette expédition a expiré.');
         }
 
-        $canNegotiate = $diffInMinutes >= 0 && $diffInMinutes <= 180;
-
-        if ($isNegotiable && !$canNegotiate) {
+        if ($isNegotiable && !$shipment->can_negotiate) {
             return redirect()->back()->with('error', 'La négociation n\'est pas autorisée pour cette expédition.');
+        }
+
+        if (!$isNegotiable && !$shipment->can_demand) {
+            return redirect()->back()->with('error', 'L\'envoi de demande n\'est plus possible.');
         }
 
         if ($isNegotiable) {

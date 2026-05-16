@@ -124,6 +124,12 @@ Route::group([
             Route::post('users/stop-impersonation', [UserController::class, 'stopImpersonate'])->name('users.stop-impersonation');
         });
 
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\NotificationController::class, 'index'])->name('index');
+            Route::get('/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('read');
+            Route::post('/mark-all-as-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        });
+
     });
 
     Route::post('/locale', function (Request $request) {
