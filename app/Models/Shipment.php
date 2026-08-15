@@ -69,6 +69,15 @@ class Shipment extends Model
      * Helpers for shipment phases and status
      */
 
+    /**
+     * How many minutes carriers are still allowed to negotiate a bid before
+     * the shipment's validity deadline. This is the single source of truth
+     * for the negotiation-window rule — ShipmentBidPolicy::negotiate() calls
+     * isWithinNegotiationWindow() below instead of re-deriving this window,
+     * so the two can't drift apart.
+     */
+    public const NEGOTIATION_WINDOW_MINUTES = 180;
+
     public function getValidityDiffAttribute(): int
     {
         return $this->validity_date ? (int) now()->diffInMinutes($this->validity_date, false) : 9999;
@@ -79,9 +88,18 @@ class Shipment extends Model
         return $this->validity_diff < 0;
     }
 
+    /**
+     * Whether the validity deadline hasn't passed and is close enough
+     * (within NEGOTIATION_WINDOW_MINUTES) to still allow negotiation.
+     */
+    public function isWithinNegotiationWindow(): bool
+    {
+        return $this->validity_diff >= 0 && $this->validity_diff <= self::NEGOTIATION_WINDOW_MINUTES;
+    }
+
     public function getCanNegotiateAttribute(): bool
     {
-        return $this->getRawOriginal('status') === 'pending' && $this->validity_diff >= 0 && $this->validity_diff <= 180;
+        return $this->getRawOriginal('status') === 'pending' && $this->isWithinNegotiationWindow();
     }
 
     public function getCanDemandAttribute(): bool

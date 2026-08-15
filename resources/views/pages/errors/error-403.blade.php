@@ -3,7 +3,7 @@
 @section('content')
 @php($currentYear = date('Y'))
 <div class="relative z-1 flex min-h-screen flex-col items-center justify-center overflow-hidden p-6">
-    <x-common.common-grid-shape />
+    @include('components.grid-shape')
 
     <div class="mx-auto w-full max-w-[242px] text-center sm:max-w-[472px]">
         <h1 class="mb-8 text-title-md font-bold text-gray-800 dark:text-white/90 xl:text-title-2xl">

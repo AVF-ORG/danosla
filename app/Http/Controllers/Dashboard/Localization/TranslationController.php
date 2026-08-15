@@ -63,7 +63,7 @@ class TranslationController extends Controller
         }
 
         return redirect()
-            ->route('pages.dashboard.localization.translations.edit', $translationKey)
+            ->route('dashboard.localization.translations.edit', $translationKey)
             ->with('success', 'Translations updated.');
     }
 }

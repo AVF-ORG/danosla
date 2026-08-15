@@ -45,7 +45,7 @@ class KeyController extends Controller
         TranslationKey::create($data);
 
         return redirect()
-            ->route('pages.dashboard.localization.keys.index')
+            ->route('dashboard.localization.keys.index')
             ->with('success', 'Key created.');
     }
 
@@ -64,7 +64,7 @@ class KeyController extends Controller
         $translationKey->update($data);
 
         return redirect()
-            ->route('pages.dashboard.localization.keys.index')
+            ->route('dashboard.localization.keys.index')
             ->with('success', 'Key updated.');
     }
 
@@ -73,7 +73,7 @@ class KeyController extends Controller
         $translationKey->delete();
 
         return redirect()
-            ->route('pages.dashboard.localization.keys.index')
+            ->route('dashboard.localization.keys.index')
             ->with('success', 'Key deleted.');
     }
 }

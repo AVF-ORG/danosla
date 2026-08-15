@@ -36,7 +36,7 @@ class LanguageController extends Controller
         Language::create($data);
 
         return redirect()
-            ->route('pages.dashboard.localization.languages.index')
+            ->route('dashboard.localization.languages.index')
             ->with('success', 'Language created.');
     }
 
@@ -58,7 +58,7 @@ class LanguageController extends Controller
         $language->update($data);
 
         return redirect()
-            ->route('pages.dashboard.localization.languages.index')
+            ->route('dashboard.localization.languages.index')
             ->with('success', 'Language updated.');
     }
 
@@ -67,7 +67,7 @@ class LanguageController extends Controller
         $language->delete();
 
         return redirect()
-            ->route('pages.dashboard.localization.languages.index')
+            ->route('dashboard.localization.languages.index')
             ->with('success', 'Language deleted.');
     }
 }

@@ -12,6 +12,11 @@ use App\Http\Controllers\Dashboard\ContactSubject\ContactSubjectController;
 use App\Http\Controllers\Dashboard\Contact\ContactController;
 use App\Http\Controllers\Dashboard\User\UserController;
 use App\Http\Controllers\Shipment\TransportFirmBidController;
+use App\Http\Controllers\Shipment\Actions\StoreBidAction;
+use App\Http\Controllers\Shipment\Actions\AcceptBidAction;
+use App\Http\Controllers\Shipment\Actions\StoreMessageAction;
+use App\Http\Controllers\Shipment\Actions\CompleteShipmentAction;
+use App\Http\Controllers\Shipment\Actions\StoreReviewAction;
 use App\Http\Controllers\Notification\NotificationController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Http\Request;
@@ -157,12 +162,12 @@ Route::group([
         Route::get('/{shipment}/edit', [TransportFirmBidController::class, 'edit'])->name('edit');
         Route::delete('/{shipment}', [TransportFirmBidController::class, 'destroy'])->name('destroy');
         
-        Route::post('/{shipment}/bid', [TransportFirmBidController::class, 'storeBid'])->name('store-bid');
-        Route::post('/bid/{bid}/message', [TransportFirmBidController::class, 'storeMessage'])->name('store-message');
-        Route::post('/bid/{bid}/accept', [TransportFirmBidController::class, 'acceptBid'])->name('accept-bid');
+        Route::post('/{shipment}/bid', StoreBidAction::class)->name('store-bid');
+        Route::post('/bid/{bid}/message', StoreMessageAction::class)->name('store-message');
+        Route::post('/bid/{bid}/accept', AcceptBidAction::class)->name('accept-bid');
         Route::post('/bid/{bid}/mark-as-read', [TransportFirmBidController::class, 'markAsRead'])->name('mark-as-read');
-        Route::post('/{shipment}/complete', [TransportFirmBidController::class, 'completeShipment'])->name('complete-shipment');
-        Route::post('/{shipment}/review', [TransportFirmBidController::class, 'storeReview'])->name('store-review');
+        Route::post('/{shipment}/complete', CompleteShipmentAction::class)->name('complete-shipment');
+        Route::post('/{shipment}/review', StoreReviewAction::class)->name('store-review');
     });
 
     // calender pages

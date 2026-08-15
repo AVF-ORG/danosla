@@ -56,18 +56,10 @@ class ShipmentBidPolicy
             return true;
         }
 
-        // 3. If shipment is still pending, only allow negotiation if bid is negotiable AND within 3 hours
-        if (!$bid->is_negotiable) {
-            return false;
-        }
-
-        $validityDate = $shipment->validity_date;
-
-        if (!$validityDate) {
-            return true;
-        }
-
-        // Only allow if we are within 3 hours of the deadline (Urgent)
-        return now()->diffInHours($validityDate, false) < 3;
+        // 3. If shipment is still pending, only allow negotiation if the bid is
+        // negotiable AND we're within the shipment's negotiation window (see
+        // Shipment::isWithinNegotiationWindow() — the single source of truth
+        // for this time rule, shared with Shipment::can_negotiate).
+        return $bid->is_negotiable && $shipment->isWithinNegotiationWindow();
     }
 }
