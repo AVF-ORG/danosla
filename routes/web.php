@@ -136,6 +136,22 @@ Route::group([
             Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
         });
 
+        // transport firm bid page
+        Route::prefix('transport-firm-bid')->name('transport-firm-bid.')->group(function () {
+            Route::get('/', [TransportFirmBidController::class, 'index'])->name('index');
+            Route::get('/create', [TransportFirmBidController::class, 'create'])->name('create');
+            Route::get('/{shipment}', [TransportFirmBidController::class, 'show'])->name('show');
+            Route::get('/{shipment}/edit', [TransportFirmBidController::class, 'edit'])->name('edit');
+            Route::delete('/{shipment}', [TransportFirmBidController::class, 'destroy'])->name('destroy');
+
+            Route::post('/{shipment}/bid', StoreBidAction::class)->name('store-bid');
+            Route::post('/bid/{bid}/message', StoreMessageAction::class)->name('store-message');
+            Route::post('/bid/{bid}/accept', AcceptBidAction::class)->name('accept-bid');
+            Route::post('/bid/{bid}/mark-as-read', [TransportFirmBidController::class, 'markAsRead'])->name('mark-as-read');
+            Route::post('/{shipment}/complete', CompleteShipmentAction::class)->name('complete-shipment');
+            Route::post('/{shipment}/review', StoreReviewAction::class)->name('store-review');
+        });
+
     });
 
     Route::post('/locale', function (Request $request) {
@@ -153,22 +169,6 @@ Route::group([
     Route::get('/', function () {
         return view('pages.front.landing', ['title' => 'Home Page']);
     })->name('landing');
-
-    // transport firm bid page
-    Route::prefix('transport-firm-bid')->name('transport-firm-bid.')->group(function () {
-        Route::get('/', [TransportFirmBidController::class, 'index'])->name('index');
-        Route::get('/create', [TransportFirmBidController::class, 'create'])->name('create');
-        Route::get('/{shipment}', [TransportFirmBidController::class, 'show'])->name('show');
-        Route::get('/{shipment}/edit', [TransportFirmBidController::class, 'edit'])->name('edit');
-        Route::delete('/{shipment}', [TransportFirmBidController::class, 'destroy'])->name('destroy');
-        
-        Route::post('/{shipment}/bid', StoreBidAction::class)->name('store-bid');
-        Route::post('/bid/{bid}/message', StoreMessageAction::class)->name('store-message');
-        Route::post('/bid/{bid}/accept', AcceptBidAction::class)->name('accept-bid');
-        Route::post('/bid/{bid}/mark-as-read', [TransportFirmBidController::class, 'markAsRead'])->name('mark-as-read');
-        Route::post('/{shipment}/complete', CompleteShipmentAction::class)->name('complete-shipment');
-        Route::post('/{shipment}/review', StoreReviewAction::class)->name('store-review');
-    });
 
     // calender pages
     Route::get('/calendar', function () {
