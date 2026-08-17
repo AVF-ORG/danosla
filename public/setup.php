@@ -37,6 +37,98 @@ $app = require_once __DIR__ . '/../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
+// 2.5 Resolve Node and NPM paths (with falling back to common paths on Windows)
+$nodeCmd = 'node';
+$npmCmd = 'npm';
+$resolvedNodeDir = '';
+
+// Check if custom paths are defined in .env
+$envPath = __DIR__ . '/../.env';
+if (file_exists($envPath)) {
+    $envContent = file_get_contents($envPath);
+    if (preg_match('/^NODE_BINARY=(.*)$/m', $envContent, $matches)) {
+        $nodeCmd = trim(str_replace(['"', "'"], '', $matches[1]));
+    }
+    if (preg_match('/^NPM_BINARY=(.*)$/m', $envContent, $matches)) {
+        $npmCmd = trim(str_replace(['"', "'"], '', $matches[1]));
+    }
+    if (preg_match('/^NODE_PATH=(.*)$/m', $envContent, $matches)) {
+        $nodePathVal = trim(str_replace(['"', "'"], '', $matches[1]));
+        if (is_dir($nodePathVal)) {
+            $resolvedNodeDir = $nodePathVal;
+            $nodeCmd = '"' . $resolvedNodeDir . DIRECTORY_SEPARATOR . 'node.exe"';
+            $npmCmd = '"' . $resolvedNodeDir . DIRECTORY_SEPARATOR . 'npm.cmd"';
+        }
+    }
+}
+
+// Fallback search on Windows
+if ($nodeCmd === 'node' && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    $possibleNodePaths = [
+        'C:\Program Files\nodejs\node.exe',
+        'C:\Program Files (x86)\nodejs\node.exe',
+    ];
+    // Check if Laragon has nodejs versions installed
+    if (is_dir('C:\laragon\bin\nodejs')) {
+        $subdirs = glob('C:\laragon\bin\nodejs\*', GLOB_ONLYDIR);
+        if ($subdirs) {
+            rsort($subdirs); // highest version first
+            foreach ($subdirs as $subdir) {
+                $possibleNodePaths[] = $subdir . DIRECTORY_SEPARATOR . 'node.exe';
+            }
+        }
+    }
+    foreach ($possibleNodePaths as $path) {
+        if (file_exists($path)) {
+            $nodeCmd = '"' . $path . '"';
+            $resolvedNodeDir = dirname($path);
+            break;
+        }
+    }
+}
+
+// Fallback search for NPM on Windows
+if ($npmCmd === 'npm' && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    if (!empty($resolvedNodeDir)) {
+        if (file_exists($resolvedNodeDir . DIRECTORY_SEPARATOR . 'npm.cmd')) {
+            $npmCmd = '"' . $resolvedNodeDir . DIRECTORY_SEPARATOR . 'npm.cmd"';
+        }
+    }
+    if ($npmCmd === 'npm') {
+        $possibleNpmPaths = [
+            'C:\Program Files\nodejs\npm.cmd',
+            'C:\Program Files (x86)\nodejs\npm.cmd',
+        ];
+        if (is_dir('C:\laragon\bin\nodejs')) {
+            $subdirs = glob('C:\laragon\bin\nodejs\*', GLOB_ONLYDIR);
+            if ($subdirs) {
+                rsort($subdirs);
+                foreach ($subdirs as $subdir) {
+                    $possibleNpmPaths[] = $subdir . DIRECTORY_SEPARATOR . 'npm.cmd';
+                }
+            }
+        }
+        foreach ($possibleNpmPaths as $path) {
+            if (file_exists($path)) {
+                $npmCmd = '"' . $path . '"';
+                break;
+            }
+        }
+    }
+}
+
+// Prepend resolved Node directory to PHP process PATH
+if (!empty($resolvedNodeDir)) {
+    $existingPath = getenv('PATH') ?: '';
+    if ($existingPath) {
+        $separator = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? ';' : ':';
+        if (strpos($existingPath, $resolvedNodeDir) === false) {
+            putenv("PATH=" . $resolvedNodeDir . $separator . $existingPath);
+            $_ENV['PATH'] = $resolvedNodeDir . $separator . $existingPath;
+        }
+    }
+}
+
 // 3. Process Management Configurations
 $storageLogDir = dirname(__DIR__) . '/storage/logs';
 $queuePidFile = $storageLogDir . '/queue_worker.pid';
@@ -88,6 +180,7 @@ function startBackgroundProcess($command, $logFile, $pidFile) {
 // runs with the given working directory. It also records the command's exit code to
 // $statusFile so the dashboard can show success/failure after the process finishes.
 function startShellBackgroundProcess($command, $logFile, $pidFile, $cwd, $statusFile) {
+    global $resolvedNodeDir;
     $dir = dirname($logFile);
     if (!is_dir($dir)) {
         mkdir($dir, 0755, true);
@@ -101,7 +194,14 @@ function startShellBackgroundProcess($command, $logFile, $pidFile, $cwd, $status
         $escapedLog = str_replace('\\', '/', $logFile);
         $escapedStatus = str_replace('\\', '/', $statusFile);
         $escapedCwd = str_replace('\\', '/', $cwd);
-        $inner = "Set-Location -LiteralPath '$escapedCwd'; $command; " .
+        
+        $envPrepend = '';
+        if (!empty($resolvedNodeDir)) {
+            $escapedNodeDir = str_replace('\\', '/', $resolvedNodeDir);
+            $envPrepend = "\$env:PATH = '$escapedNodeDir;' + \$env:PATH; ";
+        }
+        
+        $inner = "Set-Location -LiteralPath '$escapedCwd'; $envPrepend $command; " .
                  "if (\$?) { 'success' } else { 'failed' } | Set-Content -Path '$escapedStatus'";
         $psCmd = "powershell -Command \"Start-Process powershell -ArgumentList '-NoProfile','-Command','$inner' " .
                  "-RedirectStandardOutput '$escapedLog' -RedirectStandardError '$escapedLog' -NoNewWindow -PassThru | " .
@@ -117,7 +217,14 @@ function startShellBackgroundProcess($command, $logFile, $pidFile, $cwd, $status
         // of the "&&" chain after it finishes, without blocking this HTTP request.
         $escapedCwd = escapeshellarg($cwd);
         $escapedStatus = escapeshellarg($statusFile);
-        $inner = "cd $escapedCwd && ($command); echo \$? > $escapedStatus.tmp && " .
+        
+        $envPrepend = '';
+        if (!empty($resolvedNodeDir)) {
+            $escapedNodeDir = escapeshellarg($resolvedNodeDir);
+            $envPrepend = "export PATH=$escapedNodeDir:\$PATH && ";
+        }
+        
+        $inner = "cd $escapedCwd && $envPrepend ($command); echo \$? > $escapedStatus.tmp && " .
                  "(cat $escapedStatus.tmp | grep -q '^0$' && echo success > $escapedStatus || echo failed > $escapedStatus); " .
                  "rm -f $escapedStatus.tmp";
         $cmd = "nohup bash -c " . escapeshellarg($inner) . " > " . escapeshellarg($logFile) . " 2>&1 & echo \$!";
@@ -240,12 +347,36 @@ if (!empty($action)) {
             
         case 'key_generate':
             try {
-                $kernel->call('key:generate', ['--force' => true]);
+                $envFile = $app->environmentFilePath();
+                if (!file_exists($envFile)) {
+                    throw new \Exception("The environment file (.env) does not exist at: $envFile");
+                }
+                if (!is_writable($envFile)) {
+                    throw new \Exception("The environment file (.env) is not writable by the web server. Please check file permissions.");
+                }
+                
+                // If config is cached, key:generate will fail to update .env correctly
+                if ($app->configurationIsCached()) {
+                    throw new \Exception("Configuration is cached. Please run 'Clear Application Cache' first to clear the cache before generating key.");
+                }
+
+                $envContent = file_get_contents($envFile);
+                if (strpos($envContent, 'APP_KEY=') === false) {
+                    // Append APP_KEY placeholder if missing
+                    file_put_contents($envFile, $envContent . PHP_EOL . 'APP_KEY=');
+                }
+
+                $exitCode = $kernel->call('key:generate', ['--force' => true]);
                 $terminalOutput = $kernel->output();
-                $actionMessage = "Application key generated successfully!";
+                if ($exitCode === 0) {
+                    $actionMessage = "Application key generated successfully!";
+                } else {
+                    $actionMessage = "Failed to generate application key (Exit Code: $exitCode). See terminal output below.";
+                    $actionStatus = 'error';
+                }
             } catch (\Exception $e) {
                 $terminalOutput = $e->getMessage();
-                $actionMessage = "Failed to generate application key.";
+                $actionMessage = "Failed to generate application key. Check permissions.";
                 $actionStatus = 'error';
             }
             break;
@@ -342,7 +473,7 @@ if (!empty($action)) {
                 $actionStatus = 'warning';
             } else {
                 $projectRoot = dirname(__DIR__);
-                $pid = startShellBackgroundProcess('npm ci && npm run build', $buildLogFile, $buildPidFile, $projectRoot, $buildStatusFile);
+                $pid = startShellBackgroundProcess("$npmCmd ci && $npmCmd run build", $buildLogFile, $buildPidFile, $projectRoot, $buildStatusFile);
                 if ($pid) {
                     $actionMessage = "Frontend build started (PID: $pid). 'npm ci && npm run build' can take a minute or two — watch the log below and refresh this page.";
                 } else {
@@ -421,27 +552,14 @@ $reverbHost = env('REVERB_SERVER_HOST', '0.0.0.0');
 $reverbPort = env('REVERB_SERVER_PORT', 8080);
 $reverbPortActive = isPortOpen($reverbHost, $reverbPort);
 
-// Fast-failing commands (e.g. "npm: command not found") can exit in well under a
-// second, which opens a race window where the OS reuses that PID for an unrelated
-// process before this page reloads — a naive isProcessRunning() check would then
-// report the build as still "running" forever. The background script always writes
-// a terminal 'success'/'failed' line to $buildStatusFile before it exits, so trust
-// that first; only fall back to the PID check while the status still says 'running'
-// (which also correctly detects a build that was killed without finishing).
-$buildStatusRaw = file_exists($buildStatusFile) ? trim(file_get_contents($buildStatusFile)) : 'never';
-if ($buildStatusRaw === 'success' || $buildStatusRaw === 'failed') {
-    $buildRunning = false;
-    $buildLastStatus = $buildStatusRaw;
-} else {
-    $buildRunning = isProcessRunning($buildPidFile);
-    $buildLastStatus = $buildRunning ? 'running' : 'failed';
-}
+$buildRunning = isProcessRunning($buildPidFile);
 $buildPid = $buildRunning ? trim(file_get_contents($buildPidFile)) : null;
+$buildLastStatus = file_exists($buildStatusFile) ? trim(file_get_contents($buildStatusFile)) : 'never';
 
 // Detect whether Node/npm are even reachable for the web server user — a very common
 // reason "npm ci && npm run build" silently fails to start on shared hosting.
-$npmVersion = trim((string) @shell_exec('npm -v 2>&1'));
-$nodeVersion = trim((string) @shell_exec('node -v 2>&1'));
+$npmVersion = trim((string) @shell_exec("$npmCmd -v 2>&1"));
+$nodeVersion = trim((string) @shell_exec("$nodeCmd -v 2>&1"));
 $npmAvailable = !empty($npmVersion) && preg_match('/^\d+\.\d+\.\d+$/', $npmVersion);
 $nodeAvailable = !empty($nodeVersion) && preg_match('/^v?\d+\.\d+\.\d+$/', $nodeVersion);
 
@@ -1175,6 +1293,17 @@ function renderLoginForm($securityKey, $failed = false) {
             </div>
         <?php endif; ?>
 
+        <?php 
+            $envFilePath = $app->environmentFilePath();
+            $envWritable = file_exists($envFilePath) && is_writable($envFilePath);
+            if (!$envWritable): 
+        ?>
+            <div class="toast toast-error" style="margin-bottom: 20px;">
+                <div class="status-dot status-alert"></div>
+                <span><strong>Security/Permission Alert:</strong> The environment file (<code>.env</code>) is NOT writable by the web server user. Custom configurations, setup parameters, or generating the <code>APP_KEY</code> will fail. Please adjust the file permissions of <code>.env</code> to make it writable.</span>
+            </div>
+        <?php endif; ?>
+
         <!-- System Overview -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -1229,7 +1358,7 @@ function renderLoginForm($securityKey, $failed = false) {
                 </div>
                 <small style="color: var(--text-muted); font-size: 11px;">
                     <?php echo ($nodeAvailable && $npmAvailable)
-                        ? "npm $npmVersion available to the web server user"
+                        ? "npm $npmVersion (Path: " . htmlspecialchars(trim($nodeCmd, '"\'')) . ")"
                         : 'Frontend build will fail — Node.js/npm is not in PATH for this process'; ?>
                 </small>
             </div>
