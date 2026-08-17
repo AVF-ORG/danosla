@@ -109,13 +109,17 @@
                 @include('layouts.header.language-dropdown')
 
                 <!-- Notification Dropdown -->
-                @include('layouts.header.notification-dropdown')
+                @auth
+                    @include('layouts.header.notification-dropdown')
+                @endauth
 
             </div>
 
             <!-- User Dropdown -->
 
-            @include('layouts.header.user-dropdown')
+            @auth
+                @include('layouts.header.user-dropdown')
+            @endauth
 
         </div>
     </div>

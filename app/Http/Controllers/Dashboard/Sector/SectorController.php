@@ -24,7 +24,11 @@ class SectorController extends Controller
 
         $sectors = $query->latest()->paginate(15);
 
-        return view('pages.dashboard.sectors.index', compact('sectors'));
+        $languages = Language::where('is_active', true)->get();
+        $activeCount = Sector::where('is_active', true)->count();
+        $deletedCount = Sector::onlyTrashed()->count();
+
+        return view('pages.dashboard.sectors.index', compact('sectors', 'languages', 'activeCount', 'deletedCount'));
     }
 
     /**

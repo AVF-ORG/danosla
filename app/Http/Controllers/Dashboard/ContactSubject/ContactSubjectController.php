@@ -24,7 +24,11 @@ class ContactSubjectController extends Controller
 
         $contactSubjects = $query->latest()->paginate(15);
 
-        return view('pages.dashboard.contact-subjects.index', compact('contactSubjects'));
+        $languages = Language::where('is_active', true)->get();
+        $activeCount = ContactSubject::where('is_active', true)->count();
+        $deletedCount = ContactSubject::onlyTrashed()->count();
+
+        return view('pages.dashboard.contact-subjects.index', compact('contactSubjects', 'languages', 'activeCount', 'deletedCount'));
     }
 
     /**

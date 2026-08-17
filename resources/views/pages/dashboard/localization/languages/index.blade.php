@@ -29,7 +29,6 @@
                     <tr class="text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                         <th class="px-4 py-3">Code</th>
                         <th class="px-4 py-3">Name</th>
-                        <th class="px-4 py-3">Native Name</th>
                         <th class="px-4 py-3 text-center">Active</th>
                         <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
@@ -40,11 +39,10 @@
                         <tr>
                             <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ $language->code }}</td>
                             <td class="px-4 py-3 text-gray-700 dark:text-gray-300">{{ $language->name }}</td>
-                            <td class="px-4 py-3 text-gray-700 dark:text-gray-300">{{ $language->native_name }}</td>
                             <td class="px-4 py-3 text-center">
                                 <span
-                                    class="inline-flex items-center rounded px-3 py-1 text-[11px] font-semibold uppercase tracking-wider {{ $language->active ? 'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500' : 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500' }}">
-                                    {{ $language->active ? 'Yes' : 'No' }}
+                                    class="inline-flex items-center rounded px-3 py-1 text-[11px] font-semibold uppercase tracking-wider {{ $language->is_active ? 'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500' : 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500' }}">
+                                    {{ $language->is_active ? 'Yes' : 'No' }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-right">
@@ -115,7 +113,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="4" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                                 No languages found.
                             </td>
                         </tr>

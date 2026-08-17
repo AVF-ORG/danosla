@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('components.breadcrumb')
+    @include('components.breadcrumb', ['pageTitle' => 'Calendar'])
     
 <div>
     <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">

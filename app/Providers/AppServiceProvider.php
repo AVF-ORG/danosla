@@ -26,6 +26,18 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\Gate::policy(\App\Models\Shipment::class, \App\Policies\Shipment\ShipmentPolicy::class);
         \Illuminate\Support\Facades\Gate::policy(\App\Models\ShipmentBid::class, \App\Policies\Shipment\ShipmentBidPolicy::class);
 
+        // By default spatie/laravel-translatable only falls back to app.fallback_locale
+        // and otherwise returns an empty string. That leaves translatable fields (Sector,
+        // Region, Country, ContactSubject names, etc.) rendering completely blank whenever
+        // a record has no translation for the current locale AND none for the fallback
+        // locale either — e.g. a sector saved with only a French name shows up blank once
+        // the site locale is switched to Arabic. Falling back to any available translation
+        // keeps something meaningful on screen instead of a blank field.
+        \Spatie\Translatable\Facades\Translatable::fallback(
+            fallbackLocale: config('app.fallback_locale'),
+            fallbackAny: true,
+        );
+
         try {
             $languages = Cache::remember('active_languages', 3600, function () {
                 return Language::query()

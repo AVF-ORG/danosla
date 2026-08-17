@@ -58,7 +58,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Now</p>
-                        <h4 class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{{ $contactSubjects->where('is_active', true)->count() }}</h4>
+                        <h4 class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{{ $activeCount }}</h4>
                     </div>
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-success-50 text-success-600 dark:bg-success-500/10 dark:text-success-400">
                         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +86,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Deleted</p>
-                        <h4 class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{{ $contactSubjects->where('deleted_at', '!=', null)->count() }}</h4>
+                        <h4 class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{{ $deletedCount }}</h4>
                     </div>
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-error-50 text-error-600 dark:bg-error-500/10 dark:text-error-400">
                         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,9 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        // Reconstruct the update URL for a failed edit resubmission from the
+        // permission id (round-tripped via old()), since a validation failure
+        // redirects back to this index page and loses the Alpine-only state
+        // that normally holds the target URL.
+        $editingPermissionId = old('_method') === 'PUT' ? old('permission_id') : null;
+    @endphp
     <div x-data="{
         openPermissionModal: false,
         actionUrl: '',
+        permissionId: '',
         permissionName: '',
         isEdit: false,
         modalTitle: '',
@@ -12,29 +20,33 @@
             this.isEdit = false
             this.modalTitle = 'Create New Permission'
             this.permissionName = ''
+            this.permissionId = ''
             this.actionUrl = '{{ route('dashboard.permissions.store') }}'
             this.openPermissionModal = true
         },
-        openEditModal(url, name) {
+        openEditModal(url, name, id) {
             this.isEdit = true
             this.modalTitle = 'Edit Permission'
             this.permissionName = name
+            this.permissionId = id
             this.actionUrl = url
             this.openPermissionModal = true
         },
         closeModal() {
             this.openPermissionModal = false
             this.permissionName = ''
+            this.permissionId = ''
             this.actionUrl = ''
         },
 
         init() {
             @if ($errors->any())
-                @if(old('_method') == 'PUT')
+                @if($editingPermissionId)
                     this.isEdit = true
                     this.modalTitle = 'Edit Permission'
                     this.permissionName = '{{ old('name') }}'
-                    this.actionUrl = '{{ session('edit_url') }}'
+                    this.permissionId = '{{ $editingPermissionId }}'
+                    this.actionUrl = '{{ route('dashboard.permissions.update', $editingPermissionId) }}'
                 @else
                     this.isEdit = false
                     this.modalTitle = 'Create New Permission'
@@ -135,7 +147,7 @@
                                              class="absolute right-0 z-50 mt-2 w-40 rounded-xl bg-white dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700 focus:outline-none"
                                              style="display: none;">
                                             <div class="py-1">
-                                                <button @click.stop.prevent="dropdownOpen = false; openEditModal('{{ route('dashboard.permissions.update', $permission->id) }}', '{{ $permission->name }}')" type="button" class="flex w-full items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                                <button @click.stop.prevent="dropdownOpen = false; openEditModal('{{ route('dashboard.permissions.update', $permission->id) }}', '{{ $permission->name }}', '{{ $permission->id }}')" type="button" class="flex w-full items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                                     <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                                     Éditer
                                                 </button>
@@ -209,6 +221,7 @@
                 <template x-if="isEdit">
                     <input type="hidden" name="_method" value="PUT">
                 </template>
+                <input type="hidden" name="permission_id" x-model="permissionId">
 
                 <div class="mb-4">
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white" x-text="modalTitle"></h3>

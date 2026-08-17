@@ -59,7 +59,7 @@
                     @if($permissions->isEmpty())
                         <div class="flex flex-col items-center justify-center py-8 text-center">
                             <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">No permissions found. Create permissions first.</p>
-                            <a href="{{ route('dashboard.permissions.create') }}" class="text-brand-500 hover:text-brand-600 font-semibold text-sm">Create Permissions</a>
+                            <a href="{{ route('dashboard.permissions.index') }}" class="text-brand-500 hover:text-brand-600 font-semibold text-sm">Create Permissions</a>
                         </div>
                     @else
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

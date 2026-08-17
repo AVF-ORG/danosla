@@ -91,14 +91,14 @@ Route::group([
             Route::post('contacts/{contact}/reply', [ContactController::class, 'updateReply'])->name('contacts.reply');
 
             // Regions
-            Route::resource('regions', RegionController::class);
+            Route::resource('regions', RegionController::class)->except(['show']);
 
             Route::get('regions/{id}/restore',
                 [RegionController::class, 'restore']
             )->name('regions.restore');
 
             // Countries
-            Route::resource('countries', CountryController::class);
+            Route::resource('countries', CountryController::class)->except(['show']);
 
             Route::get('countries/{id}/restore',
                 [CountryController::class, 'restore']
@@ -114,7 +114,7 @@ Route::group([
 
             // Roles & Permissions
             Route::resource('roles', RoleController::class);
-            Route::resource('permissions', PermissionController::class);
+            Route::resource('permissions', PermissionController::class)->except(['create', 'edit', 'show']);
 
             // User Assignment & Management
             Route::get('users/pending', [UserController::class, 'pending'])->name('users.pending');
@@ -125,7 +125,7 @@ Route::group([
             Route::get('users/carriers', [UserController::class, 'index'])->defaults('role', 'carrier')->name('users.carriers');
             Route::get('users/shippers', [UserController::class, 'index'])->defaults('role', 'shipper')->name('users.shippers');
 
-            Route::resource('users', UserController::class);
+            Route::resource('users', UserController::class)->except(['create', 'store']);
             Route::post('users/{user}/impersonate', [UserController::class, 'impersonate'])->name('users.impersonate');
             Route::post('users/stop-impersonation', [UserController::class, 'stopImpersonate'])->name('users.stop-impersonation');
         });
