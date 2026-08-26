@@ -5,12 +5,17 @@ RUN apk add --no-cache \
     bash git curl unzip icu-dev oniguruma-dev \
     libzip-dev zip \
     freetype-dev libjpeg-turbo-dev libpng-dev \
+    linux-headers \
     mysql-client
 
 # PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+ && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install -j$(nproc) \
-    pdo_mysql mbstring exif pcntl bcmath intl zip gd opcache
+    pdo_mysql mbstring exif pcntl bcmath intl zip gd opcache \
+ && pecl install redis \
+ && docker-php-ext-enable redis \
+ && apk del .build-deps
 
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
