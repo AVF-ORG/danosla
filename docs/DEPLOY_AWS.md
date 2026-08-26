@@ -196,7 +196,31 @@ sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
 
 ## 10. Redeploying after future changes
 
+**Day-to-day workflow:**
+1. Edit code locally as normal (`composer run dev`, etc.), commit, and `git push`
+   like you would for any change.
+2. SSH into the server and pull + rebuild (full steps below).
+
+Skip the `build`/asset-rebuild steps for changes that don't touch `composer.json`,
+the Dockerfiles, or frontend source — e.g. a pure PHP logic change only needs
+`git pull` + `up -d` (source is bind-mounted into the containers) plus a cache
+clear if you touched config/views.
+
+`~/danosla` on the server is now a real git repo tracking `origin/feature/setup-frontend-build`
+(set up 2026-08-26 — it started as a `tar`/`scp` copy with no `.git`, so this was a
+one-time bootstrap). One important detail: **the repo tracks a root `.env` file**
+(pre-existing repo quirk, not something to rely on), which would normally get
+clobbered by a `git pull`. That's prevented with:
 ```bash
+git update-index --skip-worktree .env
+```
+already applied on the server — `git status`/`git pull` will silently leave the
+server's real `.env` alone. Don't undo this (`--no-skip-worktree`) unless you
+mean to let a pull overwrite it.
+
+Normal redeploy, once your changes are committed and pushed from your machine:
+```bash
+ssh -i danosla-app-key.pem ubuntu@13.53.241.191
 cd ~/danosla
 git pull
 docker compose -f docker-compose.prod.yml build
@@ -207,6 +231,10 @@ docker compose -f docker-compose.prod.yml exec app php artisan config:cache
 docker compose -f docker-compose.prod.yml exec app php artisan view:cache
 # `artisan optimize` runs route:cache internally — don't use it here, see the note above.
 ```
+
+If a deploy changes `docker/php/Dockerfile`, `docker-compose.prod.yml`, or the
+nginx configs, the `build`/`up -d` steps above already pick that up — no extra
+step needed.
 
 Consider turning this into a small `deploy.sh` script once the flow feels stable.
 
